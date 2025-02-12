@@ -1,11 +1,11 @@
 <?php
 
+use App\Domains\Common\Enum\PaymentEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -15,15 +15,16 @@ return new class extends Migration
             $table->id();
             $table->uuid();
             $table->foreignId('order_id')->constrained('orders')->nullOnDelete();
+            $table->string('reference');
             $table->decimal('amount_paid', total: 10);
             $table->decimal('order_amount', total: 10);
             $table->decimal('fee');
             $table->decimal('vat');
             $table->string('processor')->nullable();
             $table->string('processor_reference')->nullable();
-            $table->string('status')->default('pending');
+            $table->string('status')->default(PaymentEnum::PENDING->value);
             $table->text('narration')->nullable();
-            $table->dateTime('completed_at');
+            $table->timestamp('completed_at')->nullable();
             $table->timestamps();
         });
     }

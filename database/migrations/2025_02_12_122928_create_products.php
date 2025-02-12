@@ -1,11 +1,11 @@
 <?php
 
+use App\Domains\Common\Enum\ProductEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -21,7 +21,8 @@ return new class extends Migration
             $table->string('quantity');
             $table->text('description');
             $table->string('sku');
-            $table->string('status');
+            $table->string('status')->default(ProductEnum::ACTIVE->value);
+            $table->timestamp('disabled_at')->nullable();
             $table->timestamps();
         });
     }

@@ -3,21 +3,16 @@
 namespace Database\Factories;
 
 use App\Domains\Common\Enum\UserEnum;
+use App\Models\Model;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
- * @extends Factory<User>
+ * @extends Factory<Model>
  */
-class UserFactory extends Factory
+class SellerFactory extends Factory
 {
-    /**
-     * The current password being used by the factory.
-     */
-    protected static ?string $password;
-
     /**
      * Define the model's default state.
      *
@@ -26,23 +21,21 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
+            'user_id' => User::factory()->id,
             'uuid' => str::uuid(),
-            'firstname' => fake()->firstName,
-            'lastname' => fake()->firstName,
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
+            'phone_number' => fake()->phoneNumber,
+            'office_address' => fake()->address,
+            'business_name' => fake()->company(),
+            'business_description' => fake()->text,
         ];
     }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     */
-    public function unverified(): static
+    public function pending(): static
     {
         return $this->state(fn(array $attributes) => [
-            'email_verified_at' => null,
+            'status' => UserEnum::PENDING->value,
+            'verified_at' => null,
+            'disabled_at' => null,
         ]);
     }
 
@@ -50,7 +43,8 @@ class UserFactory extends Factory
     {
         return $this->state(fn(array $attributes) => [
             'status' => UserEnum::ACTIVE->value,
-            'email_verified_at' => now(),
+            'verified_at' => now(),
+            'disabled_at' => null,
         ]);
     }
 
@@ -58,6 +52,7 @@ class UserFactory extends Factory
     {
         return $this->state(fn(array $attributes) => [
             'status' => UserEnum::INACTIVE->value,
+            'disabled_at' => now(),
         ]);
     }
 }
