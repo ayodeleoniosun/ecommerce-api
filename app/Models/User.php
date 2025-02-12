@@ -3,13 +3,16 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
     /**
@@ -17,11 +20,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $guarded = ['id', 'uuid'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -44,5 +43,33 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function customer(): HasOne {
+        return $this->hasOne(CustomerProfile::class);
+    }
+
+    public function seller(): HasOne {
+        return $this->hasOne(SellerProfile::class);
+    }
+
+    public function products(): HasMany {
+        return $this->hasMany(Product::class);
+    }
+
+    public function carts(): HasMany {
+        return $this->hasMany(Cart::class);
+    }
+
+    public function wishlists(): HasMany {
+        return $this->hasMany(Wishlist::class);
+    }
+
+    public function orders(): HasMany {
+        return $this->hasMany(Order::class);
+    }
+
+    public function activities(): HasMany {
+        return $this->hasMany(Activity::class);
     }
 }
