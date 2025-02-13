@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Infrastructure\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
@@ -32,6 +32,41 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function customer(): HasOne
+    {
+        return $this->hasOne(CustomerProfile::class);
+    }
+
+    public function seller(): HasOne
+    {
+        return $this->hasOne(SellerProfile::class);
+    }
+
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    public function carts(): HasMany
+    {
+        return $this->hasMany(Cart::class);
+    }
+
+    public function wishlists(): HasMany
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function activities(): HasMany
+    {
+        return $this->hasMany(Activity::class);
+    }
+
     /**
      * Get the attributes that should be cast.
      *
@@ -43,33 +78,5 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    }
-
-    public function customer(): HasOne {
-        return $this->hasOne(CustomerProfile::class);
-    }
-
-    public function seller(): HasOne {
-        return $this->hasOne(SellerProfile::class);
-    }
-
-    public function products(): HasMany {
-        return $this->hasMany(Product::class);
-    }
-
-    public function carts(): HasMany {
-        return $this->hasMany(Cart::class);
-    }
-
-    public function wishlists(): HasMany {
-        return $this->hasMany(Wishlist::class);
-    }
-
-    public function orders(): HasMany {
-        return $this->hasMany(Order::class);
-    }
-
-    public function activities(): HasMany {
-        return $this->hasMany(Activity::class);
     }
 }

@@ -3,14 +3,14 @@
 namespace Database\Factories;
 
 use App\Domains\Common\Enum\ProductEnum;
-use App\Models\Category;
-use App\Models\Product;
-use App\Models\User;
+use App\Infrastructure\Models\Category;
+use App\Infrastructure\Models\Product;
+use App\Infrastructure\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends Factory<Product>
+ * @extends Factory<\App\Infrastructure\Models\Product>
  */
 class ProductFactory extends Factory
 {

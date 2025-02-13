@@ -3,9 +3,9 @@
 namespace Database\Factories;
 
 use App\Domains\Common\Enum\PaymentEnum;
-use App\Models\Order;
-use App\Models\Product;
-use App\Models\User;
+use App\Infrastructure\Models\Order;
+use App\Infrastructure\Models\Product;
+use App\Infrastructure\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 

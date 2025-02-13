@@ -1,22 +1,16 @@
 <?php
 
-namespace App\Models;
+namespace App\Infrastructure\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Wishlist extends Model
+class Activity extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $guarded = ['id', 'uuid'];
-
-    public function product(): BelongsTo
-    {
-        return $this->belongsTo(Product::class);
-    }
 
     public function user(): BelongsTo
     {

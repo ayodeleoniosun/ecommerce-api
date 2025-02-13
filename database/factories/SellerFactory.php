@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\Domains\Common\Enum\UserEnum;
+use App\Infrastructure\Models\User;
 use App\Models\Model;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
