@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Domains\Common\Enum\PaymentEnum;
 use App\Infrastructure\Models\Order;
-use App\Infrastructure\Models\OrderPayment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -33,21 +32,21 @@ class OrderPaymentFactory extends Factory
 
     public function pending(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'status' => PaymentEnum::PENDING->value,
         ]);
     }
 
     public function processing(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'status' => PaymentEnum::PROCESSING->value,
         ]);
     }
 
     public function completed(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'status' => PaymentEnum::SUCCESS->value,
             'processor' => 'flutterwave',
             'processor_reference' => Str::random(),

@@ -9,9 +9,7 @@ class User
         private readonly string $lastName,
         private readonly string $email,
         private readonly string $password,
-    ) {
-
-    }
+    ) {}
 
     public function getFirstname(): string
     {

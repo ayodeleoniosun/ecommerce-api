@@ -9,9 +9,7 @@ use App\Infrastructure\Models\User;
 
 class RegisterUser
 {
-    public function __construct(private readonly UserRepositoryInterface $userRepository)
-    {
-    }
+    public function __construct(private readonly UserRepositoryInterface $userRepository) {}
 
     public function execute(UserEntity $user): User
     {

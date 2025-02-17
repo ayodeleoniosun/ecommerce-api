@@ -28,7 +28,7 @@ class UserVerificationResentMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name')." Email Verification Resent",
+            subject: config('app.name').' Email Verification Resent',
         );
     }
 
@@ -40,7 +40,7 @@ class UserVerificationResentMail extends Mailable
         return new Content(
             markdown: 'emails.user.resend-verification',
             with: [
-                'verification_link' => config('app.frontend_url')."/verification?token=".$this->verification->token,
+                'verification_link' => config('app.frontend_url').'/verification?token='.$this->verification->token,
             ]
         );
     }

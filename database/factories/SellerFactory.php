@@ -32,7 +32,7 @@ class SellerFactory extends Factory
 
     public function pending(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'status' => UserEnum::PENDING->value,
             'verified_at' => null,
             'disabled_at' => null,
@@ -41,7 +41,7 @@ class SellerFactory extends Factory
 
     public function active(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'status' => UserEnum::ACTIVE->value,
             'verified_at' => now(),
             'disabled_at' => null,
@@ -50,7 +50,7 @@ class SellerFactory extends Factory
 
     public function inactive(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'status' => UserEnum::INACTIVE->value,
             'disabled_at' => now(),
         ]);

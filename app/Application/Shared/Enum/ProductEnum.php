@@ -2,7 +2,7 @@
 
 namespace App\Application\Shared\Enum;
 
-enum  ProductEnum: string
+enum ProductEnum: string
 {
     case ACTIVE = 'active';
 

@@ -11,7 +11,7 @@ class BadRequestException extends Exception
 
     protected $message = 'Bad request. Try again';
 
-    public function __construct(string $message = "", ?Throwable $previous = null)
+    public function __construct(string $message = '', ?Throwable $previous = null)
     {
         parent::__construct($message, $this->code, $previous);
     }

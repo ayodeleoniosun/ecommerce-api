@@ -2,7 +2,7 @@
 
 namespace App\Application\Shared\Enum;
 
-enum  UserEnum: string
+enum UserEnum: string
 {
     case PENDING = 'pending';
 

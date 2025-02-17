@@ -20,8 +20,7 @@ class AuthController
         private readonly RegisterUser $registerUser,
         private readonly VerifyToken $verifyToken,
         private readonly ResendToken $resendToken,
-    ) {
-    }
+    ) {}
 
     public function register(RegisterRequest $request): JsonResponse
     {

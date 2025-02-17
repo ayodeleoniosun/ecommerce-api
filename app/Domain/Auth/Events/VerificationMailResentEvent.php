@@ -14,8 +14,5 @@ class VerificationMailResentEvent
     /**
      * Create a new event instance.
      */
-    public function __construct(public UserVerification $verification)
-    {
-
-    }
+    public function __construct(public UserVerification $verification) {}
 }

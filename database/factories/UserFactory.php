@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Domains\Common\Enum\UserEnum;
-use App\Infrastructure\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -41,14 +40,14 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
     }
 
     public function active(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'status' => UserEnum::ACTIVE->value,
             'email_verified_at' => now(),
         ]);
@@ -56,7 +55,7 @@ class UserFactory extends Factory
 
     public function inactive(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'status' => UserEnum::INACTIVE->value,
         ]);
     }

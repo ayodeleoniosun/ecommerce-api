@@ -28,7 +28,7 @@ class UserVerificationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name')." Email Verification",
+            subject: config('app.name').' Email Verification',
         );
     }
 
@@ -40,7 +40,7 @@ class UserVerificationMail extends Mailable
         return new Content(
             markdown: 'emails.user.verification',
             with: [
-                'verification_link' => config('app.frontend_url')."/verification?token=".$this->token,
+                'verification_link' => config('app.frontend_url').'/verification?token='.$this->token,
             ]
         );
     }

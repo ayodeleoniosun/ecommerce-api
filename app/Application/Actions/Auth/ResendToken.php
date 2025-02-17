@@ -15,14 +15,13 @@ class ResendToken
     public function __construct(
         private readonly UserRepositoryInterface $userRepository,
         private readonly UserVerificationRepositoryInterface $userVerificationRepository,
-    ) {
-    }
+    ) {}
 
     public function execute(string $email): void
     {
         $user = $this->userRepository->findByEmail($email);
 
-        throw_if(!$user, ResourceNotFoundException::class, 'Email not found');
+        throw_if(! $user, ResourceNotFoundException::class, 'Email not found');
 
         throw_if($user->email_verified_at, BadRequestException::class, 'User already verified');
 

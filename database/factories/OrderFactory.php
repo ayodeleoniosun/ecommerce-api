@@ -32,21 +32,21 @@ class OrderFactory extends Factory
 
     public function pending(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'status' => PaymentEnum::PENDING->value,
         ]);
     }
 
     public function processing(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'status' => PaymentEnum::PROCESSING->value,
         ]);
     }
 
     public function completed(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'status' => PaymentEnum::SUCCESS->value,
         ]);
     }

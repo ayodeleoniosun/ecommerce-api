@@ -13,14 +13,13 @@ class VerifyToken
     public function __construct(
         private readonly UserRepositoryInterface $userRepository,
         private readonly UserVerificationRepositoryInterface $userVerificationRepository,
-    ) {
-    }
+    ) {}
 
     public function execute(string $token): User
     {
         $verification = $this->userVerificationRepository->findByToken($token);
 
-        throw_if(!$verification, ResourceNotFoundException::class, 'Token not found');
+        throw_if(! $verification, ResourceNotFoundException::class, 'Token not found');
 
         throw_if($verification->expires_at < now(), BadRequestException::class, 'Token already expired');
 

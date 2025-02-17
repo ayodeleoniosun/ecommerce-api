@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Domains\Common\Enum\ProductEnum;
 use App\Infrastructure\Models\Category;
-use App\Infrastructure\Models\Product;
 use App\Infrastructure\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -35,14 +34,14 @@ class ProductFactory extends Factory
 
     public function active(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'status' => ProductEnum::ACTIVE->value,
         ]);
     }
 
     public function outOfStock(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'status' => ProductEnum::OUT_OF_STOCK->value,
         ]);
     }

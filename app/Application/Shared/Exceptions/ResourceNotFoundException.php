@@ -11,7 +11,7 @@ class ResourceNotFoundException extends Exception
 
     protected $message = 'Resource not found';
 
-    public function __construct(string $message = "", ?Throwable $previous = null)
+    public function __construct(string $message = '', ?Throwable $previous = null)
     {
         parent::__construct($message, $this->code, $previous);
     }

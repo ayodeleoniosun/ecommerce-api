@@ -14,9 +14,7 @@ use Illuminate\Support\Str;
 
 class UserRepository implements UserRepositoryInterface
 {
-    public function __construct(private readonly UserVerificationRepositoryInterface $userVerificationRepository)
-    {
-    }
+    public function __construct(private readonly UserVerificationRepositoryInterface $userVerificationRepository) {}
 
     public function create(UserEntity $user): array
     {
