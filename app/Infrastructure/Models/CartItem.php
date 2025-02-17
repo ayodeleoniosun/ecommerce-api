@@ -11,7 +11,7 @@ class CartItem extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $guarded = ['id', 'uuid'];
+    protected $guarded = ['id'];
 
     public function product(): BelongsTo
     {

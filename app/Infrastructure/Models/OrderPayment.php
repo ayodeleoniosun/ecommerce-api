@@ -10,7 +10,7 @@ class OrderPayment extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id', 'uuid'];
+    protected $guarded = ['id'];
 
     public function order(): BelongsTo
     {
