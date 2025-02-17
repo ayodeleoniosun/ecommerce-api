@@ -5,9 +5,8 @@ namespace App\Http\Requests;
 use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Password;
 
-class RegisterRequest extends FormRequest
+class VerifyAccountRequest extends FormRequest
 {
     use OverrideDefaultValidationMethodTrait;
 
@@ -27,17 +26,7 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'firstname' => ['required', 'string'],
-            'lastname' => ['required', 'string'],
-            'phone_number' => ['required', 'string'],
-            'email' => ['required', 'email', 'unique:users'],
-            'password' => [
-                'required', Password::min(8)
-                    ->letters()
-                    ->mixedCase()
-                    ->numbers()
-                    ->symbols(),
-            ],
+            'token' => ['required', 'string', 'exists:user_verifications,token'],
         ];
     }
 }

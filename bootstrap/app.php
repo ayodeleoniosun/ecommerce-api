@@ -1,5 +1,8 @@
 <?php
 
+use App\Application\Shared\Exceptions\BadRequestException;
+use App\Application\Shared\Exceptions\ResourceNotFoundException;
+use App\Application\Shared\Responses\ApiResponse;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -19,5 +22,11 @@ return Application::configure(basePath: dirname(__DIR__))
         __DIR__.'/../app/Domain/*/Listeners',
     ])
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->report(function (ResourceNotFoundException $e) {
+            return ApiResponse::error($e->getMessage(), $e->getStatusCode());
+        });
+
+        $exceptions->report(function (BadRequestException $e) {
+            return ApiResponse::error($e->getMessage(), $e->getStatusCode());
+        });
     })->create();
