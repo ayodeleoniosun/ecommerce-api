@@ -5,6 +5,7 @@ namespace App\Infrastructure\Repositories;
 use App\Application\Shared\Enum\UserEnum;
 use App\Domain\User\Entities\User\User as UserEntity;
 use App\Domain\User\Interfaces\Repositories\UserRepositoryInterface;
+use App\Domain\User\Interfaces\Repositories\UserVerificationRepositoryInterface;
 use App\Infrastructure\Models\User;
 use App\Infrastructure\Models\UserVerification;
 use Carbon\Carbon;
@@ -13,12 +14,16 @@ use Illuminate\Support\Str;
 
 class UserRepository implements UserRepositoryInterface
 {
+    public function __construct(private readonly UserVerificationRepositoryInterface $userVerificationRepository)
+    {
+    }
 
-    public function create(UserEntity $user): User
+    public function create(UserEntity $user): array
     {
         $record = null;
+        $token = hash('sha256', Str::random(40));
 
-        DB::transaction(function () use (&$record, $user) {
+        DB::transaction(function () use (&$record, $user, $token) {
             $record = User::create([
                 'firstname' => $user->getFirstname(),
                 'lastname' => $user->getLastname(),
@@ -26,21 +31,22 @@ class UserRepository implements UserRepositoryInterface
                 'password' => $user->getPassword(),
             ]);
 
-            UserVerification::create([
+            $this->userVerificationRepository->create([
                 'user_id' => $record->id,
-                'token' => hash('sha256', Str::random(40)),
+                'token' => $token,
                 'expires_at' => Carbon::now()->addHours(6),
             ]);
         });
 
-        return $record;
+        return [
+            'user' => $record,
+            'token' => $token
+        ];
     }
 
-    public function getToken(string $token)
+    public function findByEmail(string $email): ?User
     {
-        return UserVerification::with('user')
-            ->where('token', $token)
-            ->first();
+        return User::where('email', $email)->first();
     }
 
     public function verify(UserVerification $verification): User

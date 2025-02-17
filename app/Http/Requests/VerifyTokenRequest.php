@@ -6,7 +6,7 @@ use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class VerifyAccountRequest extends FormRequest
+class VerifyTokenRequest extends FormRequest
 {
     use OverrideDefaultValidationMethodTrait;
 
@@ -26,7 +26,7 @@ class VerifyAccountRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'token' => ['required', 'string', 'exists:user_verifications,token'],
+            'token' => ['required', 'string', 'exists:user_verifications'],
         ];
     }
 }

@@ -19,6 +19,6 @@ class RegisterUser
 
         UserRegisteredEvent::dispatch($data);
 
-        return $data;
+        return $data['user'];
     }
 }

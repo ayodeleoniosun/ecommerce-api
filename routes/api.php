@@ -6,5 +6,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
-    Route::post('verify', [AuthController::class, 'verifyAccount']);
+    Route::post('token/verify', [AuthController::class, 'verifyToken']);
+    Route::post('token/resend', [AuthController::class, 'resendToken']);
 });
