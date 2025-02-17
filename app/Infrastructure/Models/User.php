@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Ramsey\Uuid\Uuid;
 
 class User extends Authenticatable
 {
@@ -20,7 +23,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $guarded = ['id', 'uuid'];
+    protected $guarded = ['id'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -28,9 +31,21 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
+        'id',
         'password',
         'remember_token',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            $user->uuid = (string) Uuid::uuid4();
+            $user->verification_token = hash('sha256', Str::random(40));
+            $user->password = Hash::make($user->password);
+        });
+    }
 
     public function customer(): HasOne
     {
