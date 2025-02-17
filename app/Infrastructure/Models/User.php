@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Hash;
 use Ramsey\Uuid\Uuid;
 
 class User extends Authenticatable
@@ -41,7 +40,6 @@ class User extends Authenticatable
 
         static::creating(function ($user) {
             $user->uuid = (string) Uuid::uuid4();
-            $user->password = Hash::make($user->password);
         });
     }
 

@@ -10,6 +10,7 @@ use App\Infrastructure\Models\User;
 use App\Infrastructure\Models\UserVerification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class UserRepository implements UserRepositoryInterface
@@ -26,7 +27,7 @@ class UserRepository implements UserRepositoryInterface
                 'firstname' => $user->getFirstname(),
                 'lastname' => $user->getLastname(),
                 'email' => $user->getEmail(),
-                'password' => $user->getPassword(),
+                'password' => Hash::make($user->getPassword()),
             ]);
 
             $this->userVerificationRepository->create([
