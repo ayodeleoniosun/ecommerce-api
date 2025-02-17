@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Application\Actions;
+namespace App\Application\Actions\Auth;
 
-use App\Domain\User\Entities\User\User as UserEntity;
-use App\Domain\User\Events\UserRegisteredEvent;
-use App\Domain\User\Interfaces\Repositories\UserRepositoryInterface;
+use App\Domain\Auth\Entities\User as UserEntity;
+use App\Domain\Auth\Events\UserRegisteredEvent;
+use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Infrastructure\Models\User;
 
 class RegisterUser

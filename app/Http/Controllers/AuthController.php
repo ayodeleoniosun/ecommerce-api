@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Application\Actions\RegisterUser;
-use App\Application\Actions\ResendToken;
-use App\Application\Actions\VerifyToken;
+use App\Application\Actions\Auth\RegisterUser;
+use App\Application\Actions\Auth\ResendToken;
+use App\Application\Actions\Auth\VerifyToken;
 use App\Application\Shared\Responses\ApiResponse;
-use App\Domain\User\Entities\User\User;
+use App\Domain\Auth\Entities\User;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\ResendTokenRequest;
 use App\Http\Requests\VerifyTokenRequest;

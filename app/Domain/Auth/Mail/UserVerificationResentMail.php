@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Domain\User\Mail;
+namespace App\Domain\Auth\Mail;
 
-use App\Infrastructure\Models\User;
+use App\Infrastructure\Models\UserVerification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;
@@ -10,14 +10,14 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class UserVerificationMail extends Mailable
+class UserVerificationResentMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(public User $user, public string $token)
+    public function __construct(public UserVerification $verification)
     {
         //
     }
@@ -28,7 +28,7 @@ class UserVerificationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name')." Email Verification",
+            subject: config('app.name')." Email Verification Resent",
         );
     }
 
@@ -38,9 +38,9 @@ class UserVerificationMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.user.verification',
+            markdown: 'emails.user.resend-verification',
             with: [
-                'verification_link' => config('app.frontend_url')."/verification?token=".$this->token,
+                'verification_link' => config('app.frontend_url')."/verification?token=".$this->verification->token,
             ]
         );
     }

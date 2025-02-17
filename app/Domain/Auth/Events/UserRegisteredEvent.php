@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\User\Events;
+namespace App\Domain\Auth\Events;
 
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;

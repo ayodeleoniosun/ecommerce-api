@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Domain\User\Interfaces\Repositories;
+namespace App\Domain\Auth\Interfaces\Repositories;
 
-use App\Domain\User\Entities\User\User as UserEntity;
+use App\Domain\Auth\Entities\User as UserEntity;
 use App\Infrastructure\Models\User;
 use App\Infrastructure\Models\UserVerification;
 

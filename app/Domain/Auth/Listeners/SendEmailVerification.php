@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Domain\User\Listeners;
+namespace App\Domain\Auth\Listeners;
 
-use App\Domain\User\Events\UserRegisteredEvent;
-use App\Domain\User\Mail\UserVerificationMail;
+use App\Domain\Auth\Events\UserRegisteredEvent;
+use App\Domain\Auth\Mail\UserVerificationMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

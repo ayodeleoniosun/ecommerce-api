@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Infrastructure\Repositories;
+namespace App\Infrastructure\Repositories\User;
 
-use App\Domain\User\Interfaces\Repositories\UserVerificationRepositoryInterface;
+use App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface;
 use App\Infrastructure\Models\UserVerification;
 
 class UserVerificationRepository implements UserVerificationRepositoryInterface
