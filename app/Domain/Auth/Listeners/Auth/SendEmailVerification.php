@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Domain\Auth\Listeners;
+namespace App\Domain\Auth\Listeners\Auth;
 
-use App\Domain\Auth\Events\UserRegisteredEvent;
+use App\Domain\Auth\Events\Auth\UserRegisteredEvent;
 use App\Domain\Auth\Mail\UserVerificationMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -28,9 +28,8 @@ class SendEmailVerification implements ShouldQueue
      */
     public function handle(UserRegisteredEvent $event): void
     {
-        $user = $event->data['user'];
-        $token = $event->data['token'];
+        $user = $event->user;
 
-        Mail::to($user->email)->send(new UserVerificationMail($user, $token));
+        Mail::to($user->email)->send(new UserVerificationMail($user, $user->verification->token));
     }
 }

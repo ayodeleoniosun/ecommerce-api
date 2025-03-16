@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Domain\Auth\Listeners;
+namespace App\Domain\Auth\Listeners\Auth;
 
-use App\Domain\Auth\Events\VerificationMailResentEvent;
+use App\Domain\Auth\Events\Auth\VerificationMailResentEvent;
 use App\Domain\Auth\Mail\UserVerificationResentMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

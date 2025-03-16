@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Domain\Auth\Events;
+namespace App\Domain\Auth\Events\Auth;
 
+use App\Infrastructure\Models\User;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -13,5 +14,5 @@ class UserRegisteredEvent
     /**
      * Create a new event instance.
      */
-    public function __construct(public array $data) {}
+    public function __construct(public User $user) {}
 }

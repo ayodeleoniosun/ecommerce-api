@@ -4,8 +4,8 @@ namespace App\Infrastructure\Repositories\User;
 
 use App\Application\Shared\Enum\UserEnum;
 use App\Domain\Auth\Entities\User as UserEntity;
-use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
-use App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface;
+use App\Domain\Auth\Interfaces\Repositories\Auth\UserRepositoryInterface;
+use App\Domain\Auth\Interfaces\Repositories\Auth\UserVerificationRepositoryInterface;
 use App\Infrastructure\Models\User;
 use App\Infrastructure\Models\UserVerification;
 use Carbon\Carbon;
@@ -17,30 +17,26 @@ class UserRepository implements UserRepositoryInterface
 {
     public function __construct(private readonly UserVerificationRepositoryInterface $userVerificationRepository) {}
 
-    public function create(UserEntity $user): array
+    public function create(UserEntity $userEntity): User
     {
-        $record = null;
-        $token = hash('sha256', Str::random(40));
+        $user = null;
 
-        DB::transaction(function () use (&$record, $user, $token) {
-            $record = User::create([
-                'firstname' => $user->getFirstname(),
-                'lastname' => $user->getLastname(),
-                'email' => $user->getEmail(),
-                'password' => Hash::make($user->getPassword()),
+        DB::transaction(function () use (&$user, $userEntity) {
+            $user = User::create([
+                'firstname' => $userEntity->getFirstname(),
+                'lastname' => $userEntity->getLastname(),
+                'email' => $userEntity->getEmail(),
+                'password' => Hash::make($userEntity->getPassword()),
             ]);
 
             $this->userVerificationRepository->create([
-                'user_id' => $record->id,
-                'token' => $token,
+                'user_id' => $user->id,
+                'token' => hash('sha256', Str::random(40)),
                 'expires_at' => Carbon::now()->addHours(6),
             ]);
         });
 
-        return [
-            'user' => $record,
-            'token' => $token,
-        ];
+        return $user->with('verification')->first();
     }
 
     public function findByEmail(string $email): ?User

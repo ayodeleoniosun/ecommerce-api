@@ -5,7 +5,7 @@ namespace App\Application\Actions\Auth;
 use App\Application\Shared\Enum\UserEnum;
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
-use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
+use App\Domain\Auth\Interfaces\Repositories\Auth\UserRepositoryInterface;
 use App\Infrastructure\Models\User;
 use Illuminate\Support\Facades\Hash;
 

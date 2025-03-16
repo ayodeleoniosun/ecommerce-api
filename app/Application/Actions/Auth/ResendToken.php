@@ -4,9 +4,9 @@ namespace App\Application\Actions\Auth;
 
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
-use App\Domain\Auth\Events\VerificationMailResentEvent;
-use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
-use App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface;
+use App\Domain\Auth\Events\Auth\VerificationMailResentEvent;
+use App\Domain\Auth\Interfaces\Repositories\Auth\UserRepositoryInterface;
+use App\Domain\Auth\Interfaces\Repositories\Auth\UserVerificationRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 

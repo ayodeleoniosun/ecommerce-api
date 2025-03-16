@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Auth\Interfaces\Repositories;
+namespace App\Domain\Auth\Interfaces\Repositories\Auth;
 
 use App\Infrastructure\Models\UserVerification;
 
