@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Models;
 
+use Database\Factories\UserFactory;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -36,6 +37,11 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    protected static function newFactory(): UserFactory
+    {
+        return UserFactory::new();
+    }
 
     protected static function boot()
     {
