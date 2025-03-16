@@ -15,6 +15,9 @@ use Ramsey\Uuid\Uuid;
  * @property mixed $firstname
  * @property mixed $lastname
  * @property mixed $email
+ *
+ * @method static create(array $array)
+ * @method static where(string $string, string $email)
  */
 class User extends Authenticatable
 {
@@ -80,11 +83,6 @@ class User extends Authenticatable
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
-    }
-
-    public function activities(): HasMany
-    {
-        return $this->hasMany(Activity::class);
     }
 
     public function verification(): HasOne
