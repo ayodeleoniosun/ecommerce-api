@@ -20,6 +20,7 @@ beforeEach(function () {
     $this->verification = UserVerification::factory()->create([
         'user_id' => $this->user->id,
     ]);
+    $this->resendToken = new ResendToken($this->userRepo, $this->userVerificationRepo);
 });
 
 it('should throw an exception if email is not found', function () {
@@ -28,8 +29,7 @@ it('should throw an exception if email is not found', function () {
         ->with($this->user->email)
         ->andReturn(null);
 
-    $resendToken = new ResendToken($this->userRepo, $this->userVerificationRepo);
-    $resendToken->execute($this->user->email);
+    $this->resendToken->execute($this->user->email);
 })->throws(ResourceNotFoundException::class, 'Email not found');
 
 it('should throw an exception if user is already verified', function () {
@@ -40,8 +40,7 @@ it('should throw an exception if user is already verified', function () {
         ->with($this->user->email)
         ->andReturn($this->user);
 
-    $resendToken = new ResendToken($this->userRepo, $this->userVerificationRepo);
-    $resendToken->execute($this->user->email);
+    $this->resendToken->execute($this->user->email);
 })->throws(BadRequestException::class, 'User already verified');
 
 it('can resend token', function () {
@@ -56,8 +55,7 @@ it('can resend token', function () {
         ->once()
         ->andReturn($this->verification);
 
-    $resendToken = new ResendToken($this->userRepo, $this->userVerificationRepo);
-    $resendToken->execute($this->user->email);
+    $this->resendToken->execute($this->user->email);
 
     Event::assertDispatched(VerificationMailResentEvent::class, function ($event) {
         return $event->verification->user->id === $this->user->id;

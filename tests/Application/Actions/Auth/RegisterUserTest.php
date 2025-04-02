@@ -12,10 +12,12 @@ use Mockery;
 
 beforeEach(function () {
     $this->userRepo = Mockery::mock(UserRepositoryInterface::class);
-    Event::fake();
+    $this->registerUser = new RegisterUser($this->userRepo);
 });
 
 it('can register new user', function () {
+    Event::fake();
+
     $user = User::factory()->create();
     $userEntity = new UserEntity($user->firstname, $user->lastname, $user->email, 'password');
 
@@ -24,8 +26,7 @@ it('can register new user', function () {
         ->with($userEntity)
         ->andReturn($user);
 
-    $registerUser = new RegisterUser($this->userRepo);
-    $response = $registerUser->execute($userEntity);
+    $response = $this->registerUser->execute($userEntity);
 
     Event::assertDispatched(UserRegisteredEvent::class);
 

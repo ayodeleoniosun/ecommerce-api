@@ -19,6 +19,8 @@ beforeEach(function () {
         'user_id' => $this->user->id,
     ]);
     $this->token = '12345';
+
+    $this->verifyToken = new VerifyToken($this->userRepo, $this->userVerificationRepo);
 });
 
 it('should throw an exception if token is not found', function () {
@@ -27,8 +29,7 @@ it('should throw an exception if token is not found', function () {
         ->with($this->token)
         ->andReturn(null);
 
-    $verifyToken = new VerifyToken($this->userRepo, $this->userVerificationRepo);
-    $verifyToken->execute($this->token);
+    $this->verifyToken->execute($this->token);
 })->throws(ResourceNotFoundException::class, 'Token not found');
 
 it('should throw an exception if token already expired', function () {
@@ -39,8 +40,7 @@ it('should throw an exception if token already expired', function () {
         ->with($this->token)
         ->andReturn($this->verification);
 
-    $verifyToken = new VerifyToken($this->userRepo, $this->userVerificationRepo);
-    $verifyToken->execute($this->token);
+    $this->verifyToken->execute($this->token);
 })->throws(BadRequestException::class, 'Token already expired');
 
 it('should throw an exception if token already verified', function () {
@@ -52,8 +52,7 @@ it('should throw an exception if token already verified', function () {
         ->with($this->token)
         ->andReturn($this->verification);
 
-    $verifyToken = new VerifyToken($this->userRepo, $this->userVerificationRepo);
-    $verifyToken->execute($this->token);
+    $this->verifyToken->execute($this->token);
 })->throws(BadRequestException::class, 'Account already verified');
 
 it('can verify valid token', function () {
@@ -69,8 +68,7 @@ it('can verify valid token', function () {
         ->with($this->verification)
         ->andReturn($this->user);
 
-    $verifyToken = new VerifyToken($this->userRepo, $this->userVerificationRepo);
-    $response = $verifyToken->execute($this->token);
+    $response = $this->verifyToken->execute($this->token);
 
     expect($response)->toBeInstanceOf(User::class)
         ->and($response->firstname)->toBe($this->user->firstname)

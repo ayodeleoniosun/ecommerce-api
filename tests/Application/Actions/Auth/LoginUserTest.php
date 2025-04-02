@@ -17,6 +17,7 @@ beforeEach(function () {
         'email' => $this->user->email,
         'password' => 'password',
     ];
+    $this->loginUser = new LoginUser($this->userRepo);
 });
 
 it('should throw an exception if user is not found', function () {
@@ -25,8 +26,7 @@ it('should throw an exception if user is not found', function () {
         ->with($this->user->email)
         ->andReturn(null);
 
-    $loginUser = new LoginUser($this->userRepo);
-    $loginUser->execute($this->payload);
+    $this->loginUser->execute($this->payload);
 })->throws(ResourceNotFoundException::class, 'User not found');
 
 it('should throw an exception if email is not yet verified', function () {
@@ -35,8 +35,7 @@ it('should throw an exception if email is not yet verified', function () {
         ->with($this->user->email)
         ->andReturn($this->user);
 
-    $loginUser = new LoginUser($this->userRepo);
-    $loginUser->execute($this->payload);
+    $this->loginUser->execute($this->payload);
 })->throws(BadRequestException::class, 'Email not yet verified');
 
 it('should throw an exception if account is inactive', function () {
@@ -47,8 +46,7 @@ it('should throw an exception if account is inactive', function () {
         ->with($this->user->email)
         ->andReturn($this->user);
 
-    $loginUser = new LoginUser($this->userRepo);
-    $loginUser->execute($this->payload);
+    $this->loginUser->execute($this->payload);
 })->throws(BadRequestException::class, 'Account is inactive');
 
 it('should throw an exception if password does not match', function () {
@@ -61,8 +59,7 @@ it('should throw an exception if password does not match', function () {
         ->with($this->user->email)
         ->andReturn($this->user);
 
-    $loginUser = new LoginUser($this->userRepo);
-    $loginUser->execute($this->payload);
+    $this->loginUser->execute($this->payload);
 })->throws(BadRequestException::class, 'Invalid login credentials');
 
 it('can login successfully', function () {
@@ -74,8 +71,7 @@ it('can login successfully', function () {
         ->with($this->user->email)
         ->andReturn($this->user);
 
-    $loginUser = new LoginUser($this->userRepo);
-    $response = $loginUser->execute($this->payload);
+    $response = $this->loginUser->execute($this->payload);
 
     expect($response)->toBeInstanceOf(User::class)
         ->and($response->firstname)->toBe($this->user->firstname)
