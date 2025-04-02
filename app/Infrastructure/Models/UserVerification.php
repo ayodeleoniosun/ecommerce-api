@@ -20,6 +20,10 @@ class UserVerification extends Model
 
     protected $guarded = ['id'];
 
+    protected $hidden = [
+        'id', 'user_id',
+    ];
+
     protected static function newFactory(): UserVerificationFactory
     {
         return UserVerificationFactory::new();

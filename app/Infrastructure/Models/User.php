@@ -15,6 +15,7 @@ use Ramsey\Uuid\Uuid;
  * @property mixed $firstname
  * @property mixed $lastname
  * @property mixed $email
+ * @property mixed $email_verified_at
  *
  * @method static create(array $array)
  * @method static where(string $string, string $email)
@@ -37,6 +38,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'id',
+        'uuid',
         'password',
         'remember_token',
     ];

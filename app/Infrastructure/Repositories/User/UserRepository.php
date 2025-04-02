@@ -11,6 +11,7 @@ use App\Infrastructure\Models\UserVerification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 
 class UserRepository implements UserRepositoryInterface
@@ -36,7 +37,7 @@ class UserRepository implements UserRepositoryInterface
             ]);
         });
 
-        return $user->with('verification')->first();
+        return $user;
     }
 
     public function findByEmail(string $email): ?User
@@ -59,5 +60,16 @@ class UserRepository implements UserRepositoryInterface
         $verification->refresh();
 
         return $verification->user;
+    }
+
+    public function resetPassword(array $request): string
+    {
+        return Password::reset($request, function (User $user, string $password) {
+            $user->forceFill([
+                'password' => Hash::make($password),
+            ])->setRememberToken(Str::random(60));
+
+            $user->save();
+        });
     }
 }

@@ -13,4 +13,6 @@ interface UserRepositoryInterface
     public function findByEmail(string $email): ?User;
 
     public function verify(UserVerification $verification): User;
+
+    public function resetPassword(array $request): string;
 }

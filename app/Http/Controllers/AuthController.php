@@ -2,19 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Application\Actions\Auth\InitiateForgotPassword;
 use App\Application\Actions\Auth\LoginUser;
 use App\Application\Actions\Auth\RegisterUser;
 use App\Application\Actions\Auth\ResendToken;
+use App\Application\Actions\Auth\ResetPassword;
 use App\Application\Actions\Auth\VerifyToken;
 use App\Application\Shared\Responses\ApiResponse;
 use App\Domain\Auth\Entities\User;
+use App\Http\Requests\ForgotPasswordRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\ResendTokenRequest;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\VerifyTokenRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Password;
 
 class AuthController
 {
@@ -23,6 +28,8 @@ class AuthController
         private readonly VerifyToken $verifyToken,
         private readonly ResendToken $resendToken,
         private readonly LoginUser $loginUser,
+        private readonly InitiateForgotPassword $forgotPassword,
+        private readonly ResetPassword $resetPassword,
     ) {}
 
     public function register(RegisterRequest $request): JsonResponse
@@ -62,6 +69,47 @@ class AuthController
             $this->resendToken->execute($request->validated()['email']);
 
             return ApiResponse::success('Verification link resent successfully');
+        } catch (Exception $e) {
+            return ApiResponse::error($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
+    {
+        try {
+            $status = $this->forgotPassword->execute($request->validated()['email']);
+
+            if ($status === Password::RESET_LINK_SENT) {
+                return ApiResponse::success('Forgot password link resent successfully');
+            }
+
+            if ($status === Password::RESET_THROTTLED) {
+                return ApiResponse::error('You cannot send more than 1 password request per minute. Try again later.',
+                    Response::HTTP_TOO_MANY_REQUESTS);
+            }
+
+            return ApiResponse::error('Forgot password not successful. Please try again.');
+
+        } catch (Exception $e) {
+            return ApiResponse::error($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function resetPassword(ResetPasswordRequest $request): JsonResponse
+    {
+        try {
+            $status = $this->resetPassword->execute($request->validated());
+
+            if ($status === Password::PASSWORD_RESET) {
+                return ApiResponse::success('Password successfully reset. You can login now');
+            }
+
+            if ($status === Password::INVALID_TOKEN) {
+                return ApiResponse::error('Invalid token');
+            }
+
+            return ApiResponse::error('Password reset not successful. Please try again.');
+
         } catch (Exception $e) {
             return ApiResponse::error($e->getMessage(), $e->getCode());
         }
