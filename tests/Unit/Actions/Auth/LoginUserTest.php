@@ -15,7 +15,7 @@ beforeEach(function () {
     $this->user = User::factory()->create();
     $this->payload = [
         'email' => $this->user->email,
-        'password' => 'password',
+        'password' => 'Ayodele@2025',
     ];
     $this->loginUser = new LoginUser($this->userRepo);
 });
