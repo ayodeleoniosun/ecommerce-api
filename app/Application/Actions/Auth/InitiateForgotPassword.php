@@ -5,13 +5,12 @@ namespace App\Application\Actions\Auth;
 use App\Application\Shared\Enum\UserEnum;
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
-use App\Domain\Auth\Interfaces\Repositories\Auth\UserRepositoryInterface;
 use Illuminate\Support\Facades\Password;
 
 class InitiateForgotPassword
 {
     public function __construct(
-        private readonly UserRepositoryInterface $userRepository,
+        private readonly \App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface $userRepository,
     ) {}
 
     public function execute(string $email): string

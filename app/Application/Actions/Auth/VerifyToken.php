@@ -4,15 +4,14 @@ namespace App\Application\Actions\Auth;
 
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
-use App\Domain\Auth\Interfaces\Repositories\Auth\UserRepositoryInterface;
-use App\Domain\Auth\Interfaces\Repositories\Auth\UserVerificationRepositoryInterface;
+use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Infrastructure\Models\User;
 
 class VerifyToken
 {
     public function __construct(
         private readonly UserRepositoryInterface $userRepository,
-        private readonly UserVerificationRepositoryInterface $userVerificationRepository,
+        private readonly \App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface $userVerificationRepository,
     ) {}
 
     public function execute(string $token): User

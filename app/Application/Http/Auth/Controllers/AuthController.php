@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Application\Http\Auth\Controllers;
 
 use App\Application\Actions\Auth\InitiateForgotPassword;
 use App\Application\Actions\Auth\LoginUser;
@@ -8,14 +8,14 @@ use App\Application\Actions\Auth\RegisterUser;
 use App\Application\Actions\Auth\ResendToken;
 use App\Application\Actions\Auth\ResetPassword;
 use App\Application\Actions\Auth\VerifyToken;
+use App\Application\Http\Auth\Requests\ForgotPasswordRequest;
+use App\Application\Http\Auth\Requests\LoginRequest;
+use App\Application\Http\Auth\Requests\RegisterRequest;
+use App\Application\Http\Auth\Requests\ResendTokenRequest;
+use App\Application\Http\Auth\Requests\ResetPasswordRequest;
+use App\Application\Http\Auth\Requests\VerifyTokenRequest;
 use App\Application\Shared\Responses\ApiResponse;
 use App\Domain\Auth\Entities\User;
-use App\Http\Requests\ForgotPasswordRequest;
-use App\Http\Requests\LoginRequest;
-use App\Http\Requests\RegisterRequest;
-use App\Http\Requests\ResendTokenRequest;
-use App\Http\Requests\ResetPasswordRequest;
-use App\Http\Requests\VerifyTokenRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;

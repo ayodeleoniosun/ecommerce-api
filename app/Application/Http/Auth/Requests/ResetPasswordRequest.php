@@ -1,15 +1,13 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Application\Http\Auth\Requests;
 
-use App\Application\Shared\Enum\UserTypeEnum;
 use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
-class RegisterRequest extends FormRequest
+class ResetPasswordRequest extends FormRequest
 {
     use OverrideDefaultValidationMethodTrait;
 
@@ -29,17 +27,23 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'firstname' => ['required', 'string'],
-            'lastname' => ['required', 'string'],
-            'type' => ['required', 'string', Rule::in([UserTypeEnum::CUSTOMER->value, UserTypeEnum::SELLER->value])],
-            'email' => ['required', 'email', 'unique:users'],
-            'password' => [
+            'email' => ['required', 'email', 'exists:users'],
+            'token' => ['required', 'string'],
+            'password' => ['required', 'confirmed'],
+            'password_confirmation' => [
                 'required', Password::min(8)
                     ->letters()
                     ->mixedCase()
                     ->numbers()
                     ->symbols(),
             ],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'password_confirmation.confirmed' => 'The password confirmation does not match.',
         ];
     }
 }

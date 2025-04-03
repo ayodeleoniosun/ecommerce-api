@@ -3,8 +3,7 @@
 namespace App\Application\Actions\Auth;
 
 use App\Domain\Auth\Entities\User as UserEntity;
-use App\Domain\Auth\Events\Auth\UserRegisteredEvent;
-use App\Domain\Auth\Interfaces\Repositories\Auth\UserRepositoryInterface;
+use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Infrastructure\Models\User;
 
 class RegisterUser
@@ -15,7 +14,7 @@ class RegisterUser
     {
         $user = $this->userRepository->create($userEntity);
 
-        UserRegisteredEvent::dispatch($user);
+        \App\Domain\Auth\Events\UserRegisteredEvent::dispatch($user);
 
         return $user;
     }

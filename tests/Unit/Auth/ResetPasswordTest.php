@@ -3,11 +3,11 @@
 namespace Tests\Application\Actions\Auth;
 
 use App\Application\Actions\Auth\ResetPassword;
+use App\Application\Http\Auth\Requests\ResetPasswordRequest;
 use App\Application\Shared\Enum\UserEnum;
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
-use App\Domain\Auth\Interfaces\Repositories\Auth\UserRepositoryInterface;
-use App\Http\Requests\ResetPasswordRequest;
+use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Infrastructure\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Event;

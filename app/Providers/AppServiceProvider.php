@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Domain\Auth\Interfaces\Repositories\Auth\UserRepositoryInterface;
-use App\Domain\Auth\Interfaces\Repositories\Auth\UserVerificationRepositoryInterface;
+use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
+use App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface;
 use App\Infrastructure\Repositories\User\UserRepository;
 use App\Infrastructure\Repositories\User\UserVerificationRepository;
 use Illuminate\Support\ServiceProvider;

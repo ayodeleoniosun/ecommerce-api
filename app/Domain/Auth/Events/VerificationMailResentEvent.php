@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Auth\Events\Auth;
+namespace App\Domain\Auth\Events;
 
 use App\Infrastructure\Models\UserVerification;
 use Illuminate\Broadcasting\InteractsWithSockets;

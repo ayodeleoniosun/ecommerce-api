@@ -4,8 +4,8 @@ namespace App\Infrastructure\Repositories\User;
 
 use App\Application\Shared\Enum\UserEnum;
 use App\Domain\Auth\Entities\User as UserEntity;
-use App\Domain\Auth\Interfaces\Repositories\Auth\UserRepositoryInterface;
-use App\Domain\Auth\Interfaces\Repositories\Auth\UserVerificationRepositoryInterface;
+use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
+use App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface;
 use App\Infrastructure\Models\User;
 use App\Infrastructure\Models\UserVerification;
 use Carbon\Carbon;

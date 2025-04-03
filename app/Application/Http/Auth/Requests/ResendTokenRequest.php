@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Application\Http\Auth\Requests;
 
 use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class LoginRequest extends FormRequest
+class ResendTokenRequest extends FormRequest
 {
     use OverrideDefaultValidationMethodTrait;
 
@@ -27,14 +27,6 @@ class LoginRequest extends FormRequest
     {
         return [
             'email' => ['required', 'email', 'exists:users'],
-            'password' => ['required', 'string'],
-        ];
-    }
-
-    public function messages(): array
-    {
-        return [
-            'email.exists' => 'Email address does not exist. Try registering a new account',
         ];
     }
 }

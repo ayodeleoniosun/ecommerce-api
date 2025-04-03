@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Domain\Auth\Listeners\Auth;
+namespace App\Domain\Auth\Listeners;
 
-use App\Domain\Auth\Events\Auth\UserRegisteredEvent;
-use App\Domain\Auth\Mail\UserVerificationMail;
+use App\Domain\Auth\Events\VerificationMailResentEvent;
+use App\Domain\Auth\Mail\UserVerificationResentMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -11,7 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 
-class SendEmailVerification implements ShouldQueue
+class ResendVerification implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -26,10 +26,8 @@ class SendEmailVerification implements ShouldQueue
     /**
      * Handle the event.
      */
-    public function handle(UserRegisteredEvent $event): void
+    public function handle(VerificationMailResentEvent $event): void
     {
-        $user = $event->user;
-
-        Mail::to($user->email)->send(new UserVerificationMail($user, $user->verification->token));
+        Mail::to($event->verification->user->email)->send(new UserVerificationResentMail($event->verification));
     }
 }
