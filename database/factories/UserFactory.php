@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Application\Shared\Enum\UserEnum;
+use App\Application\Shared\Enum\UserTypeEnum;
 use App\Infrastructure\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -34,6 +35,7 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'password' => Hash::make('Ayodele@2025'),
             'remember_token' => Str::random(10),
+            'type' => UserTypeEnum::CUSTOMER->value,
         ];
     }
 

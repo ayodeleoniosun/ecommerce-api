@@ -9,6 +9,7 @@ class User
         private readonly string $lastName,
         private readonly string $email,
         private readonly string $password,
+        private readonly string $type,
     ) {}
 
     public function getFirstname(): string
@@ -29,5 +30,10 @@ class User
     public function getPassword(): string
     {
         return $this->password;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
     }
 }

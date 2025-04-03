@@ -3,6 +3,7 @@
 namespace Tests\Application\Actions\Auth;
 
 use App\Application\Shared\Enum\UserEnum;
+use App\Application\Shared\Enum\UserTypeEnum;
 use App\Domain\Auth\Events\Auth\VerificationMailResentEvent;
 use App\Infrastructure\Models\PasswordResetToken;
 use App\Infrastructure\Models\User;
@@ -32,6 +33,7 @@ describe('user registration', function () {
             'phone_number' => '08123456789',
             'email' => 'invalid_email',
             'password' => 'password123',
+            'type' => UserTypeEnum::CUSTOMER->value,
         ];
 
         $response = $this->postJson('/api/auth/register', $payload);
@@ -49,6 +51,7 @@ describe('user registration', function () {
             'phone_number' => '08123456789',
             'email' => 'valid@email.com',
             'password' => 'password123',
+            'type' => UserTypeEnum::CUSTOMER->value,
         ];
 
         $response = $this->postJson('/api/auth/register', $payload);
@@ -66,6 +69,7 @@ describe('user registration', function () {
             'phone_number' => '08123456789',
             'email' => 'valid@email.com',
             'password' => 'Ayodele@2025',
+            'type' => UserTypeEnum::CUSTOMER->value,
         ];
 
         $response = $this->postJson('/api/auth/register', $payload);
@@ -88,6 +92,7 @@ describe('user registration', function () {
             'phone_number' => '08123456789',
             'email' => $user->email,
             'password' => 'Ayodele@2025',
+            'type' => UserTypeEnum::CUSTOMER->value,
         ];
 
         $response = $this->postJson('/api/auth/register', $payload);

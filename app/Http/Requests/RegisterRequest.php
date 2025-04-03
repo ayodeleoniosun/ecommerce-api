@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Application\Shared\Enum\UserTypeEnum;
 use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 class RegisterRequest extends FormRequest
@@ -29,7 +31,7 @@ class RegisterRequest extends FormRequest
         return [
             'firstname' => ['required', 'string'],
             'lastname' => ['required', 'string'],
-            'phone_number' => ['required', 'string'],
+            'type' => ['required', 'string', Rule::in([UserTypeEnum::CUSTOMER->value, UserTypeEnum::SELLER->value])],
             'email' => ['required', 'email', 'unique:users'],
             'password' => [
                 'required', Password::min(8)

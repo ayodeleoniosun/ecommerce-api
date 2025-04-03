@@ -35,7 +35,7 @@ class AuthController
     public function register(RegisterRequest $request): JsonResponse
     {
         $data = (object) $request->validated();
-        $user = new User($data->firstname, $data->lastname, $data->email, $data->password);
+        $user = new User($data->firstname, $data->lastname, $data->email, $data->password, $data->type);
         $data = $this->registerUser->execute($user);
 
         return ApiResponse::success('User registered successfully', $data, Response::HTTP_CREATED);

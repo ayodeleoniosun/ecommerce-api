@@ -28,6 +28,7 @@ class UserRepository implements UserRepositoryInterface
                 'lastname' => $userEntity->getLastname(),
                 'email' => $userEntity->getEmail(),
                 'password' => Hash::make($userEntity->getPassword()),
+                'type' => $userEntity->getType(),
             ]);
 
             $this->userVerificationRepository->create([
