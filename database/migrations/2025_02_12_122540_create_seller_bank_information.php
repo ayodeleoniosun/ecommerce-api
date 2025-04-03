@@ -12,17 +12,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('seller_profile', function (Blueprint $table) {
+        Schema::create('seller_bank_information', function (Blueprint $table) {
             $table->id();
             $table->uuid();
             $table->foreignId('user_id')->constrained('users')->nullOnDelete();
-            $table->string('phone_number');
-            $table->text('office_address');
-            $table->string('business_name');
-            $table->text('business_description');
+            $table->string('account_name');
+            $table->string('account_number');
+            $table->string('bank_name');
+            $table->string('bank_code');
+            $table->string('swift_code');
             $table->string('status')->default(UserEnum::PENDING->value);
             $table->timestamp('verified_at')->nullable();
-            $table->timestamp('disabled_at')->nullable();
             $table->timestamps();
         });
     }
