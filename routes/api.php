@@ -1,6 +1,7 @@
 <?php
 
 use App\Application\Http\Auth\Controllers\AuthController;
+use App\Application\Http\Onboarding\Controllers\OnboardingController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
@@ -10,4 +11,12 @@ Route::prefix('auth')->group(function () {
     Route::post('token/resend', [AuthController::class, 'resendToken']);
     Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->name('password.reset');
     Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
+});
+
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::prefix('seller')->group(function () {
+        Route::prefix('setup')->group(function () {
+            Route::post('contact', [OnboardingController::class, 'contact']);
+        });
+    });
 });

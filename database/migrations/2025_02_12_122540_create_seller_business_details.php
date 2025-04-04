@@ -16,11 +16,11 @@ return new class extends Migration
             $table->id();
             $table->uuid();
             $table->foreignId('user_id')->constrained('users')->nullOnDelete();
-            $table->string('business_name');
-            $table->text('business_description');
-            $table->string('registration_number');
-            $table->string('tax_identification_number');
-            $table->string('business_certificate_path');
+            $table->string('name');
+            $table->text('description');
+            $table->string('registration_number')->unique();
+            $table->string('tax_identification_number')->unique();
+            $table->string('certificate_path');
             $table->string('status')->default(UserEnum::PENDING->value);
             $table->timestamp('verified_at')->nullable();
             $table->timestamps();

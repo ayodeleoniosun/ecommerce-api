@@ -16,9 +16,10 @@ return new class extends Migration
             $table->id();
             $table->uuid();
             $table->foreignId('user_id')->constrained('users')->nullOnDelete();
-            $table->string('contact_name');
-            $table->string('contact_phone_number');
-            $table->text('office_address');
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('phone_number')->unique();
+            $table->text('address');
             $table->string('country');
             $table->string('state');
             $table->string('city');
