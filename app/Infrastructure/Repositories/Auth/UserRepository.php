@@ -3,7 +3,7 @@
 namespace App\Infrastructure\Repositories\Auth;
 
 use App\Application\Shared\Enum\UserEnum;
-use App\Domain\Auth\Entities\UserEntity;
+use App\Domain\Auth\Dtos\UserDto;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface;
 use App\Infrastructure\Models\User;
@@ -18,18 +18,12 @@ class UserRepository implements UserRepositoryInterface
 {
     public function __construct(private readonly UserVerificationRepositoryInterface $userVerificationRepository) {}
 
-    public function create(UserEntity $userEntity): User
+    public function create(UserDto $userDto): User
     {
         $user = null;
 
-        DB::transaction(function () use (&$user, $userEntity) {
-            $user = User::create([
-                'firstname' => $userEntity->getFirstname(),
-                'lastname' => $userEntity->getLastname(),
-                'email' => $userEntity->getEmail(),
-                'password' => Hash::make($userEntity->getPassword()),
-                'type' => $userEntity->getType(),
-            ]);
+        DB::transaction(function () use (&$user, $userDto) {
+            $user = User::create($userDto->toArray());
 
             $this->userVerificationRepository->create([
                 'user_id' => $user->id,

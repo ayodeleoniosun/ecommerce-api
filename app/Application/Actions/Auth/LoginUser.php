@@ -8,6 +8,7 @@ use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Infrastructure\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class LoginUser
 {
@@ -20,6 +21,10 @@ class LoginUser
         $this->validateUserStatus($user);
 
         $this->validatePassword($user, $credentials['password']);
+
+        $user->tokens()->delete();
+
+        $user->token = $user->createToken(Str::slug($user->firstname))->plainTextToken;
 
         return $user;
     }
