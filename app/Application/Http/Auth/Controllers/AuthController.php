@@ -15,7 +15,7 @@ use App\Application\Http\Auth\Requests\ResendTokenRequest;
 use App\Application\Http\Auth\Requests\ResetPasswordRequest;
 use App\Application\Http\Auth\Requests\VerifyTokenRequest;
 use App\Application\Shared\Responses\ApiResponse;
-use App\Domain\Auth\Entities\User;
+use App\Domain\Auth\Entities\UserEntity;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -35,7 +35,7 @@ class AuthController
     public function register(RegisterRequest $request): JsonResponse
     {
         $data = (object) $request->validated();
-        $user = new User($data->firstname, $data->lastname, $data->email, $data->password, $data->type);
+        $user = new UserEntity($data->firstname, $data->lastname, $data->email, $data->password, $data->type);
         $data = $this->registerUser->execute($user);
 
         return ApiResponse::success('User registered successfully', $data, Response::HTTP_CREATED);

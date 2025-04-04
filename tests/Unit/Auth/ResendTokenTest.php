@@ -6,6 +6,7 @@ use App\Application\Actions\Auth\ResendToken;
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Auth\Events\VerificationMailResentEvent;
+use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface;
 use App\Infrastructure\Models\User;
 use App\Infrastructure\Models\UserVerification;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Event;
 use Mockery;
 
 beforeEach(function () {
-    $this->userRepo = Mockery::mock(\App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface::class);
+    $this->userRepo = Mockery::mock(UserRepositoryInterface::class);
     $this->userVerificationRepo = Mockery::mock(UserVerificationRepositoryInterface::class);
     $this->user = User::factory()->create();
     $this->verification = UserVerification::factory()->create([

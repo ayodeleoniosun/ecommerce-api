@@ -2,7 +2,7 @@
 
 namespace App\Domain\Auth\Entities;
 
-class User
+class UserEntity
 {
     public function __construct(
         private readonly string $firstName,

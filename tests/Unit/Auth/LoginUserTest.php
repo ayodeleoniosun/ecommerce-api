@@ -6,11 +6,12 @@ use App\Application\Actions\Auth\LoginUser;
 use App\Application\Shared\Enum\UserEnum;
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
+use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Infrastructure\Models\User;
 use Mockery;
 
 beforeEach(function () {
-    $this->userRepo = Mockery::mock(\App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface::class);
+    $this->userRepo = Mockery::mock(UserRepositoryInterface::class);
     $this->user = User::factory()->create();
     $this->payload = [
         'email' => $this->user->email,

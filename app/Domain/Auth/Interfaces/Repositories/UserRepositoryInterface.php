@@ -2,7 +2,7 @@
 
 namespace App\Domain\Auth\Interfaces\Repositories;
 
-use App\Domain\Auth\Entities\User as UserEntity;
+use App\Domain\Auth\Entities\UserEntity;
 use App\Infrastructure\Models\User;
 use App\Infrastructure\Models\UserVerification;
 

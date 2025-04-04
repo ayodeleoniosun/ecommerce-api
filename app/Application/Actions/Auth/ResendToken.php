@@ -4,7 +4,9 @@ namespace App\Application\Actions\Auth;
 
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
+use App\Domain\Auth\Events\VerificationMailResentEvent;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
+use App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
@@ -12,7 +14,7 @@ class ResendToken
 {
     public function __construct(
         private readonly UserRepositoryInterface $userRepository,
-        private readonly \App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface $userVerificationRepository,
+        private readonly UserVerificationRepositoryInterface $userVerificationRepository,
     ) {}
 
     public function execute(string $email): void
@@ -31,6 +33,6 @@ class ResendToken
 
         $verification->user = $user;
 
-        \App\Domain\Auth\Events\VerificationMailResentEvent::dispatch($verification);
+        VerificationMailResentEvent::dispatch($verification);
     }
 }

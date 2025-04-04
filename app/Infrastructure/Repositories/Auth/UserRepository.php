@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Infrastructure\Repositories\User;
+namespace App\Infrastructure\Repositories\Auth;
 
 use App\Application\Shared\Enum\UserEnum;
-use App\Domain\Auth\Entities\User as UserEntity;
+use App\Domain\Auth\Entities\UserEntity;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface;
 use App\Infrastructure\Models\User;

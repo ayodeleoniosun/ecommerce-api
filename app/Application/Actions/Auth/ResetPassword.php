@@ -5,13 +5,14 @@ namespace App\Application\Actions\Auth;
 use App\Application\Shared\Enum\UserEnum;
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
+use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Password;
 
 class ResetPassword
 {
     public function __construct(
-        private readonly \App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface $userRepository,
+        private readonly UserRepositoryInterface $userRepository,
     ) {}
 
     public function execute(array $request): string

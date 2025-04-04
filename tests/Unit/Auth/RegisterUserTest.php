@@ -4,7 +4,7 @@ namespace Tests\Unit\Actions\Auth;
 
 use App\Application\Actions\Auth\RegisterUser;
 use App\Application\Shared\Enum\UserTypeEnum;
-use App\Domain\Auth\Entities\User as UserEntity;
+use App\Domain\Auth\Entities\UserEntity as UserEntity;
 use App\Domain\Auth\Events\UserRegisteredEvent;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Infrastructure\Models\User;
