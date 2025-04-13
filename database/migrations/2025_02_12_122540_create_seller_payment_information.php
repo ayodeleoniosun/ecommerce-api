@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('seller_bank_information', function (Blueprint $table) {
+        Schema::create('seller_payment_information', function (Blueprint $table) {
             $table->id();
             $table->uuid();
             $table->foreignId('user_id')->constrained('users')->nullOnDelete();
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('seller_profile');
+        Schema::dropIfExists('seller_payment_information');
     }
 };

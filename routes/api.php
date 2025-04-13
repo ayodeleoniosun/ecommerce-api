@@ -19,6 +19,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             Route::post('contact', [OnboardingController::class, 'contact']);
             Route::post('business', [OnboardingController::class, 'business']);
             Route::post('legal', [OnboardingController::class, 'legal']);
+            Route::post('payment', [OnboardingController::class, 'payment']);
         });
     });
 });

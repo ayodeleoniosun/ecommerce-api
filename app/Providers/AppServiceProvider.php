@@ -7,11 +7,13 @@ use App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerBusinessInformationRepositoryInterface;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerContactInformationRepositoryInterface;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerLegalInformationRepositoryInterface;
+use App\Domain\Onboarding\Interfaces\Repositories\SellerPaymentInformationRepositoryInterface;
 use App\Infrastructure\Repositories\Auth\UserRepository;
 use App\Infrastructure\Repositories\Auth\UserVerificationRepository;
 use App\Infrastructure\Repositories\Onboarding\SellerBusinessInformationRepository;
 use App\Infrastructure\Repositories\Onboarding\SellerContactInformationRepository;
 use App\Infrastructure\Repositories\Onboarding\SellerLegalInformationRepository;
+use App\Infrastructure\Repositories\Onboarding\SellerPaymentInformationRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -33,6 +35,9 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(SellerLegalInformationRepositoryInterface::class,
             SellerLegalInformationRepository::class);
+
+        $this->app->bind(SellerPaymentInformationRepositoryInterface::class,
+            SellerPaymentInformationRepository::class);
     }
 
     /**
