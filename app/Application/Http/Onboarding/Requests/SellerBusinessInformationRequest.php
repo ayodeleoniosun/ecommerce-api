@@ -6,7 +6,7 @@ use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class SellerContactDetailsRequest extends FormRequest
+class SellerBusinessInformationRequest extends FormRequest
 {
     use OverrideDefaultValidationMethodTrait;
 
@@ -26,13 +26,18 @@ class SellerContactDetailsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'contact_name' => ['required', 'string'],
-            'contact_phone_number' => ['required', 'string'],
-            'contact_email' => ['required', 'email'],
-            'country' => ['required', 'string'],
-            'state' => ['required', 'string'],
-            'city' => ['required', 'string'],
-            'address' => ['required', 'string'],
+            'company_name' => ['required', 'string'],
+            'description' => ['required', 'string'],
+            'registration_number' => ['required', 'string'],
+            'tax_identification_number' => ['required', 'string'],
+            'business_certificate_path' => ['required', 'mimes:jpg,png,jpeg'],
         ];
+    }
+
+    public function validated($key = null, $default = null)
+    {
+        return array_merge(parent::validated($key, $default), [
+            'user_id' => auth()->user()->id,
+        ]);
     }
 }

@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Ramsey\Uuid\Uuid;
 
-class SellerContact extends Model
+/**
+ * @method static updateOrCreate(array $array, array $toArray)
+ * @method static where(string $string, string $email)
+ */
+class SellerContactInformation extends Model
 {
     use HasFactory;
 
@@ -19,7 +23,7 @@ class SellerContact extends Model
      */
     protected $guarded = ['id'];
 
-    protected $table = 'seller_contact_details';
+    protected $table = 'seller_contact_information';
 
     /**
      * The attributes that should be hidden for serialization.

@@ -2,24 +2,29 @@
 
 namespace App\Application\Http\Onboarding\Controllers;
 
-use App\Application\Actions\Onboarding\CreateSellerContactDetails;
-use App\Application\Http\Onboarding\Requests\SellerContactDetailsRequest;
+use App\Application\Actions\Onboarding\CreateSellerBusinessInformation;
+use App\Application\Actions\Onboarding\CreateSellerContactInformation;
+use App\Application\Http\Onboarding\Requests\SellerBusinessInformationRequest;
+use App\Application\Http\Onboarding\Requests\SellerContactInformationRequest;
 use App\Application\Shared\Responses\ApiResponse;
-use App\Domain\Onboarding\Dtos\SellerContactDto;
+use App\Domain\Onboarding\Dtos\SellerBusinessInformationDto;
+use App\Domain\Onboarding\Dtos\SellerContactInformationDto;
+use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 
 class OnboardingController
 {
     public function __construct(
-        private readonly CreateSellerContactDetails $createSellerContactDetails,
+        private readonly CreateSellerContactInformation $createSellerContactInformation,
+        private readonly CreateSellerBusinessInformation $createSellerBusinessInformation,
     ) {}
 
-    public function contact(SellerContactDetailsRequest $request): JsonResponse
+    public function contact(SellerContactInformationRequest $request): JsonResponse
     {
         $data = (object) $request->validated();
 
-        $sellerContactDto = new SellerContactDto(
+        $sellerContactDto = new SellerContactInformationDto(
+            $data->user_id,
             $data->contact_name,
             $data->contact_email,
             $data->contact_phone_number,
@@ -29,8 +34,34 @@ class OnboardingController
             $data->address
         );
 
-        $data = $this->createSellerContactDetails->execute($sellerContactDto);
+        try {
+            $data = $this->createSellerContactInformation->execute($sellerContactDto);
 
-        return ApiResponse::success('Seller contact details successfully updated', $data, Response::HTTP_CREATED);
+            return ApiResponse::success('Seller contact information successfully updated', $data);
+        } catch (Exception $e) {
+            return ApiResponse::error($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function business(SellerBusinessInformationRequest $request): JsonResponse
+    {
+        $data = (object) $request->validated();
+
+        $sellerBusinessDto = new SellerBusinessInformationDto(
+            $data->user_id,
+            $data->company_name,
+            $data->description,
+            $data->registration_number,
+            $data->tax_identification_number,
+            $data->business_certificate_path
+        );
+
+        try {
+            $data = $this->createSellerBusinessInformation->execute($sellerBusinessDto);
+
+            return ApiResponse::success('Seller business information successfully updated', $data);
+        } catch (Exception $e) {
+            return ApiResponse::error($e->getMessage(), $e->getCode());
+        }
     }
 }

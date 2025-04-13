@@ -5,11 +5,11 @@ namespace App\Application\Shared\Exceptions;
 use Exception;
 use Throwable;
 
-class BadRequestException extends Exception
+class ConflictHttpException extends Exception
 {
-    protected $code = 400;
+    protected $code = 409;
 
-    protected $message = 'Invalid request data. Try again';
+    protected $message = 'Conflict error. Try again';
 
     public function __construct(string $message = '', ?Throwable $previous = null)
     {

@@ -4,10 +4,12 @@ namespace App\Providers;
 
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface;
-use App\Domain\Onboarding\Interfaces\Repositories\SellerContactRepositoryInterface;
+use App\Domain\Onboarding\Interfaces\Repositories\SellerBusinessInformationRepositoryInterface;
+use App\Domain\Onboarding\Interfaces\Repositories\SellerContactInformationRepositoryInterface;
 use App\Infrastructure\Repositories\Auth\UserRepository;
 use App\Infrastructure\Repositories\Auth\UserVerificationRepository;
-use App\Infrastructure\Repositories\Onboarding\SellerContactRepository;
+use App\Infrastructure\Repositories\Onboarding\SellerBusinessInformationRepository;
+use App\Infrastructure\Repositories\Onboarding\SellerContactInformationRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -17,9 +19,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(SellerContactRepositoryInterface::class, SellerContactRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+
         $this->app->bind(UserVerificationRepositoryInterface::class, UserVerificationRepository::class);
+
+        $this->app->bind(SellerContactInformationRepositoryInterface::class,
+            SellerContactInformationRepository::class);
+
+        $this->app->bind(SellerBusinessInformationRepositoryInterface::class,
+            SellerBusinessInformationRepository::class);
     }
 
     /**

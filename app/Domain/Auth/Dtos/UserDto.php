@@ -17,11 +17,36 @@ class UserDto
     public function toArray(): array
     {
         return [
-            'firstname' => $this->firstName,
-            'lastname' => $this->lastName,
-            'email' => $this->email,
-            'password' => Hash::make($this->password),
-            'type' => $this->type,
+            'firstname' => $this->getFirstname(),
+            'lastname' => $this->getLastname(),
+            'email' => $this->getEmail(),
+            'password' => Hash::make($this->getPassword()),
+            'type' => $this->getType(),
         ];
+    }
+
+    public function getFirstname(): string
+    {
+        return $this->firstName;
+    }
+
+    public function getLastname(): string
+    {
+        return $this->lastName;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
     }
 }
