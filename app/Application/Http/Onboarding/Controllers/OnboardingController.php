@@ -6,6 +6,7 @@ use App\Application\Actions\Onboarding\CreateSellerBusinessInformation;
 use App\Application\Actions\Onboarding\CreateSellerContactInformation;
 use App\Application\Actions\Onboarding\CreateSellerLegalInformation;
 use App\Application\Actions\Onboarding\CreateSellerPaymentInformation;
+use App\Application\Actions\Onboarding\GetSellerSetupStatus;
 use App\Application\Http\Onboarding\Requests\SellerBusinessInformationRequest;
 use App\Application\Http\Onboarding\Requests\SellerContactInformationRequest;
 use App\Application\Http\Onboarding\Requests\SellerLegalInformationRequest;
@@ -17,6 +18,7 @@ use App\Domain\Onboarding\Dtos\SellerLegalInformationDto;
 use App\Domain\Onboarding\Dtos\SellerPaymentInformationDto;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class OnboardingController
 {
@@ -25,7 +27,19 @@ class OnboardingController
         private readonly CreateSellerBusinessInformation $createSellerBusinessInformation,
         private readonly CreateSellerLegalInformation $createSellerLegalInformation,
         private readonly CreateSellerPaymentInformation $createSellerPaymentInformation,
+        private readonly GetSellerSetupStatus $setupStatus,
     ) {}
+
+    public function status(Request $request): JsonResponse
+    {
+        try {
+            $data = $this->setupStatus->execute(auth()->user()->id);
+
+            return ApiResponse::success('Setup status successfully retrieved', $data);
+        } catch (Exception $e) {
+            return ApiResponse::error($e->getMessage(), $e->getCode());
+        }
+    }
 
     public function contact(SellerContactInformationRequest $request): JsonResponse
     {

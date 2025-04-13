@@ -8,6 +8,11 @@ use App\Infrastructure\Models\SellerContactInformation;
 
 class SellerContactInformationRepository implements SellerContactInformationRepositoryInterface
 {
+    public function isCompleted(int $userId): bool
+    {
+        return SellerContactInformation::where('user_id', $userId)->exists();
+    }
+
     public function create(SellerContactInformationDto $contactInformationDto): SellerContactInformation
     {
         return SellerContactInformation::updateOrCreate(

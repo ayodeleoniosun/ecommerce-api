@@ -16,6 +16,7 @@ Route::prefix('auth')->group(function () {
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::prefix('seller')->group(function () {
         Route::prefix('setup')->group(function () {
+            Route::get('status', [OnboardingController::class, 'status']);
             Route::post('contact', [OnboardingController::class, 'contact']);
             Route::post('business', [OnboardingController::class, 'business']);
             Route::post('legal', [OnboardingController::class, 'legal']);

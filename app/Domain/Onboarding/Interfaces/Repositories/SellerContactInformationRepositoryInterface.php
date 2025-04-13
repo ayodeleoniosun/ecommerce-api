@@ -7,6 +7,8 @@ use App\Infrastructure\Models\SellerContactInformation;
 
 interface SellerContactInformationRepositoryInterface
 {
+    public function isCompleted(int $userId): bool;
+
     public function create(SellerContactInformationDto $contactInformationDto): SellerContactInformation;
 
     public function findContact(string $field, string $value): ?SellerContactInformation;

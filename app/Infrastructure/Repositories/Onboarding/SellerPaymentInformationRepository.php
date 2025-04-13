@@ -8,6 +8,11 @@ use App\Infrastructure\Models\SellerPaymentInformation;
 
 class SellerPaymentInformationRepository implements SellerPaymentInformationRepositoryInterface
 {
+    public function isCompleted(int $userId): bool
+    {
+        return SellerPaymentInformation::where('user_id', $userId)->exists();
+    }
+
     public function create(SellerPaymentInformationDto $paymentInformationDto): SellerPaymentInformation
     {
         return SellerPaymentInformation::updateOrCreate(

@@ -7,6 +7,8 @@ use App\Infrastructure\Models\SellerLegalInformation;
 
 interface SellerLegalInformationRepositoryInterface
 {
+    public function isCompleted(int $userId): bool;
+
     public function create(SellerLegalInformationDto $legalInformationDto): SellerLegalInformation;
 
     public function findLegal(string $field, string $value): ?SellerLegalInformation;

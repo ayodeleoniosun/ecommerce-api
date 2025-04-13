@@ -8,6 +8,11 @@ use App\Infrastructure\Models\SellerBusinessInformation;
 
 class SellerBusinessInformationRepository implements SellerBusinessInformationRepositoryInterface
 {
+    public function isCompleted(int $userId): bool
+    {
+        return SellerBusinessInformation::where('user_id', $userId)->exists();
+    }
+
     public function create(SellerBusinessInformationDto $businessInformationDto): SellerBusinessInformation
     {
         return SellerBusinessInformation::updateOrCreate(

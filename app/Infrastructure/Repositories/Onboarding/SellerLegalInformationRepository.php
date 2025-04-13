@@ -8,6 +8,11 @@ use App\Infrastructure\Models\SellerLegalInformation;
 
 class SellerLegalInformationRepository implements SellerLegalInformationRepositoryInterface
 {
+    public function isCompleted(int $userId): bool
+    {
+        return SellerLegalInformation::where('user_id', $userId)->exists();
+    }
+
     public function create(SellerLegalInformationDto $legalInformationDto): SellerLegalInformation
     {
         return SellerLegalInformation::updateOrCreate(
