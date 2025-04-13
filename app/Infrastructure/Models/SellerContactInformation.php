@@ -33,6 +33,7 @@ class SellerContactInformation extends Model
     protected $hidden = [
         'id',
         'uuid',
+        'user_id',
     ];
 
     protected static function newFactory(): SellerContactFactory

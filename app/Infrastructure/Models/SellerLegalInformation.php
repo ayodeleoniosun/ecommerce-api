@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Models;
 
-use Database\Factories\SellerContactFactory;
+use Database\Factories\SellerLegalFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +12,7 @@ use Ramsey\Uuid\Uuid;
  * @method static updateOrCreate(array $array, array $toArray)
  * @method static where(string $string, string $email)
  */
-class SellerBusinessInformation extends Model
+class SellerLegalInformation extends Model
 {
     use HasFactory;
 
@@ -23,7 +23,7 @@ class SellerBusinessInformation extends Model
      */
     protected $guarded = ['id'];
 
-    protected $table = 'seller_business_information';
+    protected $table = 'seller_legal_information';
 
     /**
      * The attributes that should be hidden for serialization.
@@ -36,9 +36,9 @@ class SellerBusinessInformation extends Model
         'user_id',
     ];
 
-    protected static function newFactory(): SellerContactFactory
+    protected static function newFactory(): SellerLegalFactory
     {
-        return SellerContactFactory::new();
+        return SellerLegalFactory::new();
     }
 
     protected static function boot()

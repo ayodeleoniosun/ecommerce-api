@@ -1,0 +1,54 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Application\Shared\Enum\UserEnum;
+use App\Infrastructure\Models\SellerLegalInformation;
+use App\Infrastructure\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
+
+/**
+ * @extends Factory<SellerLegalInformation>
+ */
+class SellerLegalFactory extends Factory
+{
+    protected $model = SellerLegalInformation::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            'uuid' => str::uuid(),
+            'user_id' => User::factory()->id,
+            'fullname' => fake()->firstName,
+            'email' => fake()->unique()->safeEmail(),
+            'business_certificate_path' => fake()->filePath(),
+        ];
+    }
+
+    public function pending(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => UserEnum::PENDING->value,
+        ]);
+    }
+
+    public function active(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => UserEnum::ACTIVE->value,
+        ]);
+    }
+
+    public function inactive(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => UserEnum::INACTIVE->value,
+        ]);
+    }
+}
