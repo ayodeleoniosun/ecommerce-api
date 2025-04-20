@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('description');
             $table->string('registration_number')->unique();
             $table->string('tax_identification_number')->unique();
-            $table->string('certificate_path');
+            $table->string('certificate_path')->nullable();
             $table->string('status')->default(UserEnum::PENDING->value);
             $table->timestamp('verified_at')->nullable();
             $table->timestamps();

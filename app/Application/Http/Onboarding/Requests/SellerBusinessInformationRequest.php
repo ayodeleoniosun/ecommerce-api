@@ -30,7 +30,7 @@ class SellerBusinessInformationRequest extends FormRequest
             'description' => ['required', 'string'],
             'registration_number' => ['required', 'string'],
             'tax_identification_number' => ['required', 'string'],
-            'business_certificate_path' => ['required', 'mimes:jpg,png,jpeg'],
+            'business_certificate_path' => ['mimes:jpg,png,jpeg'],
         ];
     }
 

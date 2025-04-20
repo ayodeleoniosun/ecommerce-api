@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->nullOnDelete();
             $table->string('fullname');
             $table->string('email')->unique();
-            $table->string('certificate_path');
+            $table->string('certificate_path')->nullable();
             $table->string('status')->default(UserEnum::PENDING->value);
             $table->timestamp('verified_at')->nullable();
             $table->timestamps();

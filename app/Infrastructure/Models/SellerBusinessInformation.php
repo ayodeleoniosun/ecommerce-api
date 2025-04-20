@@ -6,7 +6,6 @@ use Database\Factories\SellerContactFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Ramsey\Uuid\Uuid;
 
 /**
  * @method static updateOrCreate(array $array, array $toArray)
@@ -39,15 +38,6 @@ class SellerBusinessInformation extends Model
     protected static function newFactory(): SellerContactFactory
     {
         return SellerContactFactory::new();
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($user) {
-            $user->uuid = (string) Uuid::uuid4();
-        });
     }
 
     public function user(): BelongsTo

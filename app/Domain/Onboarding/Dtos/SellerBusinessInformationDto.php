@@ -3,6 +3,7 @@
 namespace App\Domain\Onboarding\Dtos;
 
 use App\Application\Shared\Enum\UserEnum;
+use Illuminate\Http\UploadedFile;
 
 class SellerBusinessInformationDto
 {
@@ -12,12 +13,14 @@ class SellerBusinessInformationDto
         private readonly string $description,
         private readonly string $registrationNumber,
         private readonly string $taxIdentificationNumber,
-        private readonly string $businessCertificatePath,
+        private UploadedFile|string|null $businessCertificatePath,
+        private ?string $uuid = null,
     ) {}
 
     public function toArray(): array
     {
         return [
+            'uuid' => $this->getUUID(),
             'user_id' => $this->getUserId(),
             'name' => $this->getCompanyName(),
             'description' => $this->getDescription(),
@@ -27,6 +30,11 @@ class SellerBusinessInformationDto
             'status' => UserEnum::ACTIVE->value,
             'verified_at' => now()->toDateTimeString(),
         ];
+    }
+
+    public function getUUID(): ?string
+    {
+        return $this->uuid;
     }
 
     public function getUserId(): int
@@ -54,8 +62,18 @@ class SellerBusinessInformationDto
         return $this->taxIdentificationNumber;
     }
 
-    public function getBusinessCertificatePath(): string
+    public function getBusinessCertificatePath(): UploadedFile|string|null
     {
         return $this->businessCertificatePath;
+    }
+
+    public function setBusinessCertificatePath(string $path): void
+    {
+        $this->businessCertificatePath = $path;
+    }
+
+    public function setUUID(string $uuid): void
+    {
+        $this->uuid = $uuid;
     }
 }

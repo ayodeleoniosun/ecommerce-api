@@ -19,10 +19,10 @@ class GetSellerSetupStatus
     public function execute(int $userId): array
     {
         return [
-            'contact_information' => $this->contactInformationRepository->isCompleted($userId),
-            'business_information' => $this->businessInformationRepository->isCompleted($userId),
-            'payment_information' => $this->paymentInformationRepository->isCompleted($userId),
-            'legal_information' => $this->legalInformationRepository->isCompleted($userId),
+            'completed_contact_information' => $this->contactInformationRepository->isCompleted($userId),
+            'completed_business_information' => $this->businessInformationRepository->isCompleted($userId),
+            'completed_payment_information' => $this->paymentInformationRepository->isCompleted($userId),
+            'completed_legal_information' => $this->legalInformationRepository->isCompleted($userId),
         ];
     }
 }

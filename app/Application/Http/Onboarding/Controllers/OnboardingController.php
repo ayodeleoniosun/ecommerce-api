@@ -75,7 +75,7 @@ class OnboardingController
             $data->description,
             $data->registration_number,
             $data->tax_identification_number,
-            $data->business_certificate_path
+            $data->business_certificate_path ?? null
         );
 
         try {
