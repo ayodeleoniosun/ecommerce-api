@@ -15,6 +15,15 @@ class CreateSellerContactInformation
 
     public function execute(SellerContactInformationDto $sellerContactDto): SellerContactInformation
     {
+        $this->validateContactEmail($sellerContactDto);
+
+        $this->validateContactPhoneNumber($sellerContactDto);
+
+        return $this->sellerContactInformationRepository->create($sellerContactDto);
+    }
+
+    private function validateContactEmail(SellerContactInformationDto $sellerContactDto): void
+    {
         $existingSellerEmail = $this->sellerContactInformationRepository->findOtherContact(
             'email',
             $sellerContactDto->getEmail(),
@@ -23,7 +32,10 @@ class CreateSellerContactInformation
 
         throw_if($existingSellerEmail, ConflictHttpException::class,
             'Email address exist for another seller');
+    }
 
+    private function validateContactPhoneNumber(SellerContactInformationDto $sellerContactDto): void
+    {
         $existingSellerPhoneNumber = $this->sellerContactInformationRepository->findOtherContact(
             'phone_number',
             $sellerContactDto->getPhoneNumber(),
@@ -31,7 +43,5 @@ class CreateSellerContactInformation
         );
 
         throw_if($existingSellerPhoneNumber, ConflictHttpException::class, 'Phone number exist for another seller');
-
-        return $this->sellerContactInformationRepository->create($sellerContactDto);
     }
 }

@@ -15,6 +15,13 @@ class CreateSellerPaymentInformation
 
     public function execute(SellerPaymentInformationDto $sellerPaymentInformationDto): SellerPaymentInformation
     {
+        $this->validatePaymentInformation($sellerPaymentInformationDto);
+
+        return $this->sellerPaymentInformationRepository->create($sellerPaymentInformationDto);
+    }
+
+    private function validatePaymentInformation(SellerPaymentInformationDto $sellerPaymentInformationDto): void
+    {
         $existingSellerPaymentInformation = $this->sellerPaymentInformationRepository->findOtherPayment(
             $sellerPaymentInformationDto->getAccountNumber(),
             $sellerPaymentInformationDto->getBankCode(),
@@ -23,7 +30,5 @@ class CreateSellerPaymentInformation
 
         throw_if($existingSellerPaymentInformation, ConflictHttpException::class,
             'Payment information exist for another seller');
-
-        return $this->sellerPaymentInformationRepository->create($sellerPaymentInformationDto);
     }
 }

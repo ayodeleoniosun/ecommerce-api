@@ -20,37 +20,13 @@ class CreateSellerBusinessInformation
 
     public function execute(SellerBusinessInformationDto $sellerBusinessDto): SellerBusinessInformation
     {
-        $existingSellerBusinessName = $this->sellerBusinessInformationRepository->findOtherBusiness(
-            'name',
-            $sellerBusinessDto->getCompanyName(),
-            $sellerBusinessDto->getUserId(),
-        );
+        $this->validateBusinessName($sellerBusinessDto);
 
-        throw_if($existingSellerBusinessName, ConflictHttpException::class,
-            'Business name exist for another seller');
+        $this->validateBusinessRegistrationNumber($sellerBusinessDto);
 
-        $existingSellerRegistrationNumber = $this->sellerBusinessInformationRepository->findOtherBusiness(
-            'registration_number',
-            $sellerBusinessDto->getRegistrationNumber(),
-            $sellerBusinessDto->getUserId(),
-        );
+        $this->validateBusinessTaxIdentificationNumber($sellerBusinessDto);
 
-        throw_if($existingSellerRegistrationNumber, ConflictHttpException::class,
-            'Registration number exist for another seller');
-
-        $existingSellerTaxIdentificationNumber = $this->sellerBusinessInformationRepository->findOtherBusiness(
-            'tax_identification_number',
-            $sellerBusinessDto->getTaxIdentificationNumber(),
-            $sellerBusinessDto->getUserId(),
-        );
-
-        throw_if($existingSellerTaxIdentificationNumber, ConflictHttpException::class,
-            'Tax identification number exist for another seller');
-
-        $business = $this->sellerBusinessInformationRepository->findBusiness('registration_number',
-            $sellerBusinessDto->getRegistrationNumber());
-
-        $uuid = (! $business) ? Uuid::uuid4()->toString() : $business->uuid;
+        $uuid = $this->getBusinessUUID($sellerBusinessDto);
 
         if ($sellerBusinessDto->getBusinessCertificatePath()) {
             $path = $this->uploadBusinessCertificate($sellerBusinessDto->getBusinessCertificatePath(), $uuid);
@@ -63,7 +39,57 @@ class CreateSellerBusinessInformation
         return $this->sellerBusinessInformationRepository->create($sellerBusinessDto);
     }
 
-    public function uploadBusinessCertificate(UploadedFile $file, string $uuid): string
+    private function validateBusinessName(SellerBusinessInformationDto $sellerBusinessDto): void
+    {
+        $existingSellerBusinessName = $this->sellerBusinessInformationRepository->findOtherBusiness(
+            'name',
+            $sellerBusinessDto->getCompanyName(),
+            $sellerBusinessDto->getUserId(),
+        );
+
+        throw_if($existingSellerBusinessName, ConflictHttpException::class,
+            'Business name exist for another seller');
+    }
+
+    private function validateBusinessRegistrationNumber(SellerBusinessInformationDto $sellerBusinessDto): void
+    {
+        $existingSellerRegistrationNumber = $this->sellerBusinessInformationRepository->findOtherBusiness(
+            'registration_number',
+            $sellerBusinessDto->getRegistrationNumber(),
+            $sellerBusinessDto->getUserId(),
+        );
+
+        throw_if($existingSellerRegistrationNumber, ConflictHttpException::class,
+            'Registration number exist for another seller');
+
+    }
+
+    private function validateBusinessTaxIdentificationNumber(SellerBusinessInformationDto $sellerBusinessDto): void
+    {
+        $existingSellerTaxIdentificationNumber = $this->sellerBusinessInformationRepository->findOtherBusiness(
+            'tax_identification_number',
+            $sellerBusinessDto->getTaxIdentificationNumber(),
+            $sellerBusinessDto->getUserId(),
+        );
+
+        throw_if($existingSellerTaxIdentificationNumber, ConflictHttpException::class,
+            'Tax identification number exist for another seller');
+
+    }
+
+    private function getBusinessUUID(SellerBusinessInformationDto $sellerBusinessDto): string
+    {
+        $business = $this->sellerBusinessInformationRepository->findBusiness('registration_number',
+            $sellerBusinessDto->getRegistrationNumber());
+
+        if (! $business) {
+            return Uuid::uuid4()->toString();
+        }
+
+        return $business->uuid;
+    }
+
+    private function uploadBusinessCertificate(UploadedFile $file, string $uuid): string
     {
         $filename = 'sellers/business/certificates/'.$uuid.'.jpg';
 

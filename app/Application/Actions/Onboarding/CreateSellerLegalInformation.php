@@ -20,18 +20,9 @@ class CreateSellerLegalInformation
 
     public function execute(SellerLegalInformationDto $sellerLegalDto): SellerLegalInformation
     {
-        $existingSellerLegalEmail = $this->sellerLegalInformationRepository->findOtherLegal(
-            'email',
-            $sellerLegalDto->getEmail(),
-            $sellerLegalDto->getUserId(),
-        );
+        $this->validateLegalEmail($sellerLegalDto);
 
-        throw_if($existingSellerLegalEmail, ConflictHttpException::class,
-            'Legal email address exist for another seller');
-
-        $legal = $this->sellerLegalInformationRepository->findLegal('email', $sellerLegalDto->getEmail());
-
-        $uuid = (! $legal) ? Uuid::uuid4() : $legal->uuid;
+        $uuid = $this->getLegalUUID($sellerLegalDto);
 
         if ($sellerLegalDto->getLegalCertificatePath()) {
             $path = $this->uploadLegalCertificate($sellerLegalDto->getLegalCertificatePath(), $uuid);
@@ -44,7 +35,31 @@ class CreateSellerLegalInformation
         return $this->sellerLegalInformationRepository->create($sellerLegalDto);
     }
 
-    public function uploadLegalCertificate(UploadedFile $file, string $uuid): string
+    private function validateLegalEmail(SellerLegalInformationDto $sellerLegalDto): void
+    {
+        $existingSellerLegalEmail = $this->sellerLegalInformationRepository->findOtherLegal(
+            'email',
+            $sellerLegalDto->getEmail(),
+            $sellerLegalDto->getUserId(),
+        );
+
+        throw_if($existingSellerLegalEmail, ConflictHttpException::class,
+            'Legal email address exist for another seller');
+
+    }
+
+    private function getLegalUUID(SellerLegalInformationDto $sellerLegalDto): string
+    {
+        $legal = $this->sellerLegalInformationRepository->findLegal('email', $sellerLegalDto->getEmail());
+
+        if (! $legal) {
+            return Uuid::uuid4();
+        }
+
+        return $legal->uuid;
+    }
+
+    private function uploadLegalCertificate(UploadedFile $file, string $uuid): string
     {
         $filename = 'sellers/legal/certificates/'.$uuid.'.jpg';
 
