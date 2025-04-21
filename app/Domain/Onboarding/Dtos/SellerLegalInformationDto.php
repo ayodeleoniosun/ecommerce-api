@@ -11,7 +11,7 @@ class SellerLegalInformationDto
         private readonly int $userId,
         private readonly string $fullName,
         private readonly string $email,
-        private UploadedFile|string|null $legalCertificatePath,
+        private UploadedFile|string|null $legalCertificatePath = null,
         private ?string $uuid = null,
     ) {}
 

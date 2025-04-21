@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Domains\Common\Enum\PaymentEnum;
+use App\Application\Shared\Enum\PaymentEnum;
 use App\Infrastructure\Models\Order;
 use App\Infrastructure\Models\Product;
 use App\Infrastructure\Models\User;
@@ -24,8 +24,8 @@ class OrderFactory extends Factory
         return [
             'uuid' => str::uuid(),
             'reference' => Str::random(),
-            'user_id' => User::factory()->id,
-            'product_id' => Product::factory()->id,
+            'user_id' => User::factory()->create()->id,
+            'product_id' => Product::factory()->create()->id,
             'quantity' => 2,
         ];
     }

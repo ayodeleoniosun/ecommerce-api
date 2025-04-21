@@ -23,13 +23,12 @@ class SellerBusinessFactory extends Factory
     public function definition(): array
     {
         return [
-            'uuid' => str::uuid(),
-            'user_id' => User::factory()->id,
+            'uuid' => Str::uuid()->toString(),
+            'user_id' => User::factory()->create()->id,
             'name' => fake()->name,
             'description' => fake()->text(),
-            'registration_number' => fake()->numberBetween(100000, 999999),
-            'tax_identification_number' => fake()->numberBetween(100000, 999999),
-            'business_certificate_path' => fake()->filePath(),
+            'registration_number' => (string) fake()->numberBetween(100000, 999999),
+            'tax_identification_number' => (string) fake()->numberBetween(100000, 999999),
         ];
     }
 

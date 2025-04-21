@@ -24,10 +24,9 @@ class SellerLegalFactory extends Factory
     {
         return [
             'uuid' => str::uuid(),
-            'user_id' => User::factory()->id,
+            'user_id' => User::factory()->create()->id,
             'fullname' => fake()->firstName,
             'email' => fake()->unique()->safeEmail(),
-            'business_certificate_path' => fake()->filePath(),
         ];
     }
 

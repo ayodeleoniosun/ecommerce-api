@@ -2,14 +2,15 @@
 
 namespace Database\Factories;
 
-use App\Domains\Common\Enum\ProductEnum;
+use App\Application\Shared\Enum\ProductEnum;
 use App\Infrastructure\Models\Category;
+use App\Infrastructure\Models\Product;
 use App\Infrastructure\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends Factory<\App\Infrastructure\Models\Product>
+ * @extends Factory<Product>
  */
 class ProductFactory extends Factory
 {
@@ -22,8 +23,8 @@ class ProductFactory extends Factory
     {
         return [
             'uuid' => str::uuid(),
-            'user_id' => User::factory()->id,
-            'category_id' => Category::factory()->id,
+            'user_id' => User::factory()->create()->id,
+            'category_id' => Category::factory()->create()->id,
             'name' => fake()->name,
             'quantity' => 10,
             'price' => 1000,

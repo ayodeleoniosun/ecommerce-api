@@ -30,8 +30,11 @@ class CreateSellerContactInformation
             $sellerContactDto->getUserId(),
         );
 
-        throw_if($existingSellerEmail, ConflictHttpException::class,
-            'Email address exist for another seller');
+        throw_if(
+            $existingSellerEmail,
+            ConflictHttpException::class,
+            'Email address exist for another seller'
+        );
     }
 
     private function validateContactPhoneNumber(SellerContactInformationDto $sellerContactDto): void
@@ -42,6 +45,10 @@ class CreateSellerContactInformation
             $sellerContactDto->getUserId(),
         );
 
-        throw_if($existingSellerPhoneNumber, ConflictHttpException::class, 'Phone number exist for another seller');
+        throw_if(
+            $existingSellerPhoneNumber,
+            ConflictHttpException::class,
+            'Phone number exist for another seller'
+        );
     }
 }

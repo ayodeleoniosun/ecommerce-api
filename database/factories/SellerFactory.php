@@ -2,10 +2,10 @@
 
 namespace Database\Factories;
 
-use App\Domains\Common\Enum\UserEnum;
+use App\Application\Shared\Enum\UserEnum;
 use App\Infrastructure\Models\User;
-use App\Models\Model;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 /**
@@ -21,7 +21,7 @@ class SellerFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory()->id,
+            'user_id' => User::factory()->create()->id,
             'uuid' => str::uuid(),
             'phone_number' => fake()->phoneNumber,
             'office_address' => fake()->address,

@@ -4,11 +4,12 @@ namespace Database\Factories;
 
 use App\Infrastructure\Models\Product;
 use App\Infrastructure\Models\User;
+use App\Infrastructure\Models\Wishlist;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends Factory<\App\Infrastructure\Models\Wishlist>
+ * @extends Factory<Wishlist>
  */
 class WishlistFactory extends Factory
 {
@@ -21,8 +22,8 @@ class WishlistFactory extends Factory
     {
         return [
             'uuid' => str::uuid(),
-            'user_id' => User::factory()->id,
-            'product_id' => Product::factory()->id,
+            'user_id' => User::factory()->create()->id,
+            'product_id' => Product::factory()->create()->id,
         ];
     }
 }

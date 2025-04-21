@@ -13,7 +13,7 @@ class SellerBusinessInformationDto
         private readonly string $description,
         private readonly string $registrationNumber,
         private readonly string $taxIdentificationNumber,
-        private UploadedFile|string|null $businessCertificatePath,
+        private UploadedFile|string|null $businessCertificatePath = null,
         private ?string $uuid = null,
     ) {}
 

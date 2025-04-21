@@ -24,7 +24,7 @@ class SellerContactFactory extends Factory
     {
         return [
             'uuid' => str::uuid(),
-            'user_id' => User::factory()->id,
+            'user_id' => User::factory()->create()->id,
             'name' => fake()->firstName,
             'email' => fake()->unique()->safeEmail(),
             'phone_number' => fake()->phoneNumber,

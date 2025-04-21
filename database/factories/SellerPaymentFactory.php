@@ -24,7 +24,7 @@ class SellerPaymentFactory extends Factory
     {
         return [
             'uuid' => str::uuid(),
-            'user_id' => User::factory()->id,
+            'user_id' => User::factory()->create()->id,
             'account_name' => fake()->name,
             'account_number' => fake()->numberBetween(100000, 999999),
             'bank_code' => fake()->numberBetween(100, 999),

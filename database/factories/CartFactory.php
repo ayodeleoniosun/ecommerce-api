@@ -2,13 +2,14 @@
 
 namespace Database\Factories;
 
+use App\Infrastructure\Models\Cart;
 use App\Infrastructure\Models\Product;
 use App\Infrastructure\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends Factory<\App\Infrastructure\Models\Cart>
+ * @extends Factory<Cart>
  */
 class CartFactory extends Factory
 {
@@ -21,8 +22,8 @@ class CartFactory extends Factory
     {
         return [
             'uuid' => str::uuid(),
-            'user_id' => User::factory()->id,
-            'product_id' => Product::factory()->id,
+            'user_id' => User::factory()->create()->id,
+            'product_id' => Product::factory()->create()->id,
             'quantity' => 2,
         ];
     }

@@ -47,8 +47,11 @@ class CreateSellerBusinessInformation
             $sellerBusinessDto->getUserId(),
         );
 
-        throw_if($existingSellerBusinessName, ConflictHttpException::class,
-            'Business name exist for another seller');
+        throw_if(
+            $existingSellerBusinessName,
+            ConflictHttpException::class,
+            'Business name exist for another seller'
+        );
     }
 
     private function validateBusinessRegistrationNumber(SellerBusinessInformationDto $sellerBusinessDto): void
@@ -59,9 +62,11 @@ class CreateSellerBusinessInformation
             $sellerBusinessDto->getUserId(),
         );
 
-        throw_if($existingSellerRegistrationNumber, ConflictHttpException::class,
-            'Registration number exist for another seller');
-
+        throw_if(
+            $existingSellerRegistrationNumber,
+            ConflictHttpException::class,
+            'Registration number exist for another seller'
+        );
     }
 
     private function validateBusinessTaxIdentificationNumber(SellerBusinessInformationDto $sellerBusinessDto): void
@@ -72,9 +77,11 @@ class CreateSellerBusinessInformation
             $sellerBusinessDto->getUserId(),
         );
 
-        throw_if($existingSellerTaxIdentificationNumber, ConflictHttpException::class,
-            'Tax identification number exist for another seller');
-
+        throw_if(
+            $existingSellerTaxIdentificationNumber,
+            ConflictHttpException::class,
+            'Tax identification number exist for another seller'
+        );
     }
 
     private function getBusinessUUID(SellerBusinessInformationDto $sellerBusinessDto): string

@@ -28,7 +28,10 @@ class CreateSellerPaymentInformation
             $sellerPaymentInformationDto->getUserId(),
         );
 
-        throw_if($existingSellerPaymentInformation, ConflictHttpException::class,
-            'Payment information exist for another seller');
+        throw_if(
+            $existingSellerPaymentInformation,
+            ConflictHttpException::class,
+            'Payment information exist for another seller'
+        );
     }
 }

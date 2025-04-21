@@ -2,79 +2,109 @@
 
 namespace Tests\Application\Actions\Onboarding;
 
-use App\Application\Actions\Auth\LoginUser;
-use App\Application\Shared\Enum\UserEnum;
-use App\Application\Shared\Exceptions\BadRequestException;
-use App\Application\Shared\Exceptions\ResourceNotFoundException;
-use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
+use App\Application\Actions\Onboarding\CreateSellerContactInformation;
+use App\Application\Shared\Exceptions\ConflictHttpException;
+use App\Domain\Onboarding\Dtos\SellerContactInformationDto;
+use App\Domain\Onboarding\Interfaces\Repositories\SellerContactInformationRepositoryInterface;
+use App\Infrastructure\Models\SellerContactInformation;
 use App\Infrastructure\Models\User;
 use Mockery;
 
 beforeEach(function () {
-    $this->userRepo = Mockery::mock(UserRepositoryInterface::class);
+    $this->sellerContactRepo = Mockery::mock(SellerContactInformationRepositoryInterface::class);
     $this->user = User::factory()->create();
-    $this->payload = [
-        'email' => $this->user->email,
-        'password' => 'Ayodele@2025',
-    ];
-    $this->loginUser = new LoginUser($this->userRepo);
+    $this->sellerContactDto = new SellerContactInformationDto(
+        $this->user->id,
+        'John Doe',
+        'johndoe@xyz.com',
+        '0123456789',
+        'Nigeria',
+        'Oyo',
+        'Ibadan',
+        'Bodija, Ibadan'
+    );
+
+    $this->contactInformation = SellerContactInformation::factory()->create([
+        'user_id' => $this->sellerContactDto->getUserId(),
+        'name' => $this->sellerContactDto->getName(),
+        'email' => $this->sellerContactDto->getEmail(),
+        'phone_number' => $this->sellerContactDto->getPhoneNumber(),
+        'country' => $this->sellerContactDto->getCountry(),
+        'state' => $this->sellerContactDto->getState(),
+        'city' => $this->sellerContactDto->getCity(),
+        'address' => $this->sellerContactDto->getAddress(),
+    ]);
+
+    $this->createSellerContactInformation = new CreateSellerContactInformation($this->sellerContactRepo);
 });
 
-it('should throw an exception if user is not found', function () {
-    $this->userRepo->shouldReceive('findByEmail')
+it('should throw an exception if contact email exist for another seller', function () {
+    $this->sellerContactRepo->shouldReceive('findOtherContact')
         ->once()
-        ->with($this->user->email)
+        ->with(
+            'email',
+            $this->sellerContactDto->getEmail(),
+            $this->sellerContactDto->getUserId(),
+        )
+        ->andReturn($this->contactInformation);
+
+    $this->createSellerContactInformation->execute($this->sellerContactDto);
+})->throws(ConflictHttpException::class, 'Email address exist for another seller');
+
+it('should throw an exception if contact phone number exist for another seller', function () {
+    $this->sellerContactRepo->shouldReceive('findOtherContact')
+        ->once()
+        ->with(
+            'email',
+            $this->sellerContactDto->getEmail(),
+            $this->sellerContactDto->getUserId(),
+        )
         ->andReturn(null);
 
-    $this->loginUser->execute($this->payload);
-})->throws(ResourceNotFoundException::class, 'User not found');
-
-it('should throw an exception if email is not yet verified', function () {
-    $this->userRepo->shouldReceive('findByEmail')
+    $this->sellerContactRepo->shouldReceive('findOtherContact')
         ->once()
-        ->with($this->user->email)
-        ->andReturn($this->user);
+        ->with(
+            'phone_number',
+            $this->sellerContactDto->getPhoneNumber(),
+            $this->sellerContactDto->getUserId(),
+        )
+        ->andReturn($this->contactInformation);
 
-    $this->loginUser->execute($this->payload);
-})->throws(BadRequestException::class, 'Email not yet verified');
+    $this->createSellerContactInformation->execute($this->sellerContactDto);
+})->throws(ConflictHttpException::class, 'Phone number exist for another seller');
 
-it('should throw an exception if account is inactive', function () {
-    $this->user->email_verified_at = now();
-
-    $this->userRepo->shouldReceive('findByEmail')
+it('should create a new seller contact information if not exist', function () {
+    $this->sellerContactRepo->shouldReceive('findOtherContact')
         ->once()
-        ->with($this->user->email)
-        ->andReturn($this->user);
+        ->with(
+            'email',
+            $this->sellerContactDto->getEmail(),
+            $this->sellerContactDto->getUserId(),
+        )
+        ->andReturn(null);
 
-    $this->loginUser->execute($this->payload);
-})->throws(BadRequestException::class, 'Account is inactive');
-
-it('should throw an exception if password does not match', function () {
-    $this->user->email_verified_at = now();
-    $this->user->status = UserEnum::ACTIVE->value;
-    $this->payload['password'] = 'wrong_password';
-
-    $this->userRepo->shouldReceive('findByEmail')
+    $this->sellerContactRepo->shouldReceive('findOtherContact')
         ->once()
-        ->with($this->user->email)
-        ->andReturn($this->user);
+        ->with(
+            'phone_number',
+            $this->sellerContactDto->getPhoneNumber(),
+            $this->sellerContactDto->getUserId(),
+        )
+        ->andReturn(null);
 
-    $this->loginUser->execute($this->payload);
-})->throws(BadRequestException::class, 'Invalid login credentials');
-
-it('can login successfully', function () {
-    $this->user->email_verified_at = now();
-    $this->user->status = UserEnum::ACTIVE->value;
-
-    $this->userRepo->shouldReceive('findByEmail')
+    $this->sellerContactRepo->shouldReceive('create')
         ->once()
-        ->with($this->user->email)
-        ->andReturn($this->user);
+        ->with($this->sellerContactDto)
+        ->andReturn($this->contactInformation);
 
-    $response = $this->loginUser->execute($this->payload);
+    $response = $this->createSellerContactInformation->execute($this->sellerContactDto);
 
-    expect($response)->toBeInstanceOf(User::class)
-        ->and($response->firstname)->toBe($this->user->firstname)
-        ->and($response->lastname)->toBe($this->user->lastname)
-        ->and($response->email)->toBe($this->user->email);
+    expect($response)->toBeInstanceOf(SellerContactInformation::class)
+        ->and($response->user_id)->toBe($this->sellerContactDto->getUserId())
+        ->and($response->name)->toBe($this->sellerContactDto->getName())
+        ->and($response->email)->toBe($this->sellerContactDto->getEmail())
+        ->and($response->phone_number)->toBe($this->sellerContactDto->getPhoneNumber())
+        ->and($response->country)->toBe($this->sellerContactDto->getCountry())
+        ->and($response->city)->toBe($this->sellerContactDto->getCity())
+        ->and($response->address)->toBe($this->sellerContactDto->getAddress());
 });

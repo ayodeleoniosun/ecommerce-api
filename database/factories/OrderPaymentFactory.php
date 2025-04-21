@@ -2,13 +2,14 @@
 
 namespace Database\Factories;
 
-use App\Domains\Common\Enum\PaymentEnum;
+use App\Application\Shared\Enum\PaymentEnum;
 use App\Infrastructure\Models\Order;
+use App\Infrastructure\Models\OrderPayment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends Factory<\App\Infrastructure\Models\OrderPayment>
+ * @extends Factory<OrderPayment>
  */
 class OrderPaymentFactory extends Factory
 {
@@ -21,7 +22,7 @@ class OrderPaymentFactory extends Factory
     {
         return [
             'uuid' => str::uuid(),
-            'order_id' => Order::factory()->id,
+            'order_id' => Order::factory()->create()->id,
             'reference' => Str::random(),
             'amount_paid' => 1000,
             'order_amount' => 950,

@@ -43,8 +43,11 @@ class CreateSellerLegalInformation
             $sellerLegalDto->getUserId(),
         );
 
-        throw_if($existingSellerLegalEmail, ConflictHttpException::class,
-            'Legal email address exist for another seller');
+        throw_if(
+            $existingSellerLegalEmail,
+            ConflictHttpException::class,
+            'Legal email address exist for another seller'
+        );
 
     }
 
