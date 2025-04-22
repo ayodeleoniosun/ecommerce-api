@@ -3,17 +3,17 @@
 namespace Database\Factories;
 
 use App\Application\Shared\Enum\UserEnum;
-use App\Infrastructure\Models\SellerContactInformation;
+use App\Infrastructure\Models\SellerBusinessInformation;
 use App\Infrastructure\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends Factory<SellerContactInformation>
+ * @extends Factory<SellerBusinessInformation>
  */
-class SellerContactFactory extends Factory
+class SellerBusinessInformationFactory extends Factory
 {
-    protected $model = SellerContactInformation::class;
+    protected $model = SellerBusinessInformation::class;
 
     /**
      * Define the model's default state.
@@ -23,15 +23,12 @@ class SellerContactFactory extends Factory
     public function definition(): array
     {
         return [
-            'uuid' => str::uuid(),
+            'uuid' => Str::uuid()->toString(),
             'user_id' => User::factory()->create()->id,
-            'name' => fake()->firstName,
-            'email' => fake()->unique()->safeEmail(),
-            'phone_number' => fake()->phoneNumber,
-            'country' => fake()->country,
-            'state' => fake()->state,
-            'city' => fake()->city,
-            'address' => fake()->address,
+            'name' => fake()->name,
+            'description' => fake()->text(),
+            'registration_number' => (string) fake()->numberBetween(100000, 999999),
+            'tax_identification_number' => (string) fake()->numberBetween(100000, 999999),
         ];
     }
 

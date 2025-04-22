@@ -3,17 +3,17 @@
 namespace Database\Factories;
 
 use App\Application\Shared\Enum\UserEnum;
-use App\Infrastructure\Models\SellerBusinessInformation;
+use App\Infrastructure\Models\SellerPaymentInformation;
 use App\Infrastructure\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends Factory<SellerBusinessInformation>
+ * @extends Factory<SellerPaymentInformation>
  */
-class SellerBusinessFactory extends Factory
+class SellerPaymentInformationFactory extends Factory
 {
-    protected $model = SellerBusinessInformation::class;
+    protected $model = SellerPaymentInformation::class;
 
     /**
      * Define the model's default state.
@@ -23,12 +23,13 @@ class SellerBusinessFactory extends Factory
     public function definition(): array
     {
         return [
-            'uuid' => Str::uuid()->toString(),
+            'uuid' => str::uuid(),
             'user_id' => User::factory()->create()->id,
-            'name' => fake()->name,
-            'description' => fake()->text(),
-            'registration_number' => (string) fake()->numberBetween(100000, 999999),
-            'tax_identification_number' => (string) fake()->numberBetween(100000, 999999),
+            'account_name' => fake()->name,
+            'account_number' => fake()->numberBetween(100000, 999999),
+            'bank_code' => fake()->numberBetween(100, 999),
+            'bank_name' => fake()->name,
+            'swift_code' => fake()->numberBetween(10000, 99999),
         ];
     }
 

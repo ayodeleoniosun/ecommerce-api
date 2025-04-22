@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Models;
 
-use Database\Factories\SellerPaymentFactory;
+use Database\Factories\SellerPaymentInformationFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,9 +36,9 @@ class SellerPaymentInformation extends Model
         'user_id',
     ];
 
-    protected static function newFactory(): SellerPaymentFactory
+    protected static function newFactory(): SellerPaymentInformationFactory
     {
-        return SellerPaymentFactory::new();
+        return SellerPaymentInformationFactory::new();
     }
 
     protected static function boot()

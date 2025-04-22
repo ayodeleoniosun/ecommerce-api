@@ -75,7 +75,18 @@ describe('user registration', function () {
         $response = $this->postJson('/api/auth/register', $payload);
         $content = json_decode($response->getContent());
 
-        $response->assertStatus(Response::HTTP_CREATED);
+        $response->assertStatus(Response::HTTP_CREATED)
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'firstname',
+                    'lastname',
+                    'email',
+                    'type',
+                ],
+            ]);
+
         expect($content->success)->toBe(true)
             ->and($content->message)->toBe('User registered successfully')
             ->and($content->data->firstname)->toBe($payload['firstname'])
@@ -186,7 +197,21 @@ describe('user login', function () {
         $response = $this->postJson('/api/auth/login', $payload);
         $content = json_decode($response->getContent());
 
-        $response->assertStatus(Response::HTTP_OK);
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'firstname',
+                    'lastname',
+                    'email',
+                    'status',
+                    'email_verified_at',
+                    'type',
+                    'token',
+                ],
+            ]);
+
         expect($content->success)->toBe(true)
             ->and($content->data->firstname)->toBe($user->firstname)
             ->and($content->data->lastname)->toBe($user->lastname)
@@ -256,7 +281,20 @@ describe('verify token', function () {
         $response = $this->postJson('/api/auth/token/verify', $payload);
         $content = json_decode($response->getContent());
 
-        $response->assertStatus(Response::HTTP_OK);
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'firstname',
+                    'lastname',
+                    'email',
+                    'status',
+                    'email_verified_at',
+                    'type',
+                ],
+            ]);
+
         expect($content->success)->toBe(true)
             ->and($content->message)->toBe('User verified successfully')
             ->and($content->data->status)->toBe(UserEnum::ACTIVE->value);
@@ -306,7 +344,12 @@ describe('resend token', function () {
         $response = $this->postJson('/api/auth/token/resend', $payload);
         $content = json_decode($response->getContent());
 
-        $response->assertStatus(Response::HTTP_OK);
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure([
+                'success',
+                'message',
+            ]);
+
         expect($content->success)->toBe(true)
             ->and($content->message)->toBe('Verification link resent successfully');
 
@@ -375,7 +418,12 @@ describe('forgot password', function () {
         $response = $this->postJson('/api/auth/forgot-password', $payload);
         $content = json_decode($response->getContent());
 
-        $response->assertStatus(Response::HTTP_OK);
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure([
+                'success',
+                'message',
+            ]);
+
         expect($content->success)->toBe(true)
             ->and($content->message)->toBe('Forgot password link resent successfully');
     });
@@ -570,12 +618,54 @@ describe('reset password', function () {
         $response = $this->postJson('/api/auth/reset-password', $payload);
         $content = json_decode($response->getContent());
 
-        $response->assertStatus(Response::HTTP_OK);
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure([
+                'success',
+                'message',
+            ]);
         expect($content->success)->toBe(true)
             ->and($content->message)->toBe('Password successfully reset. You can login now');
 
         Event::assertDispatched(PasswordReset::class, function ($event) use ($user) {
             return $event->user->id === $user->id;
         });
+    });
+});
+
+describe('authenticated', function () {
+    it('should return a 401 if unauthenticated', function () {
+        $response = $this->getJson('/api/authenticated');
+        $content = json_decode($response->getContent());
+
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+        expect($content->message)->toBe('Unauthenticated.');
+    });
+
+    it('should throw an error if user is not yet verified', function () {
+        $this->user = User::factory()->create();
+        $this->actingAs($this->user);
+
+        $response = $this->getJson('/api/authenticated');
+        $content = json_decode($response->getContent());
+
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+
+        expect($content->success)->toBe(false)
+            ->and($content->message)->toBe('User not yet verified');
+    });
+
+    it('should throw an error if user is not active', function () {
+        $this->user = User::factory()->create([
+            'email_verified_at' => now(),
+        ]);
+        $this->actingAs($this->user);
+
+        $response = $this->getJson('/api/authenticated');
+        $content = json_decode($response->getContent());
+
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+
+        expect($content->success)->toBe(false)
+            ->and($content->message)->toBe('User not active');
     });
 });

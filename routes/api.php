@@ -14,6 +14,8 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('authenticated', [AuthController::class, 'authenticated']);
+
     Route::prefix('seller')->group(function () {
         Route::prefix('setup')->group(function () {
             Route::get('status', [OnboardingController::class, 'status']);

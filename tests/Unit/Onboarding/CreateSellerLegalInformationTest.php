@@ -9,6 +9,7 @@ use App\Domain\Onboarding\Interfaces\Repositories\SellerLegalInformationReposito
 use App\Infrastructure\Models\SellerLegalInformation;
 use App\Infrastructure\Models\User;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Mockery;
 
 beforeEach(function () {
@@ -44,6 +45,8 @@ it('should throw an exception if legal name exist for another seller', function 
 
 it('should create a new legal information record if no existing record and legal certificate is not uploaded',
     function () {
+        Storage::fake('local');
+
         $this->sellerLegalRepo->shouldReceive('findOtherLegal')
             ->once()
             ->with(
@@ -77,6 +80,8 @@ it('should create a new legal information record if no existing record and legal
 
 it('should create a new legal information record if no existing record and legal certificate is uploaded',
     function () {
+        Storage::fake('local');
+
         $sellerLegalDto = new SellerLegalInformationDto(
             $this->legalInformation->user_id,
             $this->legalInformation->fullname,

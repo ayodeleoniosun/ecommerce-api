@@ -50,7 +50,7 @@ class CreateSellerBusinessInformation
         throw_if(
             $existingSellerBusinessName,
             ConflictHttpException::class,
-            'Business name exist for another seller'
+            'Business name exist for another seller',
         );
     }
 
@@ -65,7 +65,7 @@ class CreateSellerBusinessInformation
         throw_if(
             $existingSellerRegistrationNumber,
             ConflictHttpException::class,
-            'Registration number exist for another seller'
+            'Registration number exist for another seller',
         );
     }
 
@@ -80,7 +80,7 @@ class CreateSellerBusinessInformation
         throw_if(
             $existingSellerTaxIdentificationNumber,
             ConflictHttpException::class,
-            'Tax identification number exist for another seller'
+            'Tax identification number exist for another seller',
         );
     }
 

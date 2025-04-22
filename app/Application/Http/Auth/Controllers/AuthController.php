@@ -114,4 +114,15 @@ class AuthController
             return ApiResponse::error($e->getMessage(), $e->getCode());
         }
     }
+
+    public function authenticated(): JsonResponse
+    {
+        try {
+            $user = auth()->user();
+
+            return ApiResponse::success('User authenticated successfully', $user);
+        } catch (Exception $e) {
+            return ApiResponse::error($e->getMessage(), $e->getCode());
+        }
+    }
 }

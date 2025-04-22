@@ -22,11 +22,11 @@ class EnsureUserIsVerified
         }
 
         if (! $user->email_verified_at) {
-            return ApiResponse::error('User not yet verified', Response::HTTP_FORBIDDEN);
+            return ApiResponse::error('User not yet verified', Response::HTTP_UNAUTHORIZED);
         }
 
         if ($user->status !== UserEnum::ACTIVE->value) {
-            return ApiResponse::error('User not active', Response::HTTP_FORBIDDEN);
+            return ApiResponse::error('User not active', Response::HTTP_UNAUTHORIZED);
         }
 
         return $next($request);

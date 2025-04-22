@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Models;
 
-use Database\Factories\SellerBusinessFactory;
+use Database\Factories\SellerBusinessInformationFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -35,9 +35,9 @@ class SellerBusinessInformation extends Model
         'user_id',
     ];
 
-    protected static function newFactory(): SellerBusinessFactory
+    protected static function newFactory(): SellerBusinessInformationFactory
     {
-        return SellerBusinessFactory::new();
+        return SellerBusinessInformationFactory::new();
     }
 
     public function user(): BelongsTo

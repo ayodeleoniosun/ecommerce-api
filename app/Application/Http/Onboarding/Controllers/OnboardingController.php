@@ -74,7 +74,8 @@ class OnboardingController
             $data->company_name,
             $data->description,
             $data->registration_number,
-            $data->tax_identification_number
+            $data->tax_identification_number,
+            $data->business_certificate_path ?? null
         );
 
         try {
@@ -114,8 +115,8 @@ class OnboardingController
             $data->user_id,
             $data->account_name,
             $data->account_number,
-            $data->bank_name,
             $data->bank_code,
+            $data->bank_name,
             $data->swift_code
         );
 

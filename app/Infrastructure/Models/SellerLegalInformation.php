@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Models;
 
-use Database\Factories\SellerLegalFactory;
+use Database\Factories\SellerLegalInformationFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -35,9 +35,9 @@ class SellerLegalInformation extends Model
         'user_id',
     ];
 
-    protected static function newFactory(): SellerLegalFactory
+    protected static function newFactory(): SellerLegalInformationFactory
     {
-        return SellerLegalFactory::new();
+        return SellerLegalInformationFactory::new();
     }
 
     public function user(): BelongsTo

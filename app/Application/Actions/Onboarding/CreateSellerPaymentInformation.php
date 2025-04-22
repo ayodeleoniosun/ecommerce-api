@@ -31,7 +31,7 @@ class CreateSellerPaymentInformation
         throw_if(
             $existingSellerPaymentInformation,
             ConflictHttpException::class,
-            'Payment information exist for another seller'
+            'Payment information exist for another seller',
         );
     }
 }

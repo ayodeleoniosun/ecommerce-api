@@ -9,6 +9,7 @@ use App\Domain\Onboarding\Interfaces\Repositories\SellerBusinessInformationRepos
 use App\Infrastructure\Models\SellerBusinessInformation;
 use App\Infrastructure\Models\User;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Mockery;
 
 beforeEach(function () {
@@ -101,6 +102,8 @@ it('should throw an exception if business tax identification number exist for an
 
 it('should create a new business information record if no existing record and business certificate is not uploaded',
     function () {
+        Storage::fake('local');
+
         $this->sellerBusinessRepo->shouldReceive('findOtherBusiness')
             ->once()
             ->with(
@@ -154,6 +157,8 @@ it('should create a new business information record if no existing record and bu
 
 it('should create a new business information record if no existing record and business certificate is uploaded',
     function () {
+        Storage::fake('local');
+
         $sellerBusinessDto = new SellerBusinessInformationDto(
             $this->businessInformation->user_id,
             $this->businessInformation->name,

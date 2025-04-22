@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Models;
 
-use Database\Factories\SellerContactFactory;
+use Database\Factories\SellerContactInformationFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,9 +36,9 @@ class SellerContactInformation extends Model
         'user_id',
     ];
 
-    protected static function newFactory(): SellerContactFactory
+    protected static function newFactory(): SellerContactInformationFactory
     {
-        return SellerContactFactory::new();
+        return SellerContactInformationFactory::new();
     }
 
     protected static function boot()
