@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('order_payments', function (Blueprint $table) {
             $table->id();
-            $table->uuid();
+            $table->string('uuid')->unique();
             $table->foreignId('order_id')->constrained('orders')->nullOnDelete();
             $table->string('reference');
             $table->decimal('amount_paid', total: 10);

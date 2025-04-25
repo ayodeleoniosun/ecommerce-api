@@ -4,15 +4,15 @@ namespace App\Application\Actions\Onboarding;
 
 use App\Application\Shared\Exceptions\ConflictHttpException;
 use App\Application\Shared\Traits\FileUploadTrait;
+use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Domain\Onboarding\Dtos\SellerBusinessInformationDto;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerBusinessInformationRepositoryInterface;
 use App\Infrastructure\Models\SellerBusinessInformation;
 use Illuminate\Http\UploadedFile;
-use Ramsey\Uuid\Uuid;
 
 class CreateSellerBusinessInformation
 {
-    use FileUploadTrait;
+    use FileUploadTrait, UtilitiesTrait;
 
     public function __construct(
         private readonly SellerBusinessInformationRepositoryInterface $sellerBusinessInformationRepository,
@@ -90,7 +90,7 @@ class CreateSellerBusinessInformation
             $sellerBusinessDto->getRegistrationNumber());
 
         if (! $business) {
-            return Uuid::uuid4()->toString();
+            return self::generateUUID();
         }
 
         return $business->uuid;

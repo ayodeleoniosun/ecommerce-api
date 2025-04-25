@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\Http\Onboarding\Controllers;
+namespace App\Application\Http\Onboarding\Controller;
 
 use App\Application\Actions\Onboarding\CreateSellerBusinessInformation;
 use App\Application\Actions\Onboarding\CreateSellerContactInformation;

@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Models;
 
+use App\Application\Shared\Traits\UtilitiesTrait;
 use Database\Factories\UserFactory;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Ramsey\Uuid\Uuid;
 
 /**
  * @property mixed $firstname
@@ -23,7 +23,7 @@ use Ramsey\Uuid\Uuid;
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, MustVerifyEmail, Notifiable;
+    use HasApiTokens, HasFactory, MustVerifyEmail, Notifiable, UtilitiesTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -53,8 +53,8 @@ class User extends Authenticatable
     {
         parent::boot();
 
-        static::creating(function ($user) {
-            $user->uuid = (string) Uuid::uuid4();
+        static::creating(function ($model) {
+            $model->uuid = self::generateUUID();
         });
     }
 

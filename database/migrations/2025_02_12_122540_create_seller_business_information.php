@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('seller_business_information', function (Blueprint $table) {
             $table->id();
-            $table->uuid();
+            $table->string('uuid')->unique();
             $table->foreignId('user_id')->constrained('users')->nullOnDelete();
             $table->string('name');
             $table->text('description');

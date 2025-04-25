@@ -2,11 +2,11 @@
 
 namespace App\Infrastructure\Models;
 
+use App\Application\Shared\Traits\UtilitiesTrait;
 use Database\Factories\SellerContactInformationFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Ramsey\Uuid\Uuid;
 
 /**
  * @method static updateOrCreate(array $array, array $toArray)
@@ -14,7 +14,7 @@ use Ramsey\Uuid\Uuid;
  */
 class SellerContactInformation extends Model
 {
-    use HasFactory;
+    use HasFactory, UtilitiesTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -45,8 +45,8 @@ class SellerContactInformation extends Model
     {
         parent::boot();
 
-        static::creating(function ($user) {
-            $user->uuid = (string) Uuid::uuid4();
+        static::creating(function ($model) {
+            $model->uuid = self::generateUUID();
         });
     }
 

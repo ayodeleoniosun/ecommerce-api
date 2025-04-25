@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('cart_items', function (Blueprint $table) {
             $table->id();
-            $table->uuid();
+            $table->string('uuid')->unique();
             $table->foreignId('cart_id')->constrained('carts')->nullOnDelete();
             $table->foreignId('product_id')->constrained('products')->nullOnDelete();
             $table->string('quantity');

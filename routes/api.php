@@ -1,7 +1,7 @@
 <?php
 
 use App\Application\Http\Auth\Controllers\AuthController;
-use App\Application\Http\Onboarding\Controllers\OnboardingController;
+use App\Application\Http\Onboarding\Controller\OnboardingController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
@@ -25,4 +25,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             Route::post('payment', [OnboardingController::class, 'payment']);
         });
     });
+
+    //    Route::prefix('categories')->group(function () {
+    //        Route::post('store', [CategoryController::class, 'store']);
+    //        Route::get('index', [CategoryController::class, 'index']);
+    //    });
 });

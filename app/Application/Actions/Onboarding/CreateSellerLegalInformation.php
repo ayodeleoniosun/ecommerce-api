@@ -4,15 +4,15 @@ namespace App\Application\Actions\Onboarding;
 
 use App\Application\Shared\Exceptions\ConflictHttpException;
 use App\Application\Shared\Traits\FileUploadTrait;
+use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Domain\Onboarding\Dtos\SellerLegalInformationDto;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerLegalInformationRepositoryInterface;
 use App\Infrastructure\Models\SellerLegalInformation;
 use Illuminate\Http\UploadedFile;
-use Ramsey\Uuid\Uuid;
 
 class CreateSellerLegalInformation
 {
-    use FileUploadTrait;
+    use FileUploadTrait, UtilitiesTrait;
 
     public function __construct(
         private readonly SellerLegalInformationRepositoryInterface $sellerLegalInformationRepository,
@@ -46,7 +46,7 @@ class CreateSellerLegalInformation
         throw_if(
             $existingSellerLegalEmail,
             ConflictHttpException::class,
-            'Legal email address exist for another seller'
+            'Legal email address exist for another seller',
         );
 
     }
@@ -56,7 +56,7 @@ class CreateSellerLegalInformation
         $legal = $this->sellerLegalInformationRepository->findLegal('email', $sellerLegalDto->getEmail());
 
         if (! $legal) {
-            return Uuid::uuid4();
+            return self::generateUUID();
         }
 
         return $legal->uuid;
