@@ -2,7 +2,7 @@
 
 namespace Tests\Application\Actions\Onboarding;
 
-use App\Application\Actions\Onboarding\GetSellerSetupStatus;
+use App\Domain\Onboarding\Actions\GetSellerSetupStatus;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerBusinessInformationRepositoryInterface;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerContactInformationRepositoryInterface;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerLegalInformationRepositoryInterface;

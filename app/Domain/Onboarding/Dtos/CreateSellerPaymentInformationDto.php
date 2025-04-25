@@ -2,8 +2,8 @@
 
 namespace App\Domain\Onboarding\Dtos;
 
-use App\Application\Http\Onboarding\Requests\SellerPaymentInformationRequest;
 use App\Application\Shared\Enum\UserEnum;
+use App\Domain\Onboarding\Requests\SellerPaymentInformationRequest;
 
 class CreateSellerPaymentInformationDto
 {

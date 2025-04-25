@@ -2,9 +2,9 @@
 
 namespace Tests\Application\Actions\Auth;
 
-use App\Application\Actions\Auth\VerifyToken;
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
+use App\Domain\Auth\Actions\VerifyToken;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface;
 use App\Infrastructure\Models\User;

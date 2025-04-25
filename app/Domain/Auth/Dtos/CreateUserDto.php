@@ -2,7 +2,7 @@
 
 namespace App\Domain\Auth\Dtos;
 
-use App\Application\Http\Auth\Requests\RegisterRequest;
+use App\Domain\Auth\Requests\RegisterRequest;
 use Illuminate\Support\Facades\Hash;
 
 class CreateUserDto

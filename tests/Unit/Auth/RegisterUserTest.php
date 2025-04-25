@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Actions\Auth;
 
-use App\Application\Actions\Auth\RegisterUser;
+use App\Application\Events\Auth\UserRegisteredEvent;
 use App\Application\Shared\Enum\UserTypeEnum;
+use App\Domain\Auth\Actions\RegisterUser;
 use App\Domain\Auth\Dtos\CreateUserDto;
-use App\Domain\Auth\Events\UserRegisteredEvent;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Infrastructure\Models\User;
 use Illuminate\Support\Facades\Event;

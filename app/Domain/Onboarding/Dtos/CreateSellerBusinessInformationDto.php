@@ -2,8 +2,8 @@
 
 namespace App\Domain\Onboarding\Dtos;
 
-use App\Application\Http\Onboarding\Requests\SellerBusinessInformationRequest;
 use App\Application\Shared\Enum\UserEnum;
+use App\Domain\Onboarding\Requests\SellerBusinessInformationRequest;
 use Illuminate\Http\UploadedFile;
 
 class CreateSellerBusinessInformationDto

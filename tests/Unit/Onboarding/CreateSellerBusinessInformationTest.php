@@ -2,8 +2,8 @@
 
 namespace Tests\Application\Actions\Onboarding;
 
-use App\Application\Actions\Onboarding\CreateSellerBusinessInformation;
 use App\Application\Shared\Exceptions\ConflictHttpException;
+use App\Domain\Onboarding\Actions\CreateSellerBusinessInformation;
 use App\Domain\Onboarding\Dtos\CreateSellerBusinessInformationDto;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerBusinessInformationRepositoryInterface;
 use App\Infrastructure\Models\SellerBusinessInformation;

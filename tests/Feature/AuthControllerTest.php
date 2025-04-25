@@ -2,9 +2,9 @@
 
 namespace Tests\Application\Actions\Auth;
 
+use App\Application\Events\Auth\VerificationMailResentEvent;
 use App\Application\Shared\Enum\UserEnum;
 use App\Application\Shared\Enum\UserTypeEnum;
-use App\Domain\Auth\Events\VerificationMailResentEvent;
 use App\Infrastructure\Models\PasswordResetToken;
 use App\Infrastructure\Models\User;
 use App\Infrastructure\Models\UserVerification;

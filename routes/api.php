@@ -1,8 +1,8 @@
 <?php
 
-use App\Application\Http\Auth\Controllers\AuthController;
 use App\Application\Http\Catalogue\Controller\CategoryController;
-use App\Application\Http\Onboarding\Controller\OnboardingController;
+use App\Domain\Auth\Controllers\AuthController;
+use App\Domain\Onboarding\Controllers\OnboardingController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
