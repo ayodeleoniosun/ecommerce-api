@@ -4,7 +4,7 @@ namespace Tests\Unit\Actions\Auth;
 
 use App\Application\Actions\Auth\RegisterUser;
 use App\Application\Shared\Enum\UserTypeEnum;
-use App\Domain\Auth\Dtos\UserDto;
+use App\Domain\Auth\Dtos\CreateUserDto;
 use App\Domain\Auth\Events\UserRegisteredEvent;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Infrastructure\Models\User;
@@ -20,7 +20,7 @@ it('can register new user', function () {
     Event::fake();
 
     $user = User::factory()->create();
-    $userDto = new UserDto($user->firstname, $user->lastname, $user->email, 'password',
+    $userDto = new CreateUserDto($user->firstname, $user->lastname, $user->email, 'password',
         UserTypeEnum::CUSTOMER->value);
 
     $this->userRepo->shouldReceive('create')

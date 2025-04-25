@@ -2,13 +2,13 @@
 
 namespace App\Domain\Auth\Interfaces\Repositories;
 
-use App\Domain\Auth\Dtos\UserDto;
+use App\Domain\Auth\Dtos\CreateUserDto;
 use App\Infrastructure\Models\User;
 use App\Infrastructure\Models\UserVerification;
 
 interface UserRepositoryInterface
 {
-    public function create(UserDto $user): User;
+    public function create(CreateUserDto $user): User;
 
     public function findByEmail(string $email): ?User;
 

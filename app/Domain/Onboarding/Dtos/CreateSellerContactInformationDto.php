@@ -2,9 +2,10 @@
 
 namespace App\Domain\Onboarding\Dtos;
 
+use App\Application\Http\Onboarding\Requests\SellerContactInformationRequest;
 use App\Application\Shared\Enum\UserEnum;
 
-class SellerContactInformationDto
+class CreateSellerContactInformationDto
 {
     public function __construct(
         private readonly int $userId,
@@ -17,17 +18,31 @@ class SellerContactInformationDto
         private readonly string $address,
     ) {}
 
+    public static function fromRequest(SellerContactInformationRequest $request): self
+    {
+        return new self(
+            userId: $request->user_id,
+            name: $request->contact_name,
+            email: $request->contact_email,
+            phoneNumber: $request->contact_phone_number,
+            country: $request->country,
+            state: $request->state,
+            city: $request->city,
+            address: $request->address
+        );
+    }
+
     public function toArray(): array
     {
         return [
-            'user_id' => $this->getUserId(),
-            'name' => $this->getName(),
-            'email' => $this->getEmail(),
-            'phone_number' => $this->getPhoneNumber(),
-            'country' => $this->getCountry(),
-            'state' => $this->getState(),
-            'city' => $this->getCity(),
-            'address' => $this->getAddress(),
+            'user_id' => $this->userId,
+            'name' => $this->name,
+            'email' => $this->email,
+            'phone_number' => $this->phoneNumber,
+            'country' => $this->country,
+            'state' => $this->state,
+            'city' => $this->city,
+            'address' => $this->address,
             'status' => UserEnum::ACTIVE->value,
             'verified_at' => now()->toDateTimeString(),
         ];

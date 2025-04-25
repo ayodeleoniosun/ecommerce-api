@@ -2,12 +2,12 @@
 
 namespace App\Domain\Onboarding\Interfaces\Repositories;
 
-use App\Domain\Onboarding\Dtos\SellerPaymentInformationDto;
+use App\Domain\Onboarding\Dtos\CreateSellerPaymentInformationDto;
 use App\Infrastructure\Models\SellerPaymentInformation;
 
 interface SellerPaymentInformationRepositoryInterface
 {
-    public function create(SellerPaymentInformationDto $paymentInformationDto): SellerPaymentInformation;
+    public function create(CreateSellerPaymentInformationDto $paymentInformationDto): SellerPaymentInformation;
 
     public function findPayment(string $accountNumber, string $bankCode): ?SellerPaymentInformation;
 

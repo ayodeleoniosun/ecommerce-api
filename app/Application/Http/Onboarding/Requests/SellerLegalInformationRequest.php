@@ -32,9 +32,9 @@ class SellerLegalInformationRequest extends FormRequest
         ];
     }
 
-    public function validated($key = null, $default = null)
+    public function prepareForValidation()
     {
-        return array_merge(parent::validated($key, $default), [
+        $this->merge([
             'user_id' => auth()->user()->id,
         ]);
     }

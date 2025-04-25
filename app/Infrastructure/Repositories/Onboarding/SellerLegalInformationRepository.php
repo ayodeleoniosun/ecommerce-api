@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Repositories\Onboarding;
 
-use App\Domain\Onboarding\Dtos\SellerLegalInformationDto;
+use App\Domain\Onboarding\Dtos\CreateSellerLegalInformationDto;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerLegalInformationRepositoryInterface;
 use App\Infrastructure\Models\SellerLegalInformation;
 
@@ -13,7 +13,7 @@ class SellerLegalInformationRepository implements SellerLegalInformationReposito
         return SellerLegalInformation::where('user_id', $userId)->exists();
     }
 
-    public function create(SellerLegalInformationDto $legalInformationDto): SellerLegalInformation
+    public function create(CreateSellerLegalInformationDto $legalInformationDto): SellerLegalInformation
     {
         return SellerLegalInformation::updateOrCreate(
             ['user_id' => $legalInformationDto->getUserId()],

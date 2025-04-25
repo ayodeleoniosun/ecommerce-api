@@ -5,7 +5,7 @@ namespace App\Application\Actions\Onboarding;
 use App\Application\Shared\Exceptions\ConflictHttpException;
 use App\Application\Shared\Traits\FileUploadTrait;
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Domain\Onboarding\Dtos\SellerLegalInformationDto;
+use App\Domain\Onboarding\Dtos\CreateSellerLegalInformationDto;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerLegalInformationRepositoryInterface;
 use App\Infrastructure\Models\SellerLegalInformation;
 use Illuminate\Http\UploadedFile;
@@ -18,7 +18,7 @@ class CreateSellerLegalInformation
         private readonly SellerLegalInformationRepositoryInterface $sellerLegalInformationRepository,
     ) {}
 
-    public function execute(SellerLegalInformationDto $sellerLegalDto): SellerLegalInformation
+    public function execute(CreateSellerLegalInformationDto $sellerLegalDto): SellerLegalInformation
     {
         $this->validateLegalEmail($sellerLegalDto);
 
@@ -35,7 +35,7 @@ class CreateSellerLegalInformation
         return $this->sellerLegalInformationRepository->create($sellerLegalDto);
     }
 
-    private function validateLegalEmail(SellerLegalInformationDto $sellerLegalDto): void
+    private function validateLegalEmail(CreateSellerLegalInformationDto $sellerLegalDto): void
     {
         $existingSellerLegalEmail = $this->sellerLegalInformationRepository->findOtherLegal(
             'email',
@@ -51,7 +51,7 @@ class CreateSellerLegalInformation
 
     }
 
-    private function getLegalUUID(SellerLegalInformationDto $sellerLegalDto): string
+    private function getLegalUUID(CreateSellerLegalInformationDto $sellerLegalDto): string
     {
         $legal = $this->sellerLegalInformationRepository->findLegal('email', $sellerLegalDto->getEmail());
 

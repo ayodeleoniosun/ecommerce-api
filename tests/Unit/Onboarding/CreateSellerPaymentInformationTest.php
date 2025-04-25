@@ -4,7 +4,7 @@ namespace Tests\Application\Actions\Onboarding;
 
 use App\Application\Actions\Onboarding\CreateSellerPaymentInformation;
 use App\Application\Shared\Exceptions\ConflictHttpException;
-use App\Domain\Onboarding\Dtos\SellerPaymentInformationDto;
+use App\Domain\Onboarding\Dtos\CreateSellerPaymentInformationDto;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerPaymentInformationRepositoryInterface;
 use App\Infrastructure\Models\SellerPaymentInformation;
 use App\Infrastructure\Models\User;
@@ -13,7 +13,7 @@ use Mockery;
 beforeEach(function () {
     $this->sellerPaymentRepo = Mockery::mock(SellerPaymentInformationRepositoryInterface::class);
     $this->user = User::factory()->create();
-    $this->sellerPaymentDto = new SellerPaymentInformationDto(
+    $this->sellerPaymentDto = new CreateSellerPaymentInformationDto(
         $this->user->id,
         'John Doe',
         '0123456789',

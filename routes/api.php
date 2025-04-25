@@ -1,6 +1,7 @@
 <?php
 
 use App\Application\Http\Auth\Controllers\AuthController;
+use App\Application\Http\Catalogue\Controller\CategoryController;
 use App\Application\Http\Onboarding\Controller\OnboardingController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,8 +27,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         });
     });
 
-    //    Route::prefix('categories')->group(function () {
-    //        Route::post('store', [CategoryController::class, 'store']);
-    //        Route::get('index', [CategoryController::class, 'index']);
-    //    });
+    Route::prefix('catalogues')->group(function () {
+        Route::prefix('categories')->group(function () {
+            Route::post('', [CategoryController::class, 'store']);
+            Route::get('', [CategoryController::class, 'index']);
+        });
+    });
 });

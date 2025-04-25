@@ -13,15 +13,6 @@ class CategoryController
 
     public function store(Request $request): JsonResponse
     {
-        $sellerPaymentDto = new SellerPaymentInformationDto(
-            $data->user_id,
-            $data->account_name,
-            $data->account_number,
-            $data->bank_code,
-            $data->bank_name,
-            $data->swift_code
-        );
-
         try {
             $data = $this->createSellerPaymentInformation->execute($sellerPaymentDto);
 

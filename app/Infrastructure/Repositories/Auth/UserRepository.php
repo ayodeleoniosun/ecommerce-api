@@ -3,7 +3,7 @@
 namespace App\Infrastructure\Repositories\Auth;
 
 use App\Application\Shared\Enum\UserEnum;
-use App\Domain\Auth\Dtos\UserDto;
+use App\Domain\Auth\Dtos\CreateUserDto;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface;
 use App\Infrastructure\Models\User;
@@ -18,7 +18,7 @@ class UserRepository implements UserRepositoryInterface
 {
     public function __construct(private readonly UserVerificationRepositoryInterface $userVerificationRepository) {}
 
-    public function create(UserDto $userDto): User
+    public function create(CreateUserDto $userDto): User
     {
         $user = null;
 

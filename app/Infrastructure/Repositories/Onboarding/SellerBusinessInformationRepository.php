@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Repositories\Onboarding;
 
-use App\Domain\Onboarding\Dtos\SellerBusinessInformationDto;
+use App\Domain\Onboarding\Dtos\CreateSellerBusinessInformationDto;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerBusinessInformationRepositoryInterface;
 use App\Infrastructure\Models\SellerBusinessInformation;
 
@@ -13,7 +13,7 @@ class SellerBusinessInformationRepository implements SellerBusinessInformationRe
         return SellerBusinessInformation::where('user_id', $userId)->exists();
     }
 
-    public function create(SellerBusinessInformationDto $businessInformationDto): SellerBusinessInformation
+    public function create(CreateSellerBusinessInformationDto $businessInformationDto): SellerBusinessInformation
     {
         return SellerBusinessInformation::updateOrCreate(
             ['user_id' => $businessInformationDto->getUserId()],

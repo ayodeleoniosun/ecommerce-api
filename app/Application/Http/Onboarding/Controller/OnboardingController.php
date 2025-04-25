@@ -12,10 +12,10 @@ use App\Application\Http\Onboarding\Requests\SellerContactInformationRequest;
 use App\Application\Http\Onboarding\Requests\SellerLegalInformationRequest;
 use App\Application\Http\Onboarding\Requests\SellerPaymentInformationRequest;
 use App\Application\Shared\Responses\ApiResponse;
-use App\Domain\Onboarding\Dtos\SellerBusinessInformationDto;
-use App\Domain\Onboarding\Dtos\SellerContactInformationDto;
-use App\Domain\Onboarding\Dtos\SellerLegalInformationDto;
-use App\Domain\Onboarding\Dtos\SellerPaymentInformationDto;
+use App\Domain\Onboarding\Dtos\CreateSellerBusinessInformationDto;
+use App\Domain\Onboarding\Dtos\CreateSellerContactInformationDto;
+use App\Domain\Onboarding\Dtos\CreateSellerLegalInformationDto;
+use App\Domain\Onboarding\Dtos\CreateSellerPaymentInformationDto;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -43,21 +43,10 @@ class OnboardingController
 
     public function contact(SellerContactInformationRequest $request): JsonResponse
     {
-        $data = (object) $request->validated();
-
-        $sellerContactDto = new SellerContactInformationDto(
-            $data->user_id,
-            $data->contact_name,
-            $data->contact_email,
-            $data->contact_phone_number,
-            $data->country,
-            $data->state,
-            $data->city,
-            $data->address
-        );
+        $contact = CreateSellerContactInformationDto::fromRequest($request);
 
         try {
-            $data = $this->createSellerContactInformation->execute($sellerContactDto);
+            $data = $this->createSellerContactInformation->execute($contact);
 
             return ApiResponse::success('Seller contact information successfully updated', $data);
         } catch (Exception $e) {
@@ -67,19 +56,10 @@ class OnboardingController
 
     public function business(SellerBusinessInformationRequest $request): JsonResponse
     {
-        $data = (object) $request->validated();
-
-        $sellerBusinessDto = new SellerBusinessInformationDto(
-            $data->user_id,
-            $data->company_name,
-            $data->description,
-            $data->registration_number,
-            $data->tax_identification_number,
-            $data->business_certificate_path ?? null
-        );
+        $business = CreateSellerBusinessInformationDto::fromRequest($request);
 
         try {
-            $data = $this->createSellerBusinessInformation->execute($sellerBusinessDto);
+            $data = $this->createSellerBusinessInformation->execute($business);
 
             return ApiResponse::success('Seller business information successfully updated', $data);
         } catch (Exception $e) {
@@ -89,17 +69,10 @@ class OnboardingController
 
     public function legal(SellerLegalInformationRequest $request): JsonResponse
     {
-        $data = (object) $request->validated();
-
-        $sellerLegalDto = new SellerLegalInformationDto(
-            $data->user_id,
-            $data->fullname,
-            $data->email,
-            $data->legal_certificate_path
-        );
+        $legal = CreateSellerLegalInformationDto::fromRequest($request);
 
         try {
-            $data = $this->createSellerLegalInformation->execute($sellerLegalDto);
+            $data = $this->createSellerLegalInformation->execute($legal);
 
             return ApiResponse::success('Seller legal information successfully updated', $data);
         } catch (Exception $e) {
@@ -109,19 +82,10 @@ class OnboardingController
 
     public function payment(SellerPaymentInformationRequest $request): JsonResponse
     {
-        $data = (object) $request->validated();
-
-        $sellerPaymentDto = new SellerPaymentInformationDto(
-            $data->user_id,
-            $data->account_name,
-            $data->account_number,
-            $data->bank_code,
-            $data->bank_name,
-            $data->swift_code
-        );
+        $payment = CreateSellerPaymentInformationDto::fromRequest($request);
 
         try {
-            $data = $this->createSellerPaymentInformation->execute($sellerPaymentDto);
+            $data = $this->createSellerPaymentInformation->execute($payment);
 
             return ApiResponse::success('Seller payment information successfully updated', $data);
         } catch (Exception $e) {

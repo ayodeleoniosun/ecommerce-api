@@ -2,9 +2,10 @@
 
 namespace App\Domain\Onboarding\Dtos;
 
+use App\Application\Http\Onboarding\Requests\SellerPaymentInformationRequest;
 use App\Application\Shared\Enum\UserEnum;
 
-class SellerPaymentInformationDto
+class CreateSellerPaymentInformationDto
 {
     public function __construct(
         private readonly int $userId,
@@ -15,15 +16,27 @@ class SellerPaymentInformationDto
         private readonly string $swiftCode,
     ) {}
 
+    public static function fromRequest(SellerPaymentInformationRequest $request): self
+    {
+        return new self(
+            userId: $request->user_id,
+            accountName: $request->account_name,
+            accountNumber: $request->account_number,
+            bankCode: $request->bank_code,
+            bankName: $request->bank_name,
+            swiftCode: $request->swift_code
+        );
+    }
+
     public function toArray(): array
     {
         return [
-            'user_id' => $this->getUserId(),
-            'account_name' => $this->getAccountName(),
-            'account_number' => $this->getAccountNumber(),
-            'bank_code' => $this->getBankCode(),
-            'bank_name' => $this->getBankName(),
-            'swift_code' => $this->getSwiftCode(),
+            'user_id' => $this->userId,
+            'account_name' => $this->accountName,
+            'account_number' => $this->accountNumber,
+            'bank_code' => $this->bankCode,
+            'bank_name' => $this->bankName,
+            'swift_code' => $this->swiftCode,
             'status' => UserEnum::ACTIVE->value,
             'verified_at' => now()->toDateTimeString(),
         ];

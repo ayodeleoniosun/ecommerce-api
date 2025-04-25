@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Repositories\Onboarding;
 
-use App\Domain\Onboarding\Dtos\SellerPaymentInformationDto;
+use App\Domain\Onboarding\Dtos\CreateSellerPaymentInformationDto;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerPaymentInformationRepositoryInterface;
 use App\Infrastructure\Models\SellerPaymentInformation;
 
@@ -13,7 +13,7 @@ class SellerPaymentInformationRepository implements SellerPaymentInformationRepo
         return SellerPaymentInformation::where('user_id', $userId)->exists();
     }
 
-    public function create(SellerPaymentInformationDto $paymentInformationDto): SellerPaymentInformation
+    public function create(CreateSellerPaymentInformationDto $paymentInformationDto): SellerPaymentInformation
     {
         return SellerPaymentInformation::updateOrCreate(
             ['user_id' => $paymentInformationDto->getUserId()],

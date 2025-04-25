@@ -3,7 +3,7 @@
 namespace App\Application\Actions\Onboarding;
 
 use App\Application\Shared\Exceptions\ConflictHttpException;
-use App\Domain\Onboarding\Dtos\SellerContactInformationDto;
+use App\Domain\Onboarding\Dtos\CreateSellerContactInformationDto;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerContactInformationRepositoryInterface;
 use App\Infrastructure\Models\SellerContactInformation;
 
@@ -13,7 +13,7 @@ class CreateSellerContactInformation
         private readonly SellerContactInformationRepositoryInterface $sellerContactInformationRepository,
     ) {}
 
-    public function execute(SellerContactInformationDto $sellerContactDto): SellerContactInformation
+    public function execute(CreateSellerContactInformationDto $sellerContactDto): SellerContactInformation
     {
         $this->validateContactEmail($sellerContactDto);
 
@@ -22,7 +22,7 @@ class CreateSellerContactInformation
         return $this->sellerContactInformationRepository->create($sellerContactDto);
     }
 
-    private function validateContactEmail(SellerContactInformationDto $sellerContactDto): void
+    private function validateContactEmail(CreateSellerContactInformationDto $sellerContactDto): void
     {
         $existingSellerEmail = $this->sellerContactInformationRepository->findOtherContact(
             'email',
@@ -33,11 +33,11 @@ class CreateSellerContactInformation
         throw_if(
             $existingSellerEmail,
             ConflictHttpException::class,
-            'Email address exist for another seller'
+            'Email address exist for another seller',
         );
     }
 
-    private function validateContactPhoneNumber(SellerContactInformationDto $sellerContactDto): void
+    private function validateContactPhoneNumber(CreateSellerContactInformationDto $sellerContactDto): void
     {
         $existingSellerPhoneNumber = $this->sellerContactInformationRepository->findOtherContact(
             'phone_number',
@@ -48,7 +48,7 @@ class CreateSellerContactInformation
         throw_if(
             $existingSellerPhoneNumber,
             ConflictHttpException::class,
-            'Phone number exist for another seller'
+            'Phone number exist for another seller',
         );
     }
 }

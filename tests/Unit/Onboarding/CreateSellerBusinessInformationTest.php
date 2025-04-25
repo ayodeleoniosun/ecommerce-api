@@ -4,7 +4,7 @@ namespace Tests\Application\Actions\Onboarding;
 
 use App\Application\Actions\Onboarding\CreateSellerBusinessInformation;
 use App\Application\Shared\Exceptions\ConflictHttpException;
-use App\Domain\Onboarding\Dtos\SellerBusinessInformationDto;
+use App\Domain\Onboarding\Dtos\CreateSellerBusinessInformationDto;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerBusinessInformationRepositoryInterface;
 use App\Infrastructure\Models\SellerBusinessInformation;
 use App\Infrastructure\Models\User;
@@ -15,7 +15,7 @@ use Mockery;
 beforeEach(function () {
     $this->sellerBusinessRepo = Mockery::mock(SellerBusinessInformationRepositoryInterface::class);
     $this->user = User::factory()->create();
-    $this->sellerBusinessDto = new SellerBusinessInformationDto(
+    $this->sellerBusinessDto = new CreateSellerBusinessInformationDto(
         $this->user->id,
         'Company ABC',
         'Company description',
@@ -159,7 +159,7 @@ it('should create a new business information record if no existing record and bu
     function () {
         Storage::fake('local');
 
-        $sellerBusinessDto = new SellerBusinessInformationDto(
+        $sellerBusinessDto = new CreateSellerBusinessInformationDto(
             $this->businessInformation->user_id,
             $this->businessInformation->name,
             $this->businessInformation->description,

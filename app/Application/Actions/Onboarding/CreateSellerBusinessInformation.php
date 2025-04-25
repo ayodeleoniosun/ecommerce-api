@@ -5,7 +5,7 @@ namespace App\Application\Actions\Onboarding;
 use App\Application\Shared\Exceptions\ConflictHttpException;
 use App\Application\Shared\Traits\FileUploadTrait;
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Domain\Onboarding\Dtos\SellerBusinessInformationDto;
+use App\Domain\Onboarding\Dtos\CreateSellerBusinessInformationDto;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerBusinessInformationRepositoryInterface;
 use App\Infrastructure\Models\SellerBusinessInformation;
 use Illuminate\Http\UploadedFile;
@@ -18,7 +18,7 @@ class CreateSellerBusinessInformation
         private readonly SellerBusinessInformationRepositoryInterface $sellerBusinessInformationRepository,
     ) {}
 
-    public function execute(SellerBusinessInformationDto $sellerBusinessDto): SellerBusinessInformation
+    public function execute(CreateSellerBusinessInformationDto $sellerBusinessDto): SellerBusinessInformation
     {
         $this->validateBusinessName($sellerBusinessDto);
 
@@ -39,7 +39,7 @@ class CreateSellerBusinessInformation
         return $this->sellerBusinessInformationRepository->create($sellerBusinessDto);
     }
 
-    private function validateBusinessName(SellerBusinessInformationDto $sellerBusinessDto): void
+    private function validateBusinessName(CreateSellerBusinessInformationDto $sellerBusinessDto): void
     {
         $existingSellerBusinessName = $this->sellerBusinessInformationRepository->findOtherBusiness(
             'name',
@@ -54,7 +54,7 @@ class CreateSellerBusinessInformation
         );
     }
 
-    private function validateBusinessRegistrationNumber(SellerBusinessInformationDto $sellerBusinessDto): void
+    private function validateBusinessRegistrationNumber(CreateSellerBusinessInformationDto $sellerBusinessDto): void
     {
         $existingSellerRegistrationNumber = $this->sellerBusinessInformationRepository->findOtherBusiness(
             'registration_number',
@@ -69,8 +69,8 @@ class CreateSellerBusinessInformation
         );
     }
 
-    private function validateBusinessTaxIdentificationNumber(SellerBusinessInformationDto $sellerBusinessDto): void
-    {
+    private function validateBusinessTaxIdentificationNumber(CreateSellerBusinessInformationDto $sellerBusinessDto,
+    ): void {
         $existingSellerTaxIdentificationNumber = $this->sellerBusinessInformationRepository->findOtherBusiness(
             'tax_identification_number',
             $sellerBusinessDto->getTaxIdentificationNumber(),
@@ -84,7 +84,7 @@ class CreateSellerBusinessInformation
         );
     }
 
-    private function getBusinessUUID(SellerBusinessInformationDto $sellerBusinessDto): string
+    private function getBusinessUUID(CreateSellerBusinessInformationDto $sellerBusinessDto): string
     {
         $business = $this->sellerBusinessInformationRepository->findBusiness('registration_number',
             $sellerBusinessDto->getRegistrationNumber());

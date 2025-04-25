@@ -2,10 +2,11 @@
 
 namespace App\Domain\Onboarding\Dtos;
 
+use App\Application\Http\Onboarding\Requests\SellerBusinessInformationRequest;
 use App\Application\Shared\Enum\UserEnum;
 use Illuminate\Http\UploadedFile;
 
-class SellerBusinessInformationDto
+class CreateSellerBusinessInformationDto
 {
     public function __construct(
         private readonly int $userId,
@@ -17,24 +18,31 @@ class SellerBusinessInformationDto
         private ?string $uuid = null,
     ) {}
 
+    public static function fromRequest(SellerBusinessInformationRequest $request): self
+    {
+        return new self(
+            userId: $request->user_id,
+            companyName: $request->company_name,
+            description: $request->description,
+            registrationNumber: $request->registration_number,
+            taxIdentificationNumber: $request->tax_identification_number,
+            businessCertificatePath: $request->certificate_path
+        );
+    }
+
     public function toArray(): array
     {
         return [
-            'uuid' => $this->getUUID(),
-            'user_id' => $this->getUserId(),
-            'name' => $this->getCompanyName(),
-            'description' => $this->getDescription(),
-            'registration_number' => $this->getRegistrationNumber(),
-            'tax_identification_number' => $this->getTaxIdentificationNumber(),
-            'certificate_path' => $this->getBusinessCertificatePath(),
+            'uuid' => $this->uuid,
+            'user_id' => $this->userId,
+            'name' => $this->companyName,
+            'description' => $this->description,
+            'registration_number' => $this->registrationNumber,
+            'tax_identification_number' => $this->taxIdentificationNumber,
+            'certificate_path' => $this->businessCertificatePath,
             'status' => UserEnum::ACTIVE->value,
             'verified_at' => now()->toDateTimeString(),
         ];
-    }
-
-    public function getUUID(): ?string
-    {
-        return $this->uuid;
     }
 
     public function getUserId(): int

@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Repositories\Onboarding;
 
-use App\Domain\Onboarding\Dtos\SellerContactInformationDto;
+use App\Domain\Onboarding\Dtos\CreateSellerContactInformationDto;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerContactInformationRepositoryInterface;
 use App\Infrastructure\Models\SellerContactInformation;
 
@@ -13,7 +13,7 @@ class SellerContactInformationRepository implements SellerContactInformationRepo
         return SellerContactInformation::where('user_id', $userId)->exists();
     }
 
-    public function create(SellerContactInformationDto $contactInformationDto): SellerContactInformation
+    public function create(CreateSellerContactInformationDto $contactInformationDto): SellerContactInformation
     {
         return SellerContactInformation::updateOrCreate(
             ['user_id' => $contactInformationDto->getUserId()],

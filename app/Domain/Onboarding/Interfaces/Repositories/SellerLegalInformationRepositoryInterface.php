@@ -2,14 +2,14 @@
 
 namespace App\Domain\Onboarding\Interfaces\Repositories;
 
-use App\Domain\Onboarding\Dtos\SellerLegalInformationDto;
+use App\Domain\Onboarding\Dtos\CreateSellerLegalInformationDto;
 use App\Infrastructure\Models\SellerLegalInformation;
 
 interface SellerLegalInformationRepositoryInterface
 {
     public function isCompleted(int $userId): bool;
 
-    public function create(SellerLegalInformationDto $legalInformationDto): SellerLegalInformation;
+    public function create(CreateSellerLegalInformationDto $legalInformationDto): SellerLegalInformation;
 
     public function findLegal(string $field, string $value): ?SellerLegalInformation;
 

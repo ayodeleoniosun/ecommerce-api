@@ -4,7 +4,7 @@ namespace Tests\Application\Actions\Onboarding;
 
 use App\Application\Actions\Onboarding\CreateSellerLegalInformation;
 use App\Application\Shared\Exceptions\ConflictHttpException;
-use App\Domain\Onboarding\Dtos\SellerLegalInformationDto;
+use App\Domain\Onboarding\Dtos\CreateSellerLegalInformationDto;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerLegalInformationRepositoryInterface;
 use App\Infrastructure\Models\SellerLegalInformation;
 use App\Infrastructure\Models\User;
@@ -15,7 +15,7 @@ use Mockery;
 beforeEach(function () {
     $this->sellerLegalRepo = Mockery::mock(SellerLegalInformationRepositoryInterface::class);
     $this->user = User::factory()->create();
-    $this->sellerLegalDto = new SellerLegalInformationDto(
+    $this->sellerLegalDto = new CreateSellerLegalInformationDto(
         $this->user->id,
         'Barrister John Doe',
         'johndoe@xyz.com'
@@ -82,7 +82,7 @@ it('should create a new legal information record if no existing record and legal
     function () {
         Storage::fake('local');
 
-        $sellerLegalDto = new SellerLegalInformationDto(
+        $sellerLegalDto = new CreateSellerLegalInformationDto(
             $this->legalInformation->user_id,
             $this->legalInformation->fullname,
             $this->legalInformation->email,

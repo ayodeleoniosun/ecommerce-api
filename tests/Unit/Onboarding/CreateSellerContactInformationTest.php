@@ -4,7 +4,7 @@ namespace Tests\Application\Actions\Onboarding;
 
 use App\Application\Actions\Onboarding\CreateSellerContactInformation;
 use App\Application\Shared\Exceptions\ConflictHttpException;
-use App\Domain\Onboarding\Dtos\SellerContactInformationDto;
+use App\Domain\Onboarding\Dtos\CreateSellerContactInformationDto;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerContactInformationRepositoryInterface;
 use App\Infrastructure\Models\SellerContactInformation;
 use App\Infrastructure\Models\User;
@@ -13,7 +13,7 @@ use Mockery;
 beforeEach(function () {
     $this->sellerContactRepo = Mockery::mock(SellerContactInformationRepositoryInterface::class);
     $this->user = User::factory()->create();
-    $this->sellerContactDto = new SellerContactInformationDto(
+    $this->sellerContactDto = new CreateSellerContactInformationDto(
         $this->user->id,
         'John Doe',
         'johndoe@xyz.com',

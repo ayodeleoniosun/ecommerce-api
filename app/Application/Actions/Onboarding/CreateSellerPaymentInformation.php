@@ -3,7 +3,7 @@
 namespace App\Application\Actions\Onboarding;
 
 use App\Application\Shared\Exceptions\ConflictHttpException;
-use App\Domain\Onboarding\Dtos\SellerPaymentInformationDto;
+use App\Domain\Onboarding\Dtos\CreateSellerPaymentInformationDto;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerPaymentInformationRepositoryInterface;
 use App\Infrastructure\Models\SellerPaymentInformation;
 
@@ -13,14 +13,14 @@ class CreateSellerPaymentInformation
         private readonly SellerPaymentInformationRepositoryInterface $sellerPaymentInformationRepository,
     ) {}
 
-    public function execute(SellerPaymentInformationDto $sellerPaymentInformationDto): SellerPaymentInformation
+    public function execute(CreateSellerPaymentInformationDto $sellerPaymentInformationDto): SellerPaymentInformation
     {
         $this->validatePaymentInformation($sellerPaymentInformationDto);
 
         return $this->sellerPaymentInformationRepository->create($sellerPaymentInformationDto);
     }
 
-    private function validatePaymentInformation(SellerPaymentInformationDto $sellerPaymentInformationDto): void
+    private function validatePaymentInformation(CreateSellerPaymentInformationDto $sellerPaymentInformationDto): void
     {
         $existingSellerPaymentInformation = $this->sellerPaymentInformationRepository->findOtherPayment(
             $sellerPaymentInformationDto->getAccountNumber(),
