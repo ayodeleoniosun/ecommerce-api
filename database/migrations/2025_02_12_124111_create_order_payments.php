@@ -27,6 +27,7 @@ return new class extends Migration
             $table->text('narration')->nullable();
             $table->timestamp('completed_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

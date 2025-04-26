@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customer_profile', function (Blueprint $table) {
+        Schema::create('category_variation_options', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('variation_id')->constrained('category_variations')->nullOnDelete();
             $table->string('uuid')->unique();
-            $table->foreignId('user_id')->constrained('users')->nullOnDelete();
-            $table->string('phone_number');
-            $table->text('home_address');
+            $table->string('value');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customer_profile');
+        Schema::dropIfExists('category_variation_options');
     }
 };

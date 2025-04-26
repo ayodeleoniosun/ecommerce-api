@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('quantity');
             $table->string('status')->default(PaymentEnum::PENDING->value);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

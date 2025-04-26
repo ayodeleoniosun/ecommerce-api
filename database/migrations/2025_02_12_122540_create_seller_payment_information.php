@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('status')->default(UserEnum::PENDING->value);
             $table->timestamp('verified_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
