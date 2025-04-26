@@ -2,10 +2,10 @@
 
 namespace App\Domain\Catalogue\Interfaces\Repositories;
 
-use App\Infrastructure\Models\Category;
+use App\Domain\Catalogue\Resources\CategoryResourceCollection;
 use Illuminate\Http\Request;
 
 interface CategoryRepositoryInterface
 {
-    public function index(Request $request): Category;
+    public function index(Request $request): CategoryResourceCollection;
 }

@@ -4,12 +4,14 @@ namespace App\Infrastructure\Providers;
 
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface;
+use App\Domain\Catalogue\Interfaces\Repositories\CategoryRepositoryInterface;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerBusinessInformationRepositoryInterface;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerContactInformationRepositoryInterface;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerLegalInformationRepositoryInterface;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerPaymentInformationRepositoryInterface;
 use App\Infrastructure\Repositories\Auth\UserRepository;
 use App\Infrastructure\Repositories\Auth\UserVerificationRepository;
+use App\Infrastructure\Repositories\Catalogue\CategoryRepository;
 use App\Infrastructure\Repositories\Onboarding\SellerBusinessInformationRepository;
 use App\Infrastructure\Repositories\Onboarding\SellerContactInformationRepository;
 use App\Infrastructure\Repositories\Onboarding\SellerLegalInformationRepository;
@@ -27,9 +29,8 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(UserVerificationRepositoryInterface::class, UserVerificationRepository::class);
 
-        //        $this->app->bind(CategoryRepositoryInterface::class,
-        //            CategoryRepository::class);
-        //
+        $this->app->bind(CategoryRepositoryInterface::class, CategoryRepository::class);
+
         $this->app->bind(SellerContactInformationRepositoryInterface::class,
             SellerContactInformationRepository::class);
 

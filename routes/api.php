@@ -1,7 +1,7 @@
 <?php
 
-use App\Application\Http\Catalogue\Controller\CategoryController;
 use App\Domain\Auth\Controllers\AuthController;
+use App\Domain\Catalogue\Controllers\CategoryController;
 use App\Domain\Onboarding\Controllers\OnboardingController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +14,10 @@ Route::prefix('auth')->group(function () {
     Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 });
 
+Route::prefix('catalogues')->group(function () {
+    Route::get('categories', [CategoryController::class, 'index']);
+});
+
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('authenticated', [AuthController::class, 'authenticated']);
 
@@ -24,13 +28,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             Route::post('business', [OnboardingController::class, 'business']);
             Route::post('legal', [OnboardingController::class, 'legal']);
             Route::post('payment', [OnboardingController::class, 'payment']);
-        });
-    });
-
-    Route::prefix('catalogues')->group(function () {
-        Route::prefix('categories')->group(function () {
-            Route::post('', [CategoryController::class, 'store']);
-            Route::get('', [CategoryController::class, 'index']);
         });
     });
 });

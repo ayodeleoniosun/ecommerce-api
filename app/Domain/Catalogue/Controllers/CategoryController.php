@@ -1,24 +1,23 @@
 <?php
 
-namespace App\Application\Http\Catalogue\Controller;
+namespace App\Domain\Catalogue\Controllers;
 
 use App\Application\Shared\Responses\ApiResponse;
-use App\Domain\Catalogue\Catalogue\Category\CreateProductCategory;
+use App\Domain\Catalogue\Actions\Category\GetProductCategories;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class CategoryController
 {
-    public function __construct(private readonly CreateProductCategory $createProductCategory) {}
+    public function __construct(private readonly GetProductCategories $getProductCategories) {}
 
-    public function store(Request $request): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
-            $data = $this->createProductCategory->execute($request->name);
+            $data = $this->getProductCategories->execute($request);
 
-            return ApiResponse::success('Product category successfully created', $data, Response::HTTP_CREATED);
+            return ApiResponse::success('Product categories successfully retrieved', $data);
         } catch (Exception $e) {
             return ApiResponse::error($e->getMessage(), $e->getCode());
         }

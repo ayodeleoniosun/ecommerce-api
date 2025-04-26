@@ -1,0 +1,44 @@
+[
+    {
+        "name": "Technology",
+        "slug": "technology",
+        "subcategories": [
+            {
+                "name": "Artificial Intelligence",
+                "slug": "artificial-intelligence"
+            },
+            {
+                "name": "Web Development",
+                "slug": "web-development"
+            }
+        ]
+    },
+    {
+        "name": "Health",
+        "slug": "health",
+        "subcategories": [
+            {
+                "name": "Nutrition",
+                "slug": "nutrition"
+            },
+            {
+                "name": "Mental Health",
+                "slug": "mental-health"
+            }
+        ]
+    },
+    {
+        "name": "Finance",
+        "slug": "finance",
+        "subcategories": [
+            {
+                "name": "Investing",
+                "slug": "investing"
+            },
+            {
+                "name": "Personal Budgeting",
+                "slug": "personal-budgeting"
+            }
+        ]
+    }
+]
