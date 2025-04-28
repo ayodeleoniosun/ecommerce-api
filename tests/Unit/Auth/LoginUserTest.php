@@ -21,18 +21,18 @@ beforeEach(function () {
 });
 
 it('should throw an exception if user is not found', function () {
-    $this->userRepo->shouldReceive('findByEmail')
+    $this->userRepo->shouldReceive('findByColumn')
         ->once()
-        ->with($this->user->email)
+        ->with('email', $this->user->email)
         ->andReturn(null);
 
     $this->loginUser->execute($this->payload);
 })->throws(ResourceNotFoundException::class, 'User not found');
 
 it('should throw an exception if email is not yet verified', function () {
-    $this->userRepo->shouldReceive('findByEmail')
+    $this->userRepo->shouldReceive('findByColumn')
         ->once()
-        ->with($this->user->email)
+        ->with('email', $this->user->email)
         ->andReturn($this->user);
 
     $this->loginUser->execute($this->payload);
@@ -41,9 +41,9 @@ it('should throw an exception if email is not yet verified', function () {
 it('should throw an exception if account is inactive', function () {
     $this->user->email_verified_at = now();
 
-    $this->userRepo->shouldReceive('findByEmail')
+    $this->userRepo->shouldReceive('findByColumn')
         ->once()
-        ->with($this->user->email)
+        ->with('email', $this->user->email)
         ->andReturn($this->user);
 
     $this->loginUser->execute($this->payload);
@@ -54,9 +54,9 @@ it('should throw an exception if password does not match', function () {
     $this->user->status = UserEnum::ACTIVE->value;
     $this->payload['password'] = 'wrong_password';
 
-    $this->userRepo->shouldReceive('findByEmail')
+    $this->userRepo->shouldReceive('findByColumn')
         ->once()
-        ->with($this->user->email)
+        ->with('email', $this->user->email)
         ->andReturn($this->user);
 
     $this->loginUser->execute($this->payload);
@@ -66,9 +66,9 @@ it('can login successfully', function () {
     $this->user->email_verified_at = now();
     $this->user->status = UserEnum::ACTIVE->value;
 
-    $this->userRepo->shouldReceive('findByEmail')
+    $this->userRepo->shouldReceive('findByColumn')
         ->once()
-        ->with($this->user->email)
+        ->with('email', $this->user->email)
         ->andReturn($this->user);
 
     $response = $this->loginUser->execute($this->payload);

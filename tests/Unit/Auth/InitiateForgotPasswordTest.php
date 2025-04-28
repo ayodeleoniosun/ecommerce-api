@@ -19,18 +19,18 @@ beforeEach(function () {
 });
 
 it('should throw an exception if email is not found', function () {
-    $this->userRepo->shouldReceive('findByEmail')
+    $this->userRepo->shouldReceive('findByColumn')
         ->once()
-        ->with($this->user->email)
+        ->with('email', $this->user->email)
         ->andReturn(null);
 
     $this->forgotPassword->execute($this->user->email);
 })->throws(ResourceNotFoundException::class, 'Email not found');
 
 it('should throw an exception if user is not yet verified', function () {
-    $this->userRepo->shouldReceive('findByEmail')
+    $this->userRepo->shouldReceive('findByColumn')
         ->once()
-        ->with($this->user->email)
+        ->with('email', $this->user->email)
         ->andReturn($this->user);
 
     $this->forgotPassword->execute($this->user->email);
@@ -39,9 +39,9 @@ it('should throw an exception if user is not yet verified', function () {
 it('should throw an exception if user is not active', function () {
     $this->user->email_verified_at = now();
 
-    $this->userRepo->shouldReceive('findByEmail')
+    $this->userRepo->shouldReceive('findByColumn')
         ->once()
-        ->with($this->user->email)
+        ->with('email', $this->user->email)
         ->andReturn($this->user);
 
     $this->forgotPassword->execute($this->user->email);
@@ -53,9 +53,9 @@ it('can send a forgot password link', function () {
     $this->user->email_verified_at = now();
     $this->user->status = UserEnum::ACTIVE->value;
 
-    $this->userRepo->shouldReceive('findByEmail')
+    $this->userRepo->shouldReceive('findByColumn')
         ->once()
-        ->with($this->user->email)
+        ->with('email', $this->user->email)
         ->andReturn($this->user);
 
     $status = $this->forgotPassword->execute($this->user->email);

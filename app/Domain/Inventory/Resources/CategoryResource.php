@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Domain\Catalogue\Resources;
+namespace App\Domain\Inventory\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SubCategoryResource extends JsonResource
+class CategoryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,6 +18,7 @@ class SubCategoryResource extends JsonResource
             'id' => $this->uuid,
             'slug' => $this->slug,
             'name' => ucwords($this->name),
+            'sub_categories' => SubCategoryResource::collection($this->whenLoaded('subCategories')),
         ];
     }
 }

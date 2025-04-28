@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 /**
  * @property mixed $firstname
@@ -23,7 +24,7 @@ use Laravel\Sanctum\HasApiTokens;
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, MustVerifyEmail, Notifiable, UtilitiesTrait;
+    use HasApiTokens, HasFactory, HasRoles, MustVerifyEmail, Notifiable, UtilitiesTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -31,6 +32,8 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $guarded = ['id'];
+
+    protected $guard_name = 'api';
 
     /**
      * The attributes that should be hidden for serialization.

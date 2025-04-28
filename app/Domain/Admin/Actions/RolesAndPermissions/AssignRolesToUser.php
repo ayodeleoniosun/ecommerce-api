@@ -1,29 +1,29 @@
 <?php
 
-namespace App\Domain\Auth\Actions;
+namespace App\Domain\Admin\Actions\RolesAndPermissions;
 
 use App\Application\Shared\Enum\UserEnum;
 use App\Application\Shared\Exceptions\BadRequestException;
-use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
-use Illuminate\Support\Facades\Password;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
-class InitiateForgotPassword
+class AssignRolesToUser
 {
     public function __construct(
         private readonly UserRepositoryInterface $userRepository,
     ) {}
 
-    public function execute(string $email): string
+    public function execute(Request $request): Collection
     {
-        $user = $this->userRepository->findByColumn('email', $email);
-
-        throw_if(! $user, ResourceNotFoundException::class, 'Email not found');
+        $user = $this->userRepository->findByColumn('uuid', $request->input('role_user_id'));
 
         throw_if(! $user->email_verified_at, BadRequestException::class, 'User not yet verified');
 
         throw_if($user->status !== UserEnum::ACTIVE->value, BadRequestException::class, 'User not active');
 
-        return Password::sendResetLink(compact('email'));
+        $user->syncRoles($request->input('roles'));
+
+        return $user->getRoleNames();
     }
 }

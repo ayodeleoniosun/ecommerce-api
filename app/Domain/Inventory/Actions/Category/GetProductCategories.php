@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Domain\Catalogue\Actions\Category;
+namespace App\Domain\Inventory\Actions\Category;
 
-use App\Domain\Catalogue\Interfaces\Repositories\CategoryRepositoryInterface;
-use App\Domain\Catalogue\Resources\CategoryResourceCollection;
+use App\Domain\Inventory\Interfaces\Repositories\CategoryRepositoryInterface;
+use App\Domain\Inventory\Resources\CategoryResourceCollection;
 use Illuminate\Http\Request;
 
 class GetProductCategories

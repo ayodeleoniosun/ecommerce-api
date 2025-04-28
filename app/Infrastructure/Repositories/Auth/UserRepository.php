@@ -35,9 +35,9 @@ class UserRepository implements UserRepositoryInterface
         return $user;
     }
 
-    public function findByEmail(string $email): ?User
+    public function findByColumn(string $field, string $value): ?User
     {
-        return User::where('email', $email)->first();
+        return User::where($field, $value)->first();
     }
 
     public function verify(UserVerification $verification): User

@@ -2,8 +2,8 @@
 
 namespace App\Infrastructure\Repositories\Catalogue;
 
-use App\Domain\Catalogue\Interfaces\Repositories\CategoryRepositoryInterface;
-use App\Domain\Catalogue\Resources\CategoryResourceCollection;
+use App\Domain\Inventory\Interfaces\Repositories\CategoryRepositoryInterface;
+use App\Domain\Inventory\Resources\CategoryResourceCollection;
 use App\Infrastructure\Models\Category;
 use Illuminate\Http\Request;
 

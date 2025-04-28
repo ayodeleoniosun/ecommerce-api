@@ -17,7 +17,7 @@ class ResetPassword
 
     public function execute(array $request): string
     {
-        $user = $this->userRepository->findByEmail($request['email']);
+        $user = $this->userRepository->findByColumn('email', $request['email']);
 
         throw_if(! $user, ResourceNotFoundException::class, 'Email not found');
 

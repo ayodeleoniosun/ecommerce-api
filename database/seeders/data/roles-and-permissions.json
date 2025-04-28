@@ -1,0 +1,76 @@
+[
+    {
+        "name": "user admin",
+        "guard_name": "api",
+        "permissions": [
+            {
+                "name": "view users",
+                "guard_name": "api"
+            },
+            {
+                "name": "update users",
+                "guard_name": "api"
+            },
+            {
+                "name": "delete users",
+                "guard_name": "api"
+            }
+        ]
+    },
+    {
+        "name": "product admin",
+        "guard_name": "api",
+        "permissions": [
+            {
+                "name": "view products",
+                "guard_name": "api"
+            },
+            {
+                "name": "update products",
+                "guard_name": "api"
+            },
+            {
+                "name": "delete products",
+                "guard_name": "api"
+            },
+            {
+                "name": "add categories",
+                "guard_name": "api"
+            },
+            {
+                "name": "update categories",
+                "guard_name": "api"
+            },
+            {
+                "name": "delete categories",
+                "guard_name": "api"
+            },
+            {
+                "name": "view categories",
+                "guard_name": "api"
+            }
+        ]
+    },
+    {
+        "name": "order admin",
+        "guard_name": "api",
+        "permissions": [
+            {
+                "name": "view orders",
+                "guard_name": "api"
+            },
+            {
+                "name": "update orders",
+                "guard_name": "api"
+            },
+            {
+                "name": "approve orders",
+                "guard_name": "api"
+            },
+            {
+                "name": "decline orders",
+                "guard_name": "api"
+            }
+        ]
+    }
+]

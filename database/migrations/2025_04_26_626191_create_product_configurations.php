@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('product_configurations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained('products')->nullOnDelete();
-            $table->foreignId('variation_option_id')->constrained('variation_options')->nullOnDelete();
+            $table->foreignId('variation_option_id')->constrained('category_variation_options')->nullOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

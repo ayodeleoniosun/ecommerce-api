@@ -10,7 +10,7 @@ interface UserRepositoryInterface
 {
     public function create(CreateUserDto $user): User;
 
-    public function findByEmail(string $email): ?User;
+    public function findByColumn(string $field, string $value): ?User;
 
     public function verify(UserVerification $verification): User;
 

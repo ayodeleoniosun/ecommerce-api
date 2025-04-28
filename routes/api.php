@@ -1,7 +1,8 @@
 <?php
 
+use App\Domain\Admin\Controllers\RoleController;
 use App\Domain\Auth\Controllers\AuthController;
-use App\Domain\Catalogue\Controllers\CategoryController;
+use App\Domain\Inventory\Controllers\CategoryController;
 use App\Domain\Onboarding\Controllers\OnboardingController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,18 @@ Route::prefix('catalogues')->group(function () {
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('authenticated', [AuthController::class, 'authenticated']);
+
+    Route::prefix('admin')->group(function () {
+        Route::get('roles', [RoleController::class, 'roles']);
+        Route::get('permissions', [RoleController::class, 'permissions']);
+
+        Route::prefix('users')->group(function () {
+            Route::prefix('roles')->group(function () {
+                Route::post('assign', [RoleController::class, 'assignRoles']);
+                Route::post('revoke', [RoleController::class, 'revokeRole']);
+            });
+        });
+    });
 
     Route::prefix('seller')->group(function () {
         Route::prefix('setup')->group(function () {

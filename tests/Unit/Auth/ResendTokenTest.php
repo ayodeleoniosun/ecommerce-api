@@ -24,9 +24,9 @@ beforeEach(function () {
 });
 
 it('should throw an exception if email is not found', function () {
-    $this->userRepo->shouldReceive('findByEmail')
+    $this->userRepo->shouldReceive('findByColumn')
         ->once()
-        ->with($this->user->email)
+        ->with('email', $this->user->email)
         ->andReturn(null);
 
     $this->resendToken->execute($this->user->email);
@@ -35,9 +35,9 @@ it('should throw an exception if email is not found', function () {
 it('should throw an exception if user is already verified', function () {
     $this->user->email_verified_at = now();
 
-    $this->userRepo->shouldReceive('findByEmail')
+    $this->userRepo->shouldReceive('findByColumn')
         ->once()
-        ->with($this->user->email)
+        ->with('email', $this->user->email)
         ->andReturn($this->user);
 
     $this->resendToken->execute($this->user->email);
@@ -46,9 +46,9 @@ it('should throw an exception if user is already verified', function () {
 it('can resend token', function () {
     Event::fake();
 
-    $this->userRepo->shouldReceive('findByEmail')
+    $this->userRepo->shouldReceive('findByColumn')
         ->once()
-        ->with($this->user->email)
+        ->with('email', $this->user->email)
         ->andReturn($this->user);
 
     $this->userVerificationRepo->shouldReceive('create')

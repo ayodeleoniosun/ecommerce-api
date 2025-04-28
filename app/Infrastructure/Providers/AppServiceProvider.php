@@ -4,7 +4,7 @@ namespace App\Infrastructure\Providers;
 
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface;
-use App\Domain\Catalogue\Interfaces\Repositories\CategoryRepositoryInterface;
+use App\Domain\Inventory\Interfaces\Repositories\CategoryRepositoryInterface;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerBusinessInformationRepositoryInterface;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerContactInformationRepositoryInterface;
 use App\Domain\Onboarding\Interfaces\Repositories\SellerLegalInformationRepositoryInterface;

@@ -19,7 +19,7 @@ class ResendToken
 
     public function execute(string $email): void
     {
-        $user = $this->userRepository->findByEmail($email);
+        $user = $this->userRepository->findByColumn('email', $email);
 
         throw_if(! $user, ResourceNotFoundException::class, 'Email not found');
 

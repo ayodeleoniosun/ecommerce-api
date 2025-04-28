@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Domain\Catalogue\Controllers;
+namespace App\Domain\Inventory\Controllers;
 
 use App\Application\Shared\Responses\ApiResponse;
-use App\Domain\Catalogue\Actions\Category\GetProductCategories;
+use App\Domain\Inventory\Actions\Category\GetProductCategories;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

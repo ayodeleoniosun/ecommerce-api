@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Domain\Catalogue\Interfaces\Repositories;
+namespace App\Domain\Inventory\Interfaces\Repositories;
 
-use App\Domain\Catalogue\Resources\CategoryResourceCollection;
+use App\Domain\Inventory\Resources\CategoryResourceCollection;
 use Illuminate\Http\Request;
 
 interface CategoryRepositoryInterface

@@ -16,7 +16,7 @@ class LoginUser
 
     public function execute(array $credentials): User
     {
-        $user = $this->userRepository->findByEmail($credentials['email']);
+        $user = $this->userRepository->findByColumn('email', $credentials['email']);
 
         $this->validateUserStatus($user);
 
