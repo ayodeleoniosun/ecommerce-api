@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Domain\Admin\Requests;
+namespace App\Domain\Admin\Requests\RolesAndPermissions;
 
 use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class RevokeRoleFromUserRequest extends FormRequest
+class RevokePermissionFromUserRequest extends FormRequest
 {
     use OverrideDefaultValidationMethodTrait;
 
@@ -26,8 +26,8 @@ class RevokeRoleFromUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'role_user_id' => ['required', 'string', 'exists:users,uuid'],
-            'role' => ['required', 'string', 'exists:roles,name'],
+            'permission_user_id' => ['required', 'string', 'exists:users,uuid'],
+            'permission' => ['required', 'string', 'exists:permissions,name'],
         ];
     }
 

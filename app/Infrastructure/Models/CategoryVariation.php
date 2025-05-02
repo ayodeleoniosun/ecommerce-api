@@ -5,13 +5,13 @@ namespace App\Infrastructure\Models;
 use App\Application\Shared\Traits\UtilitiesTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @method static updateOrCreate(array $array, array $toArray)
  * @method static where(string $string, string $email)
  */
-class Category extends Model
+class CategoryVariation extends Model
 {
     use HasFactory, UtilitiesTrait;
 
@@ -26,13 +26,8 @@ class Category extends Model
         });
     }
 
-    public function subCategories(): HasMany
+    public function category(): BelongsTo
     {
-        return $this->hasMany(SubCategory::class, 'category_id');
-    }
-
-    public function variations(): HasMany
-    {
-        return $this->hasMany(CategoryVariation::class);
+        return $this->belongsTo(Category::class);
     }
 }

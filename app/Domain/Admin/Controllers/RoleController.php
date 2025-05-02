@@ -3,12 +3,16 @@
 namespace App\Domain\Admin\Controllers;
 
 use App\Application\Shared\Responses\ApiResponse;
+use App\Domain\Admin\Actions\RolesAndPermissions\AssignPermissionsToUser;
 use App\Domain\Admin\Actions\RolesAndPermissions\AssignRolesToUser;
 use App\Domain\Admin\Actions\RolesAndPermissions\GetAllPermissions;
 use App\Domain\Admin\Actions\RolesAndPermissions\GetAllRoles;
+use App\Domain\Admin\Actions\RolesAndPermissions\RevokePermissionFromUser;
 use App\Domain\Admin\Actions\RolesAndPermissions\RevokeRoleFromUser;
-use App\Domain\Admin\Requests\AssignRolesToUserRequest;
-use App\Domain\Admin\Requests\RevokeRoleFromUserRequest;
+use App\Domain\Admin\Requests\RolesAndPermissions\AssignPermissionsToUserRequest;
+use App\Domain\Admin\Requests\RolesAndPermissions\AssignRolesToUserRequest;
+use App\Domain\Admin\Requests\RolesAndPermissions\RevokePermissionFromUserRequest;
+use App\Domain\Admin\Requests\RolesAndPermissions\RevokeRoleFromUserRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -20,6 +24,8 @@ class RoleController
         private readonly GetAllPermissions $getAllPermissions,
         private readonly AssignRolesToUser $assignRolesToUser,
         private readonly RevokeRoleFromUser $revokeRole,
+        private readonly AssignPermissionsToUser $assignPermissionsToUser,
+        private readonly RevokePermissionFromUser $revokePermissionFromUser,
     ) {}
 
     public function roles(Request $request): JsonResponse
@@ -61,6 +67,28 @@ class RoleController
             $data = $this->revokeRole->execute($request);
 
             return ApiResponse::success('Roles successfully revoked from user', $data);
+        } catch (Exception $e) {
+            return ApiResponse::error($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function assignPermissions(AssignPermissionsToUserRequest $request): JsonResponse
+    {
+        try {
+            $data = $this->assignPermissionsToUser->execute($request);
+
+            return ApiResponse::success('Permissions successfully assigned to user', $data);
+        } catch (Exception $e) {
+            return ApiResponse::error($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function revokePermission(RevokePermissionFromUserRequest $request): JsonResponse
+    {
+        try {
+            $data = $this->revokePermissionFromUser->execute($request);
+
+            return ApiResponse::success('Permissions successfully revoked from user', $data);
         } catch (Exception $e) {
             return ApiResponse::error($e->getMessage(), $e->getCode());
         }

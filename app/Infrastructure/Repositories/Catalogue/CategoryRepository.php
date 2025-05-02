@@ -23,4 +23,9 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         return new CategoryResourceCollection($result);
     }
+
+    public function findByColumn(string $field, string $value): ?Category
+    {
+        return Category::where($field, $value)->first();
+    }
 }

@@ -29,10 +29,6 @@ class ApiResponse
         int $code = Response::HTTP_BAD_REQUEST,
         $errors = [],
     ): JsonResponse {
-        if ($code === 0) {
-            $code = Response::HTTP_BAD_REQUEST;
-        }
-
         $response = [
             'success' => false,
             'message' => $message,

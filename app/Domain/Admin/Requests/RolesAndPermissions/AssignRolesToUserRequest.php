@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Admin\Requests;
+namespace App\Domain\Admin\Requests\RolesAndPermissions;
 
 use App\Application\Shared\Responses\ApiResponse;
 use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;

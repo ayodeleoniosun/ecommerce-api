@@ -10,7 +10,9 @@ use Illuminate\Http\Request;
 
 class CategoryController
 {
-    public function __construct(private readonly GetProductCategories $getProductCategories) {}
+    public function __construct(
+        private readonly GetProductCategories $getProductCategories,
+    ) {}
 
     public function index(Request $request): JsonResponse
     {

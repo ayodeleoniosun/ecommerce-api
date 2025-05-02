@@ -1,5 +1,6 @@
 <?php
 
+use App\Domain\Admin\Controllers\CategoryController as AdminCategoryController;
 use App\Domain\Admin\Controllers\RoleController;
 use App\Domain\Auth\Controllers\AuthController;
 use App\Domain\Inventory\Controllers\CategoryController;
@@ -31,6 +32,23 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
                 Route::post('assign', [RoleController::class, 'assignRoles']);
                 Route::post('revoke', [RoleController::class, 'revokeRole']);
             });
+
+            Route::prefix('permissions')->group(function () {
+                Route::post('assign', [RoleController::class, 'assignPermissions']);
+                Route::post('revoke', [RoleController::class, 'revokePermission']);
+            });
+        });
+
+        Route::prefix('categories')->group(function () {
+            Route::prefix('variations')->group(function () {
+                Route::get('', [AdminCategoryController::class, 'variations']);
+                Route::post('', [AdminCategoryController::class, 'storeVariations']);
+
+                Route::prefix('options')->group(function () {
+                    Route::get('', [AdminCategoryController::class, 'variationOptions']);
+                    Route::post('', [AdminCategoryController::class, 'storeVariationOptions']);
+                });
+            });
         });
     });
 
@@ -42,5 +60,15 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             Route::post('legal', [OnboardingController::class, 'legal']);
             Route::post('payment', [OnboardingController::class, 'payment']);
         });
+
+        //        Route::prefix('products')->group(function () {
+        //            Route::get('', [ProductController::class, 'index']);
+        //            Route::get('/{id}', [ProductController::class, 'view']);
+        //            Route::post('', [ProductController::class, 'store']);
+        //            Route::post('/{id}', [ProductController::class, 'storeImages']);
+        //            Route::post('/configurations/{id}', [ProductController::class, 'storeConfigurations']);
+        //            Route::put('/{id}', [ProductController::class, 'update']);
+        //            Route::delete('/{id}', [ProductController::class, 'delete']);
+        //        });
     });
 });
