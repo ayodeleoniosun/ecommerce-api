@@ -16,8 +16,9 @@ use App\Domain\Admin\Requests\RolesAndPermissions\RevokeRoleFromUserRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 
-class RoleController
+class RoleController extends Controller
 {
     public function __construct(
         private readonly GetAllRoles $getAllRoles,
@@ -26,7 +27,14 @@ class RoleController
         private readonly RevokeRoleFromUser $revokeRole,
         private readonly AssignPermissionsToUser $assignPermissionsToUser,
         private readonly RevokePermissionFromUser $revokePermissionFromUser,
-    ) {}
+    ) {
+        //        if (!auth()->user()->hasRole(RoleEnum::SUPER_ADMIN)) {
+        //            return ApiResponse::error('You do not have the permission to assign roles to users',
+        //                Response::HTTP_FORBIDDEN);
+        //
+        //            abort(403, 'You do not have permission to access this resource.');
+        //        }
+    }
 
     public function roles(Request $request): JsonResponse
     {

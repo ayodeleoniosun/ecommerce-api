@@ -26,15 +26,8 @@ class RevokeRoleFromUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'role_user_id' => ['required', 'string', 'exists:users,uuid'],
+            'user_id' => ['required', 'string', 'exists:users,uuid'],
             'role' => ['required', 'string', 'exists:roles,name'],
         ];
-    }
-
-    public function prepareForValidation()
-    {
-        $this->merge([
-            'user_id' => auth()->user()->id,
-        ]);
     }
 }

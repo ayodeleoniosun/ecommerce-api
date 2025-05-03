@@ -30,17 +30,10 @@ class AssignRolesToUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'role_user_id' => ['required', 'string', 'exists:users,uuid'],
+            'user_id' => ['required', 'string', 'exists:users,uuid'],
             'roles' => ['required', 'array'],
             'roles.*' => ['required', 'exists:roles,name'],
         ];
-    }
-
-    public function prepareForValidation()
-    {
-        $this->merge([
-            'user_id' => auth()->user()->id,
-        ]);
     }
 
     /**

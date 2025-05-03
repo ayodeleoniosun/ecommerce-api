@@ -14,7 +14,7 @@ class RevokeRoleFromUser
 
     public function execute(Request $request): Collection
     {
-        $user = $this->userRepository->findByColumn('uuid', $request->input('role_user_id'));
+        $user = $this->userRepository->findByColumn('uuid', $request->input('user_id'));
 
         $user->removeRole($request->input('role'));
 

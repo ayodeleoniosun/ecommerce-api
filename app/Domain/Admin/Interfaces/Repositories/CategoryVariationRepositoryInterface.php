@@ -4,8 +4,14 @@ namespace App\Domain\Admin\Interfaces\Repositories;
 
 use App\Domain\Admin\Dtos\CreateCategoryVariationDto;
 use App\Infrastructure\Models\CategoryVariation;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 interface CategoryVariationRepositoryInterface
 {
+    public function index(Request $request): AnonymousResourceCollection;
+
     public function store(CreateCategoryVariationDto $categoryVariationDto): CategoryVariation;
+
+    public function findByColumn(string $field, string $value): ?CategoryVariation;
 }

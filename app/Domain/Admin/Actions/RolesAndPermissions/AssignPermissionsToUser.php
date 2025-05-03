@@ -22,7 +22,7 @@ class AssignPermissionsToUser
 
         throw_if($user->status !== UserEnum::ACTIVE->value, BadRequestException::class, 'User not active');
 
-        $user->syncPermissions($request->input('permissions'));
+        $user->givePermissionTo($request->input('permissions'));
 
         return $user->getPermissionNames();
     }

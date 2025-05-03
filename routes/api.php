@@ -16,8 +16,9 @@ Route::prefix('auth')->group(function () {
     Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 });
 
-Route::prefix('catalogues')->group(function () {
-    Route::get('categories', [CategoryController::class, 'index']);
+Route::prefix('categories')->group(function () {
+    Route::get('', [CategoryController::class, 'index']);
+    Route::get('variations', [CategoryController::class, 'variations']);
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
@@ -41,13 +42,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
         Route::prefix('categories')->group(function () {
             Route::prefix('variations')->group(function () {
-                Route::get('', [AdminCategoryController::class, 'variations']);
                 Route::post('', [AdminCategoryController::class, 'storeVariations']);
-
-                Route::prefix('options')->group(function () {
-                    Route::get('', [AdminCategoryController::class, 'variationOptions']);
-                    Route::post('', [AdminCategoryController::class, 'storeVariationOptions']);
-                });
+                Route::post('/options', [AdminCategoryController::class, 'storeVariationOptions']);
             });
         });
     });

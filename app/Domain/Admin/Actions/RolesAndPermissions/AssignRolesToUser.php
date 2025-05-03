@@ -16,13 +16,13 @@ class AssignRolesToUser
 
     public function execute(Request $request): Collection
     {
-        $user = $this->userRepository->findByColumn('uuid', $request->input('role_user_id'));
+        $user = $this->userRepository->findByColumn('uuid', $request->input('user_id'));
 
         throw_if(! $user->email_verified_at, BadRequestException::class, 'User not yet verified');
 
         throw_if($user->status !== UserEnum::ACTIVE->value, BadRequestException::class, 'User not active');
 
-        $user->syncRoles($request->input('roles'));
+        $user->assignRole($request->input('roles'));
 
         return $user->getRoleNames();
     }
