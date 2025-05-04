@@ -20,7 +20,7 @@ class CategoryController
         private readonly CreateCategoryVariationOptions $createCategoryVariationOptions,
     ) {}
 
-    public function storeVariations(CategoryVariationRequest $request): JsonResponse
+    public function storeCategoryVariations(CategoryVariationRequest $request): JsonResponse
     {
         if (! auth()->user()->hasDirectPermission('add-categories')) {
             return ApiResponse::error('You are not allowed to create category variations', Response::HTTP_FORBIDDEN);
@@ -37,7 +37,7 @@ class CategoryController
         }
     }
 
-    public function storeVariationOptions(CategoryVariationOptionRequest $request): JsonResponse
+    public function storeCategoryVariationOptions(CategoryVariationOptionRequest $request): JsonResponse
     {
         $variationOptions = CreateCategoryVariationOptionDto::fromRequest($request);
 

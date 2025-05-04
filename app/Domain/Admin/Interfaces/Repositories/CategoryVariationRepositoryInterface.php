@@ -9,7 +9,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 interface CategoryVariationRepositoryInterface
 {
-    public function index(Request $request): AnonymousResourceCollection;
+    public function index(Request $request, string $categoryId): AnonymousResourceCollection;
 
     public function store(CreateCategoryVariationDto $categoryVariationDto): void;
 

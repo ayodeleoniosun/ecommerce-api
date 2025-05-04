@@ -18,7 +18,11 @@ Route::prefix('auth')->group(function () {
 
 Route::prefix('categories')->group(function () {
     Route::get('', [CategoryController::class, 'index']);
-    Route::get('variations', [CategoryController::class, 'variations']);
+
+    Route::prefix('variations')->group(function () {
+        Route::get('/{categoryUUID}', [CategoryController::class, 'getCategoryVariations']);
+        Route::get('/{variationUUID}/options', [CategoryController::class, 'getCategoryVariationOptions']);
+    });
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
@@ -42,8 +46,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
         Route::prefix('categories')->group(function () {
             Route::prefix('variations')->group(function () {
-                Route::post('', [AdminCategoryController::class, 'storeVariations']);
-                Route::post('/options', [AdminCategoryController::class, 'storeVariationOptions']);
+                Route::post('', [AdminCategoryController::class, 'storeCategoryVariations']);
+                Route::post('/options', [AdminCategoryController::class, 'storeCategoryVariationOptions']);
             });
         });
     });

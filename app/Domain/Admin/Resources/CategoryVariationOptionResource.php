@@ -5,7 +5,7 @@ namespace App\Domain\Admin\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CategoryVariationResource extends JsonResource
+class CategoryVariationOptionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,7 +16,7 @@ class CategoryVariationResource extends JsonResource
     {
         return [
             'id' => $this->uuid,
-            'name' => ucwords($this->name),
+            'value' => ucwords($this->value),
         ];
     }
 }

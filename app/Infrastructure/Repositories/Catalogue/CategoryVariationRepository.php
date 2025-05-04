@@ -11,16 +11,16 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class CategoryVariationRepository implements CategoryVariationRepositoryInterface
 {
-    public function index(Request $request): AnonymousResourceCollection
+    public function index(Request $request, string $categoryId): AnonymousResourceCollection
     {
         $search = $request->input('search') ?? null;
 
-        $result = CategoryVariation::query()
+        $result = CategoryVariation::where('category_id', $categoryId)
             ->when($search, function ($query) use ($search) {
                 $query->where('name', 'like', "%{$search}%");
             })
             ->latest()
-            ->paginate(10);
+            ->get();
 
         return CategoryVariationResource::collection($result);
     }
