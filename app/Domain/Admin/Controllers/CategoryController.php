@@ -31,7 +31,7 @@ class CategoryController
         try {
             $data = $this->createCategoryVariations->execute($variation);
 
-            return ApiResponse::success('Category variation successfully added', $data, Response::HTTP_CREATED);
+            return ApiResponse::success('Category variations successfully added', $data, Response::HTTP_CREATED);
         } catch (Exception $e) {
             return ApiResponse::error($e->getMessage(), $e->getCode());
         }

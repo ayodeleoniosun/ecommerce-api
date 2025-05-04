@@ -25,9 +25,9 @@ class CategoryVariationRepository implements CategoryVariationRepositoryInterfac
         return CategoryVariationResource::collection($result);
     }
 
-    public function store(CreateCategoryVariationDto $categoryVariationDto): CategoryVariation
+    public function store(CreateCategoryVariationDto $categoryVariationDto): void
     {
-        return CategoryVariation::create($categoryVariationDto->toArray());
+        CategoryVariation::insert($categoryVariationDto->toArray());
     }
 
     public function findByColumn(string $field, string $value): ?CategoryVariation

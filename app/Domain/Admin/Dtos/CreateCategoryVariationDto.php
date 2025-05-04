@@ -2,13 +2,16 @@
 
 namespace App\Domain\Admin\Dtos;
 
+use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Domain\Admin\Requests\Category\CategoryVariationRequest;
 
 class CreateCategoryVariationDto
 {
+    use UtilitiesTrait;
+
     public function __construct(
         private readonly string $categoryUUID,
-        private readonly string $name,
+        private readonly array $variations,
         private ?string $categoryId = null,
     ) {}
 
@@ -16,16 +19,25 @@ class CreateCategoryVariationDto
     {
         return new self(
             categoryUUID: $request->input('category_id'),
-            name: $request->input('name'),
+            variations: $request->input('variations'),
         );
     }
 
     public function toArray(): array
     {
-        return [
-            'category_id' => $this->categoryId,
-            'name' => $this->name,
-        ];
+        $variations = [];
+
+        foreach ($this->variations as $variation) {
+            $variations[] = [
+                'category_id' => $this->categoryId,
+                'uuid' => self::generateUUID(),
+                'name' => $variation,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+
+        return $variations;
     }
 
     public function getCategoryUUID(): string
@@ -33,9 +45,9 @@ class CreateCategoryVariationDto
         return $this->categoryUUID;
     }
 
-    public function getName(): string
+    public function getVariations(): array
     {
-        return $this->name;
+        return $this->variations;
     }
 
     public function setCategoryId(string $categoryId): void

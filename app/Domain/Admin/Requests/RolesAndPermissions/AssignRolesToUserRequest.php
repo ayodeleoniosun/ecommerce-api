@@ -42,18 +42,22 @@ class AssignRolesToUserRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         $errors = $validator->errors()->toArray();
-        $formattedErrors = [];
+        $invalidRoles = [];
 
         foreach ($errors as $key => $error) {
             if (str_contains($key, 'roles.')) {
                 $index = str_replace('roles.', '', $key);
-                $roleName = $this->input('roles')[$index] ?? 'Unknown Role';
-                $formattedErrors[] = "The selected role '{$roleName}' is invalid.";
+                $invalidRoles[] = $this->input('roles')[$index] ?? 'Unknown Role';
             }
         }
 
-        throw new HttpResponseException(
-            ApiResponse::error($formattedErrors[0], Response::HTTP_UNPROCESSABLE_ENTITY)
-        );
+        if (! empty($invalidRoles)) {
+            $roles = implode(', ', $invalidRoles);
+
+            throw new HttpResponseException(
+                ApiResponse::error("The selected roles: {$roles} are invalid.",
+                    Response::HTTP_UNPROCESSABLE_ENTITY)
+            );
+        }
     }
 }

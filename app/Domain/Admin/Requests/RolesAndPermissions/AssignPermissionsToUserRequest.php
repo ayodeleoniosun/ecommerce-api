@@ -49,18 +49,22 @@ class AssignPermissionsToUserRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         $errors = $validator->errors()->toArray();
-        $formattedErrors = [];
+        $invalidPermissions = [];
 
         foreach ($errors as $key => $error) {
             if (str_contains($key, 'permissions.')) {
                 $index = str_replace('permissions.', '', $key);
-                $permissionName = $this->input('permissions')[$index] ?? 'Unknown Role';
-                $formattedErrors[] = "The selected permission '{$permissionName}' is invalid.";
+                $invalidPermissions[] = $this->input('permissions')[$index] ?? 'Unknown Role';
             }
         }
 
-        throw new HttpResponseException(
-            ApiResponse::error($formattedErrors[0], Response::HTTP_UNPROCESSABLE_ENTITY)
-        );
+        if (! empty($invalidPermissions)) {
+            $permissions = implode(', ', $invalidPermissions);
+
+            throw new HttpResponseException(
+                ApiResponse::error("The selected permissions: {$permissions} are invalid.",
+                    Response::HTTP_UNPROCESSABLE_ENTITY)
+            );
+        }
     }
 }
