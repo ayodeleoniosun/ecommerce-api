@@ -14,4 +14,6 @@ interface CategoryVariationOptionRepositoryInterface
     public function store(CreateCategoryVariationOptionDto $categoryVariationOptionDto): void;
 
     public function findByColumn(string $field, string $value): ?CategoryVariationOption;
+
+    public function delete(CategoryVariationOption $option): void;
 }

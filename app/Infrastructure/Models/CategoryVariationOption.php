@@ -5,6 +5,7 @@ namespace App\Infrastructure\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @method static updateOrCreate(array $array, array $toArray)
@@ -12,12 +13,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class CategoryVariationOption extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $guarded = ['id', 'uuid'];
 
-    public function categoryVariation(): BelongsTo
+    public function variation(): BelongsTo
     {
-        return $this->belongsTo(CategoryVariation::class);
+        return $this->belongsTo(CategoryVariation::class, 'variation_id', 'id');
     }
 }

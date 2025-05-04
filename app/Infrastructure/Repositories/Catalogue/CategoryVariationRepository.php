@@ -34,4 +34,9 @@ class CategoryVariationRepository implements CategoryVariationRepositoryInterfac
     {
         return CategoryVariation::where($field, $value)->first();
     }
+
+    public function delete(CategoryVariation $variation): void
+    {
+        $variation->delete();
+    }
 }

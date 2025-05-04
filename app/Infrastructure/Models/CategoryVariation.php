@@ -6,6 +6,8 @@ use App\Application\Shared\Traits\UtilitiesTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @method static updateOrCreate(array $array, array $toArray)
@@ -13,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class CategoryVariation extends Model
 {
-    use HasFactory, UtilitiesTrait;
+    use HasFactory, SoftDeletes, UtilitiesTrait;
 
     protected $guarded = ['id', 'uuid'];
 
@@ -24,6 +26,15 @@ class CategoryVariation extends Model
         static::creating(function ($model) {
             $model->uuid = self::generateUUID();
         });
+
+        static::deleting(function ($model) {
+            $model->options()->delete();
+        });
+    }
+
+    public function options(): HasMany
+    {
+        return $this->hasMany(CategoryVariationOption::class, 'variation_id', 'id');
     }
 
     public function category(): BelongsTo

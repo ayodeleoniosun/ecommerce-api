@@ -48,6 +48,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             Route::prefix('variations')->group(function () {
                 Route::post('', [AdminCategoryController::class, 'storeCategoryVariations']);
                 Route::post('/options', [AdminCategoryController::class, 'storeCategoryVariationOptions']);
+                Route::delete('/{variationUUID}', [AdminCategoryController::class, 'deleteCategoryVariations']);
+                Route::delete('/options/{optionUUID}',
+                    [AdminCategoryController::class, 'deleteCategoryVariationOptions']);
             });
         });
     });

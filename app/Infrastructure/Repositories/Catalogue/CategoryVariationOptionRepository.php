@@ -34,4 +34,9 @@ class CategoryVariationOptionRepository implements CategoryVariationOptionReposi
     {
         return CategoryVariationOption::where($field, $value)->first();
     }
+
+    public function delete(CategoryVariationOption $option): void
+    {
+        $option->delete();
+    }
 }
