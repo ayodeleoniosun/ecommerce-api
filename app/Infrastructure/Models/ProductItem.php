@@ -6,14 +6,13 @@ use App\Application\Shared\Traits\UtilitiesTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @method static updateOrCreate(array $array, array $toArray)
  * @method static where(string $string, mixed $productUUID)
  */
-class Product extends Model
+class ProductItem extends Model
 {
     use HasFactory, SoftDeletes, UtilitiesTrait;
 
@@ -25,36 +24,17 @@ class Product extends Model
 
         static::creating(function ($model) {
             $model->uuid = self::generateUUID();
+            $model->sku = 'PRO-SKU-'.self::generateRandomCharacters();
         });
     }
 
-    public function vendor(): BelongsTo
+    public function product(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'vendor_id', 'id');
+        return $this->belongsTo(Product::class);
     }
 
-    public function category(): BelongsTo
+    public function variationOption(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
-    }
-
-    public function items(): HasMany
-    {
-        return $this->hasMany(ProductItem::class);
-    }
-
-    public function carts(): HasMany
-    {
-        return $this->hasMany(Cart::class);
-    }
-
-    public function orders(): HasMany
-    {
-        return $this->hasMany(Order::class);
-    }
-
-    public function wishlists(): HasMany
-    {
-        return $this->hasMany(Wishlist::class);
+        return $this->belongsTo(CategoryVariationOption::class);
     }
 }

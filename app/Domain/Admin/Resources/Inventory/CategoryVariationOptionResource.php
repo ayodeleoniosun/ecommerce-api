@@ -17,6 +17,7 @@ class CategoryVariationOptionResource extends JsonResource
         return [
             'id' => $this->uuid,
             'value' => ucwords($this->value),
+            'variation' => new CategoryVariationResource($this->whenLoaded('variation')),
         ];
     }
 }

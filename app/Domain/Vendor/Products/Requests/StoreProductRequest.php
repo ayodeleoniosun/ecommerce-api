@@ -53,12 +53,8 @@ class StoreProductRequest extends FormRequest
 
         $category = Category::where('uuid', $categoryUUID)->first();
 
-        if (! $category) {
-            return;
-        }
-
         $this->merge([
-            'merged_category_id' => $category->id,
+            'merged_category_id' => $category?->id,
         ]);
     }
 }

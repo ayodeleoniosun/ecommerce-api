@@ -11,7 +11,10 @@ class ProductRepository implements ProductRepositoryInterface
     public function store(CreateProductDto $createProductDto): Product
     {
         $product = Product::updateOrCreate(
-            ['vendor_id' => $createProductDto->getVendorId(), 'name' => $createProductDto->getName()],
+            [
+                'vendor_id' => $createProductDto->getVendorId(),
+                'name' => $createProductDto->getName(),
+            ],
             $createProductDto->toArray(),
         );
 

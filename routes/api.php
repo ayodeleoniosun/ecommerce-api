@@ -69,6 +69,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             //            Route::get('', [ProductController::class, 'index']);
             //            Route::get('/{id}', [ProductController::class, 'view']);
             Route::post('', [ProductController::class, 'store']);
+            Route::post('/items', [ProductController::class, 'storeItems']);
             //            Route::post('/{id}', [ProductController::class, 'storeImages']);
             //            Route::post('/configurations/{id}', [ProductController::class, 'storeConfigurations']);
             //            Route::put('/{id}', [ProductController::class, 'update']);
