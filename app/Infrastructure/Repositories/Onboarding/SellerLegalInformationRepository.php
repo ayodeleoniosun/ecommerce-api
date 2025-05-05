@@ -2,8 +2,8 @@
 
 namespace App\Infrastructure\Repositories\Onboarding;
 
-use App\Domain\Onboarding\Dtos\CreateSellerLegalInformationDto;
-use App\Domain\Onboarding\Interfaces\Repositories\SellerLegalInformationRepositoryInterface;
+use App\Domain\Vendor\Onboarding\Dtos\CreateSellerLegalInformationDto;
+use App\Domain\Vendor\Onboarding\Interfaces\SellerLegalInformationRepositoryInterface;
 use App\Infrastructure\Models\SellerLegalInformation;
 
 class SellerLegalInformationRepository implements SellerLegalInformationRepositoryInterface

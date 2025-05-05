@@ -3,8 +3,8 @@
 namespace App\Domain\Inventory\Actions\Category;
 
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
-use App\Domain\Admin\Interfaces\Repositories\CategoryVariationOptionRepositoryInterface;
-use App\Domain\Admin\Interfaces\Repositories\CategoryVariationRepositoryInterface;
+use App\Domain\Admin\Interfaces\CategoryVariationOptionRepositoryInterface;
+use App\Domain\Admin\Interfaces\CategoryVariationRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 

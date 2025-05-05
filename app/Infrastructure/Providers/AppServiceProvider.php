@@ -2,15 +2,15 @@
 
 namespace App\Infrastructure\Providers;
 
-use App\Domain\Admin\Interfaces\Repositories\CategoryVariationOptionRepositoryInterface;
-use App\Domain\Admin\Interfaces\Repositories\CategoryVariationRepositoryInterface;
+use App\Domain\Admin\Interfaces\CategoryVariationOptionRepositoryInterface;
+use App\Domain\Admin\Interfaces\CategoryVariationRepositoryInterface;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface;
-use App\Domain\Inventory\Interfaces\Repositories\CategoryRepositoryInterface;
-use App\Domain\Onboarding\Interfaces\Repositories\SellerBusinessInformationRepositoryInterface;
-use App\Domain\Onboarding\Interfaces\Repositories\SellerContactInformationRepositoryInterface;
-use App\Domain\Onboarding\Interfaces\Repositories\SellerLegalInformationRepositoryInterface;
-use App\Domain\Onboarding\Interfaces\Repositories\SellerPaymentInformationRepositoryInterface;
+use App\Domain\Inventory\Interfaces\CategoryRepositoryInterface;
+use App\Domain\Vendor\Onboarding\Interfaces\SellerBusinessInformationRepositoryInterface;
+use App\Domain\Vendor\Onboarding\Interfaces\SellerContactInformationRepositoryInterface;
+use App\Domain\Vendor\Onboarding\Interfaces\SellerLegalInformationRepositoryInterface;
+use App\Domain\Vendor\Onboarding\Interfaces\SellerPaymentInformationRepositoryInterface;
 use App\Infrastructure\Repositories\Auth\UserRepository;
 use App\Infrastructure\Repositories\Auth\UserVerificationRepository;
 use App\Infrastructure\Repositories\Catalogue\CategoryRepository;

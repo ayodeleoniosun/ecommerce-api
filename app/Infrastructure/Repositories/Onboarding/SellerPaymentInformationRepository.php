@@ -2,8 +2,8 @@
 
 namespace App\Infrastructure\Repositories\Onboarding;
 
-use App\Domain\Onboarding\Dtos\CreateSellerPaymentInformationDto;
-use App\Domain\Onboarding\Interfaces\Repositories\SellerPaymentInformationRepositoryInterface;
+use App\Domain\Vendor\Onboarding\Dtos\CreateSellerPaymentInformationDto;
+use App\Domain\Vendor\Onboarding\Interfaces\SellerPaymentInformationRepositoryInterface;
 use App\Infrastructure\Models\SellerPaymentInformation;
 
 class SellerPaymentInformationRepository implements SellerPaymentInformationRepositoryInterface

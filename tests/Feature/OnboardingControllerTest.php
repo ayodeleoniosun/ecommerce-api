@@ -28,7 +28,6 @@ describe('create seller contact information', function () {
 
         $response = $this->postJson('/api/seller/setup/contact', $payload);
         $content = json_decode($response->getContent());
-
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
         expect($content->success)->toBe(false)

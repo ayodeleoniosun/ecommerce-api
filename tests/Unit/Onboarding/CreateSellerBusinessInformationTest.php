@@ -3,9 +3,9 @@
 namespace Tests\Application\Actions\Onboarding;
 
 use App\Application\Shared\Exceptions\ConflictHttpException;
-use App\Domain\Onboarding\Actions\CreateSellerBusinessInformation;
-use App\Domain\Onboarding\Dtos\CreateSellerBusinessInformationDto;
-use App\Domain\Onboarding\Interfaces\Repositories\SellerBusinessInformationRepositoryInterface;
+use App\Domain\Vendor\Onboarding\Actions\CreateSellerBusinessInformation;
+use App\Domain\Vendor\Onboarding\Dtos\CreateSellerBusinessInformationDto;
+use App\Domain\Vendor\Onboarding\Interfaces\SellerBusinessInformationRepositoryInterface;
 use App\Infrastructure\Models\SellerBusinessInformation;
 use App\Infrastructure\Models\User;
 use Illuminate\Http\UploadedFile;

@@ -4,7 +4,8 @@ use App\Domain\Admin\Controllers\CategoryController as AdminCategoryController;
 use App\Domain\Admin\Controllers\RoleController;
 use App\Domain\Auth\Controllers\AuthController;
 use App\Domain\Inventory\Controllers\CategoryController;
-use App\Domain\Onboarding\Controllers\OnboardingController;
+use App\Domain\Vendor\Onboarding\Controllers\OnboardingController;
+use App\Domain\Vendor\Products\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
@@ -64,14 +65,14 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             Route::post('payment', [OnboardingController::class, 'payment']);
         });
 
-        //        Route::prefix('products')->group(function () {
-        //            Route::get('', [ProductController::class, 'index']);
-        //            Route::get('/{id}', [ProductController::class, 'view']);
-        //            Route::post('', [ProductController::class, 'store']);
-        //            Route::post('/{id}', [ProductController::class, 'storeImages']);
-        //            Route::post('/configurations/{id}', [ProductController::class, 'storeConfigurations']);
-        //            Route::put('/{id}', [ProductController::class, 'update']);
-        //            Route::delete('/{id}', [ProductController::class, 'delete']);
-        //        });
+        Route::prefix('products')->group(function () {
+            //            Route::get('', [ProductController::class, 'index']);
+            //            Route::get('/{id}', [ProductController::class, 'view']);
+            Route::post('', [ProductController::class, 'store']);
+            //            Route::post('/{id}', [ProductController::class, 'storeImages']);
+            //            Route::post('/configurations/{id}', [ProductController::class, 'storeConfigurations']);
+            //            Route::put('/{id}', [ProductController::class, 'update']);
+            //            Route::delete('/{id}', [ProductController::class, 'delete']);
+        });
     });
 });

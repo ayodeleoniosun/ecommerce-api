@@ -3,8 +3,8 @@
 namespace App\Domain\Admin\Actions\Category;
 
 use App\Domain\Admin\Dtos\CreateCategoryVariationDto;
-use App\Domain\Admin\Interfaces\Repositories\CategoryVariationRepositoryInterface;
-use App\Domain\Inventory\Interfaces\Repositories\CategoryRepositoryInterface;
+use App\Domain\Admin\Interfaces\CategoryVariationRepositoryInterface;
+use App\Domain\Inventory\Interfaces\CategoryRepositoryInterface;
 
 class CreateCategoryVariations
 {

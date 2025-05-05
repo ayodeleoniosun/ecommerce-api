@@ -2,11 +2,11 @@
 
 namespace Tests\Application\Actions\Onboarding;
 
-use App\Domain\Onboarding\Actions\GetSellerSetupStatus;
-use App\Domain\Onboarding\Interfaces\Repositories\SellerBusinessInformationRepositoryInterface;
-use App\Domain\Onboarding\Interfaces\Repositories\SellerContactInformationRepositoryInterface;
-use App\Domain\Onboarding\Interfaces\Repositories\SellerLegalInformationRepositoryInterface;
-use App\Domain\Onboarding\Interfaces\Repositories\SellerPaymentInformationRepositoryInterface;
+use App\Domain\Vendor\Onboarding\Actions\GetSellerSetupStatus;
+use App\Domain\Vendor\Onboarding\Interfaces\SellerBusinessInformationRepositoryInterface;
+use App\Domain\Vendor\Onboarding\Interfaces\SellerContactInformationRepositoryInterface;
+use App\Domain\Vendor\Onboarding\Interfaces\SellerLegalInformationRepositoryInterface;
+use App\Domain\Vendor\Onboarding\Interfaces\SellerPaymentInformationRepositoryInterface;
 use App\Infrastructure\Models\User;
 use Mockery;
 

@@ -3,7 +3,7 @@
 namespace App\Domain\Admin\Actions\Category;
 
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
-use App\Domain\Admin\Interfaces\Repositories\CategoryVariationOptionRepositoryInterface;
+use App\Domain\Admin\Interfaces\CategoryVariationOptionRepositoryInterface;
 
 class DeleteCategoryVariationOptions
 {

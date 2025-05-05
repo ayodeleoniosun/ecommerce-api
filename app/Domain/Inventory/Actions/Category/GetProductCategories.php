@@ -2,7 +2,7 @@
 
 namespace App\Domain\Inventory\Actions\Category;
 
-use App\Domain\Inventory\Interfaces\Repositories\CategoryRepositoryInterface;
+use App\Domain\Inventory\Interfaces\CategoryRepositoryInterface;
 use App\Domain\Inventory\Resources\CategoryResourceCollection;
 use Illuminate\Http\Request;
 

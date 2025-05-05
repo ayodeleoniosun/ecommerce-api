@@ -3,7 +3,7 @@
 namespace App\Infrastructure\Repositories\Catalogue;
 
 use App\Domain\Admin\Dtos\CreateCategoryVariationOptionDto;
-use App\Domain\Admin\Interfaces\Repositories\CategoryVariationOptionRepositoryInterface;
+use App\Domain\Admin\Interfaces\CategoryVariationOptionRepositoryInterface;
 use App\Domain\Admin\Resources\CategoryVariationOptionResource;
 use App\Infrastructure\Models\CategoryVariationOption;
 use Illuminate\Http\Request;

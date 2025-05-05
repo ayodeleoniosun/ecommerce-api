@@ -2,8 +2,8 @@
 
 namespace App\Infrastructure\Repositories\Onboarding;
 
-use App\Domain\Onboarding\Dtos\CreateSellerBusinessInformationDto;
-use App\Domain\Onboarding\Interfaces\Repositories\SellerBusinessInformationRepositoryInterface;
+use App\Domain\Vendor\Onboarding\Dtos\CreateSellerBusinessInformationDto;
+use App\Domain\Vendor\Onboarding\Interfaces\SellerBusinessInformationRepositoryInterface;
 use App\Infrastructure\Models\SellerBusinessInformation;
 
 class SellerBusinessInformationRepository implements SellerBusinessInformationRepositoryInterface
