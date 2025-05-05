@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Domain\Admin\Resources;
+namespace App\Domain\Admin\Resources\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RoleResource extends JsonResource
+class VendorResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,8 +15,10 @@ class RoleResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'name' => $this->name,
-            'permissions' => PermissionResource::collection($this->whenLoaded('permissions')),
+            'id' => $this->uuid,
+            'firstname' => ucwords($this->firstname),
+            'lastname' => ucwords($this->lastname),
+            'email' => $this->email,
         ];
     }
 }

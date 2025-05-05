@@ -2,7 +2,7 @@
 
 namespace App\Domain\Admin\Actions\RolesAndPermissions;
 
-use App\Domain\Admin\Resources\RoleResource;
+use App\Domain\Admin\Resources\RolesAndPermission\RoleResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Spatie\Permission\Models\Role;

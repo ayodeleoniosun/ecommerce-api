@@ -2,20 +2,34 @@
 
 namespace App\Infrastructure\Models;
 
+use App\Application\Shared\Traits\UtilitiesTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @method static updateOrCreate(array $array, array $toArray)
+ */
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes, UtilitiesTrait;
 
-    protected $guarded = ['id'];
+    protected $guarded = ['id', 'uuid'];
 
-    public function user(): BelongsTo
+    protected static function boot()
     {
-        return $this->belongsTo(User::class);
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->uuid = self::generateUUID();
+        });
+    }
+
+    public function vendor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'vendor_id', 'id');
     }
 
     public function category(): BelongsTo

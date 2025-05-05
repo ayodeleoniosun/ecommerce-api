@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure\Repositories\Catalogue;
+namespace App\Infrastructure\Repositories\Inventory;
 
 use App\Domain\Inventory\Interfaces\CategoryRepositoryInterface;
 use App\Domain\Inventory\Resources\CategoryResourceCollection;

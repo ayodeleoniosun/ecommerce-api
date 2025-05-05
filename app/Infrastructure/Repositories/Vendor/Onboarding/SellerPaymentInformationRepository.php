@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure\Repositories\Onboarding;
+namespace App\Infrastructure\Repositories\Vendor\Onboarding;
 
 use App\Domain\Vendor\Onboarding\Dtos\CreateSellerPaymentInformationDto;
 use App\Domain\Vendor\Onboarding\Interfaces\SellerPaymentInformationRepositoryInterface;

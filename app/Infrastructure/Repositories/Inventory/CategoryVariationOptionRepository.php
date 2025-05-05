@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Infrastructure\Repositories\Catalogue;
+namespace App\Infrastructure\Repositories\Inventory;
 
 use App\Domain\Admin\Dtos\CreateCategoryVariationOptionDto;
 use App\Domain\Admin\Interfaces\CategoryVariationOptionRepositoryInterface;
-use App\Domain\Admin\Resources\CategoryVariationOptionResource;
+use App\Domain\Admin\Resources\Inventory\CategoryVariationOptionResource;
 use App\Infrastructure\Models\CategoryVariationOption;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;

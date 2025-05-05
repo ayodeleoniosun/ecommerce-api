@@ -2,6 +2,7 @@
 
 namespace App\Application\Shared\Traits;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 trait UtilitiesTrait
@@ -11,5 +12,10 @@ trait UtilitiesTrait
         $uuid = Str::uuid()->toString();
 
         return str_replace('-', '', $uuid);
+    }
+
+    public static function parseDate($date): string
+    {
+        return Carbon::parse($date)->format('F jS, Y h:i:s');
     }
 }

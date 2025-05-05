@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('status')->default(ProductEnum::ACTIVE->value);
             $table->timestamp('disabled_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -2,17 +2,16 @@
 
 namespace App\Domain\Vendor\Products\Requests;
 
-use App\Application\Shared\Responses\ApiResponse;
 use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
-use App\Infrastructure\Models\Product;
+use App\Infrastructure\Models\Category;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\Response;
 
 class StoreProductRequest extends FormRequest
 {
     use OverrideDefaultValidationMethodTrait;
+
+    private ?int $requestCategoryId;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -31,6 +30,7 @@ class StoreProductRequest extends FormRequest
     {
         return [
             'category_id' => ['required', 'string', 'exists:categories,uuid'],
+            'merged_category_id' => ['required'],
             'name' => ['required', 'string'],
             'description' => ['required', 'string'],
         ];
@@ -45,20 +45,20 @@ class StoreProductRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        $name = $this->input('name');
+        $categoryUUID = $this->input('category_id');
 
-        if (empty($name)) {
+        if (empty($categoryUUID)) {
             return;
         }
 
-        $productExist = Product::where('name', $name)
-            ->where('vendor_id', auth()->user()->id)
-            ->exists();
+        $category = Category::where('uuid', $categoryUUID)->first();
 
-        if ($productExist) {
-            throw new HttpResponseException(
-                ApiResponse::error('You have already added this product', Response::HTTP_UNPROCESSABLE_ENTITY)
-            );
+        if (! $category) {
+            return;
         }
+
+        $this->merge([
+            'merged_category_id' => $category->id,
+        ]);
     }
 }
