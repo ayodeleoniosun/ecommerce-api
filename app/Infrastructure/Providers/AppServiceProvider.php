@@ -11,6 +11,7 @@ use App\Domain\Vendor\Onboarding\Interfaces\SellerBusinessInformationRepositoryI
 use App\Domain\Vendor\Onboarding\Interfaces\SellerContactInformationRepositoryInterface;
 use App\Domain\Vendor\Onboarding\Interfaces\SellerLegalInformationRepositoryInterface;
 use App\Domain\Vendor\Onboarding\Interfaces\SellerPaymentInformationRepositoryInterface;
+use App\Domain\Vendor\Products\Interfaces\ProductImageRepositoryInterface;
 use App\Domain\Vendor\Products\Interfaces\ProductItemRepositoryInterface;
 use App\Domain\Vendor\Products\Interfaces\ProductRepositoryInterface;
 use App\Infrastructure\Repositories\Auth\UserRepository;
@@ -22,6 +23,7 @@ use App\Infrastructure\Repositories\Vendor\Onboarding\SellerBusinessInformationR
 use App\Infrastructure\Repositories\Vendor\Onboarding\SellerContactInformationRepository;
 use App\Infrastructure\Repositories\Vendor\Onboarding\SellerLegalInformationRepository;
 use App\Infrastructure\Repositories\Vendor\Onboarding\SellerPaymentInformationRepository;
+use App\Infrastructure\Repositories\Vendor\Products\ProductImageRepository;
 use App\Infrastructure\Repositories\Vendor\Products\ProductItemRepository;
 use App\Infrastructure\Repositories\Vendor\Products\ProductRepository;
 use Illuminate\Support\ServiceProvider;
@@ -50,6 +52,7 @@ class AppServiceProvider extends ServiceProvider
         /* Vendor Products */
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
         $this->app->bind(ProductItemRepositoryInterface::class, ProductItemRepository::class);
+        $this->app->bind(ProductImageRepositoryInterface::class, ProductImageRepository::class);
 
         /* Inventory */
         $this->app->bind(CategoryRepositoryInterface::class, CategoryRepository::class);

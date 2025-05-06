@@ -63,9 +63,4 @@ class CreateOrUpdateProductDto
     {
         return $this->name;
     }
-
-    public function getCategoryUUID(): string
-    {
-        return $this->categoryUUID;
-    }
 }

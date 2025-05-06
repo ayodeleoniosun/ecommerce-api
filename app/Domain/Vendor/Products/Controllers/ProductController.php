@@ -5,10 +5,13 @@ namespace App\Domain\Vendor\Products\Controllers;
 use App\Application\Shared\Responses\ApiResponse;
 use App\Domain\Vendor\Products\Actions\CreateOrUpdateProduct;
 use App\Domain\Vendor\Products\Actions\CreateOrUpdateProductItem;
+use App\Domain\Vendor\Products\Actions\UploadProductItemImage;
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductDto;
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductItemDto;
+use App\Domain\Vendor\Products\Dtos\UploadProductItemImageDto;
 use App\Domain\Vendor\Products\Requests\StoreOrUpdateProductItemRequest;
 use App\Domain\Vendor\Products\Requests\StoreOrUpdateProductRequest;
+use App\Domain\Vendor\Products\Requests\StoreProductItemImageRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -18,6 +21,7 @@ class ProductController
     public function __construct(
         private readonly CreateOrUpdateProduct $createOrUpdateProduct,
         private readonly CreateOrUpdateProductItem $createOrUpdateProductItem,
+        private readonly UploadProductItemImage $uploadProductItemImage,
     ) {}
 
     public function storeOrUpdateProduct(StoreOrUpdateProductRequest $request): JsonResponse
@@ -49,6 +53,19 @@ class ProductController
             }
 
             return ApiResponse::success('Product item successfully added', $data, Response::HTTP_CREATED);
+        } catch (Exception $e) {
+            return ApiResponse::error($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function storeImages(StoreProductItemImageRequest $request): JsonResponse
+    {
+        $productImage = UploadProductItemImageDto::fromRequest($request->validated());
+
+        try {
+            $data = $this->uploadProductItemImage->execute($productImage);
+
+            return ApiResponse::success('Product image successfully uploaded', $data, Response::HTTP_CREATED);
         } catch (Exception $e) {
             return ApiResponse::error($e->getMessage(), $e->getCode());
         }

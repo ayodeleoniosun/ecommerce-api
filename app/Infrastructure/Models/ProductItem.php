@@ -6,6 +6,7 @@ use App\Application\Shared\Traits\UtilitiesTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -36,5 +37,10 @@ class ProductItem extends Model
     public function variationOption(): BelongsTo
     {
         return $this->belongsTo(CategoryVariationOption::class);
+    }
+
+    public function productImages(): HasMany
+    {
+        return $this->hasMany(ProductImage::class, 'product_item_id', 'id');
     }
 }

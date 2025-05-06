@@ -70,8 +70,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             //            Route::get('/{id}', [ProductController::class, 'view']);
             Route::post('', [ProductController::class, 'storeOrUpdateProduct']);
             Route::post('/items', [ProductController::class, 'storeOrUpdateProductItems']);
-            //            Route::post('/{id}', [ProductController::class, 'storeImages']);
-            //            Route::post('/configurations/{id}', [ProductController::class, 'storeConfigurations']);
+            Route::post('/images', [ProductController::class, 'storeImages']);
             //            Route::delete('/{id}', [ProductController::class, 'delete']);
         });
     });
