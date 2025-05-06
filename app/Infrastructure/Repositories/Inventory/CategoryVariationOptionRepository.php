@@ -9,7 +9,7 @@ use App\Infrastructure\Models\CategoryVariationOption;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class CategoryVariationOptionRepository implements CategoryVariationOptionRepositoryInterface
+class CategoryVariationOptionRepository extends BaseRepository implements CategoryVariationOptionRepositoryInterface
 {
     public function index(Request $request, string $variationId): AnonymousResourceCollection
     {
@@ -28,15 +28,5 @@ class CategoryVariationOptionRepository implements CategoryVariationOptionReposi
     public function store(CreateCategoryVariationOptionDto $categoryVariationOptionDto): void
     {
         CategoryVariationOption::insert($categoryVariationOptionDto->toArray());
-    }
-
-    public function findByColumn(string $field, string $value): ?CategoryVariationOption
-    {
-        return CategoryVariationOption::where($field, $value)->first();
-    }
-
-    public function delete(CategoryVariationOption $option): void
-    {
-        $option->delete();
     }
 }

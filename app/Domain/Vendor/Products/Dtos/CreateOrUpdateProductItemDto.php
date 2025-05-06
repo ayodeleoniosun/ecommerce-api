@@ -4,15 +4,16 @@ namespace App\Domain\Vendor\Products\Dtos;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
 
-class CreateProductItemDto
+class CreateOrUpdateProductItemDto
 {
     use UtilitiesTrait;
 
     public function __construct(
         private readonly string $productUUID,
-        private readonly string $productId,
         private readonly string $categoryVariationOptionUUID,
-        private readonly string $categoryVariationOptionId,
+        private readonly int $productId,
+        private readonly ?int $productItemId,
+        private readonly int $categoryVariationOptionId,
         private readonly int $price,
         private readonly int $quantity,
     ) {}
@@ -21,8 +22,9 @@ class CreateProductItemDto
     {
         return new self(
             productUUID: $payload['product_id'],
-            productId: $payload['merged_product_id'],
             categoryVariationOptionUUID: $payload['variation_option_id'],
+            productId: $payload['merged_product_id'],
+            productItemId: $payload['merged_product_item_id'] ?? null,
             categoryVariationOptionId: $payload['merged_variation_option_id'],
             price: $payload['price'],
             quantity: $payload['quantity'],
@@ -39,12 +41,17 @@ class CreateProductItemDto
         ];
     }
 
-    public function getProductId(): string
+    public function getProductId(): int
     {
         return $this->productId;
     }
 
-    public function getCategoryVariationOptionId(): string
+    public function getProductItemId(): ?int
+    {
+        return $this->productItemId;
+    }
+
+    public function getCategoryVariationOptionId(): int
     {
         return $this->categoryVariationOptionId;
     }

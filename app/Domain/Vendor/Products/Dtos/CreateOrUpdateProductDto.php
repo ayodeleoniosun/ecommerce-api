@@ -5,14 +5,15 @@ namespace App\Domain\Vendor\Products\Dtos;
 use App\Application\Shared\Enum\ProductEnum;
 use App\Application\Shared\Traits\UtilitiesTrait;
 
-class CreateProductDto
+class CreateOrUpdateProductDto
 {
     use UtilitiesTrait;
 
     public function __construct(
-        private readonly int $vendorId,
         private readonly string $categoryUUID,
-        private readonly string $categoryId,
+        private readonly int $vendorId,
+        private readonly int $categoryId,
+        private readonly ?int $productId,
         private readonly string $name,
         private readonly string $description,
     ) {}
@@ -20,9 +21,10 @@ class CreateProductDto
     public static function fromRequest(array $payload): self
     {
         return new self(
-            vendorId: $payload['vendor_id'],
             categoryUUID: $payload['category_id'],
+            vendorId: $payload['vendor_id'],
             categoryId: $payload['merged_category_id'],
+            productId: $payload['merged_product_id'] ?? null,
             name: $payload['name'],
             description: $payload['description'],
         );
@@ -30,6 +32,14 @@ class CreateProductDto
 
     public function toArray(): array
     {
+        if ($this->productId) {
+            return [
+                'category_id' => $this->categoryId,
+                'name' => $this->name,
+                'description' => $this->description,
+            ];
+        }
+
         return [
             'vendor_id' => $this->vendorId,
             'category_id' => $this->categoryId,
@@ -39,9 +49,14 @@ class CreateProductDto
         ];
     }
 
-    public function getVendorId(): string
+    public function getVendorId(): int
     {
         return $this->vendorId;
+    }
+
+    public function getProductId(): ?int
+    {
+        return $this->productId;
     }
 
     public function getName(): string

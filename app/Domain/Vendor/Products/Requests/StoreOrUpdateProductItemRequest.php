@@ -6,13 +6,14 @@ use App\Application\Shared\Responses\ApiResponse;
 use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
 use App\Infrastructure\Models\CategoryVariationOption;
 use App\Infrastructure\Models\Product;
+use App\Infrastructure\Models\ProductItem;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
 
-class StoreProductItemRequest extends FormRequest
+class StoreOrUpdateProductItemRequest extends FormRequest
 {
     use OverrideDefaultValidationMethodTrait;
 
@@ -33,13 +34,15 @@ class StoreProductItemRequest extends FormRequest
     {
         return [
             'product_id' => ['required', 'string', 'exists:products,uuid'],
+            'product_item_id' => ['sometimes', 'string', 'exists:product_items,uuid'],
             'variation_option_id' => [
                 'required',
                 'string',
                 Rule::exists('category_variation_options', 'uuid')->whereNull('deleted_at'),
             ],
-            'merged_product_id' => ['required'],
-            'merged_variation_option_id' => ['required'],
+            'merged_product_id' => ['required', 'integer'],
+            'merged_product_item_id' => ['sometimes', 'integer'],
+            'merged_variation_option_id' => ['required', 'integer'],
             'price' => ['required', 'integer'],
             'quantity' => ['required', 'integer'],
         ];
@@ -63,6 +66,16 @@ class StoreProductItemRequest extends FormRequest
         }
 
         $categoryVariationOption = CategoryVariationOption::where('uuid', $categoryVariationOptionUUID)->first();
+
+        $productItemUUID = $this->input('product_item_id');
+
+        if (! empty($productItemUUID)) {
+            $productItem = ProductItem::where('uuid', $productItemUUID)->first();
+
+            $this->merge([
+                'merged_product_item_id' => $productItem?->id,
+            ]);
+        }
 
         $this->merge([
             'merged_product_id' => $product->id,

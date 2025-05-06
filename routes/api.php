@@ -68,11 +68,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::prefix('products')->group(function () {
             //            Route::get('', [ProductController::class, 'index']);
             //            Route::get('/{id}', [ProductController::class, 'view']);
-            Route::post('', [ProductController::class, 'store']);
-            Route::post('/items', [ProductController::class, 'storeItems']);
+            Route::post('', [ProductController::class, 'storeOrUpdateProduct']);
+            Route::post('/items', [ProductController::class, 'storeOrUpdateProductItems']);
             //            Route::post('/{id}', [ProductController::class, 'storeImages']);
             //            Route::post('/configurations/{id}', [ProductController::class, 'storeConfigurations']);
-            //            Route::put('/{id}', [ProductController::class, 'update']);
             //            Route::delete('/{id}', [ProductController::class, 'delete']);
         });
     });

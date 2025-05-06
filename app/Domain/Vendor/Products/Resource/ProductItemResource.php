@@ -23,6 +23,7 @@ class ProductItemResource extends JsonResource
             'product' => new ProductResource($this->whenLoaded('product')),
             'product_variation_option' => new CategoryVariationOptionResource($this->whenLoaded('variationOption')),
             'created_at' => $this->created_at->diffForHumans(),
+            'updated_at' => $this->updated_at->diffForHumans(),
         ];
     }
 }

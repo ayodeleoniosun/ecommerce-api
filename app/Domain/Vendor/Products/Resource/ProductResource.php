@@ -18,11 +18,12 @@ class ProductResource extends JsonResource
     {
         return [
             'id' => $this->uuid,
-            'name' => ucwords($this->name),
-            'description' => $this->description,
+            'name' => ucfirst($this->name),
+            'description' => ucfirst($this->description),
             'category' => new CategoryResource($this->whenLoaded('category')),
             'vendor' => new VendorResource($this->whenLoaded('vendor')),
             'created_at' => $this->created_at->diffForHumans(),
+            'updated_at' => $this->updated_at->diffForHumans(),
         ];
     }
 }

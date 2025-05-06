@@ -4,10 +4,11 @@ namespace App\Domain\Vendor\Products\Requests;
 
 use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
 use App\Infrastructure\Models\Category;
+use App\Infrastructure\Models\Product;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreProductRequest extends FormRequest
+class StoreOrUpdateProductRequest extends FormRequest
 {
     use OverrideDefaultValidationMethodTrait;
 
@@ -29,8 +30,10 @@ class StoreProductRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'product_id' => ['sometimes', 'string', 'exists:products,uuid'],
             'category_id' => ['required', 'string', 'exists:categories,uuid'],
-            'merged_category_id' => ['required'],
+            'merged_product_id' => ['sometimes', 'integer'],
+            'merged_category_id' => ['required', 'integer'],
             'name' => ['required', 'string'],
             'description' => ['required', 'string'],
         ];
@@ -52,6 +55,18 @@ class StoreProductRequest extends FormRequest
         }
 
         $category = Category::where('uuid', $categoryUUID)->first();
+
+        $productUUID = $this->input('product_id');
+
+        if (! empty($productUUID)) {
+            $product = Product::where('uuid', $productUUID)
+                ->where('vendor_id', auth()->user()->id)
+                ->first();
+
+            $this->merge([
+                'merged_product_id' => $product?->id,
+            ]);
+        }
 
         $this->merge([
             'merged_category_id' => $category?->id,

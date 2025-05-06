@@ -2,24 +2,37 @@
 
 namespace App\Infrastructure\Repositories\Vendor\Products;
 
-use App\Domain\Vendor\Products\Dtos\CreateProductDto;
+use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductDto;
 use App\Domain\Vendor\Products\Interfaces\ProductRepositoryInterface;
 use App\Infrastructure\Models\Product;
+use App\Infrastructure\Repositories\Inventory\BaseRepository;
 
-class ProductRepository implements ProductRepositoryInterface
+class ProductRepository extends BaseRepository implements ProductRepositoryInterface
 {
-    public function store(CreateProductDto $createProductDto): Product
+    public function storeOrUpdate(CreateOrUpdateProductDto $createOrUpdateProductDto): Product
     {
-        $product = Product::updateOrCreate(
-            [
-                'vendor_id' => $createProductDto->getVendorId(),
-                'name' => $createProductDto->getName(),
-            ],
-            $createProductDto->toArray(),
-        );
+        if ($createOrUpdateProductDto->getProductId()) {
+            $searchToUpdateBy = [
+                'id' => $createOrUpdateProductDto->getProductId(),
+            ];
+        } else {
+            $searchToUpdateBy = [
+                'vendor_id' => $createOrUpdateProductDto->getVendorId(),
+                'name' => $createOrUpdateProductDto->getName(),
+            ];
+        }
+
+        $product = Product::updateOrCreate($searchToUpdateBy, $createOrUpdateProductDto->toArray());
 
         $product->load('vendor', 'category');
 
         return $product;
+    }
+
+    public function findExistingProduct(int $vendorId, string $name): ?Product
+    {
+        return Product::where('vendor_id', $vendorId)
+            ->where('name', $name)
+            ->first();
     }
 }

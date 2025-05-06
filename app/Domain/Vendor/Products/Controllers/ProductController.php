@@ -3,12 +3,12 @@
 namespace App\Domain\Vendor\Products\Controllers;
 
 use App\Application\Shared\Responses\ApiResponse;
-use App\Domain\Vendor\Products\Actions\CreateProduct;
-use App\Domain\Vendor\Products\Actions\CreateProductItem;
-use App\Domain\Vendor\Products\Dtos\CreateProductDto;
-use App\Domain\Vendor\Products\Dtos\CreateProductItemDto;
-use App\Domain\Vendor\Products\Requests\StoreProductItemRequest;
-use App\Domain\Vendor\Products\Requests\StoreProductRequest;
+use App\Domain\Vendor\Products\Actions\CreateOrUpdateProduct;
+use App\Domain\Vendor\Products\Actions\CreateOrUpdateProductItem;
+use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductDto;
+use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductItemDto;
+use App\Domain\Vendor\Products\Requests\StoreOrUpdateProductItemRequest;
+use App\Domain\Vendor\Products\Requests\StoreOrUpdateProductRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -16,16 +16,20 @@ use Illuminate\Http\Response;
 class ProductController
 {
     public function __construct(
-        private readonly CreateProduct $createProduct,
-        private readonly CreateProductItem $createProductItem,
+        private readonly CreateOrUpdateProduct $createOrUpdateProduct,
+        private readonly CreateOrUpdateProductItem $createOrUpdateProductItem,
     ) {}
 
-    public function store(StoreProductRequest $request): JsonResponse
+    public function storeOrUpdateProduct(StoreOrUpdateProductRequest $request): JsonResponse
     {
-        $product = CreateProductDto::fromRequest($request->validated());
+        $product = CreateOrUpdateProductDto::fromRequest($request->validated());
 
         try {
-            $data = $this->createProduct->execute($product);
+            $data = $this->createOrUpdateProduct->execute($product);
+
+            if ($data['is_existing_product'] || $product->getProductId()) {
+                return ApiResponse::success('Product successfully updated', $data);
+            }
 
             return ApiResponse::success('Product successfully added', $data, Response::HTTP_CREATED);
         } catch (Exception $e) {
@@ -33,12 +37,16 @@ class ProductController
         }
     }
 
-    public function storeItems(StoreProductItemRequest $request): JsonResponse
+    public function storeOrUpdateProductItems(StoreOrUpdateProductItemRequest $request): JsonResponse
     {
-        $productItem = CreateProductItemDto::fromRequest($request->validated());
+        $productItem = CreateOrUpdateProductItemDto::fromRequest($request->validated());
 
         try {
-            $data = $this->createProductItem->execute($productItem);
+            $data = $this->createOrUpdateProductItem->execute($productItem);
+
+            if ($data['is_existing_product_item'] || $productItem->getProductItemId()) {
+                return ApiResponse::success('Product item successfully updated', $data);
+            }
 
             return ApiResponse::success('Product item successfully added', $data, Response::HTTP_CREATED);
         } catch (Exception $e) {

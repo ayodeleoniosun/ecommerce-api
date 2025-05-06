@@ -4,6 +4,7 @@ namespace App\Domain\Admin\Actions\Category;
 
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Admin\Interfaces\CategoryVariationOptionRepositoryInterface;
+use App\Infrastructure\Models\CategoryVariationOption;
 
 class DeleteCategoryVariationOptions
 {
@@ -13,7 +14,10 @@ class DeleteCategoryVariationOptions
 
     public function execute(string $optionUUID): void
     {
-        $categoryVariationOption = $this->categoryVariationOptionRepository->findByColumn('uuid', $optionUUID);
+        $categoryVariationOption = $this->categoryVariationOptionRepository->findByColumn(
+            CategoryVariationOption::class,
+            'uuid', $optionUUID,
+        );
 
         throw_if(! $categoryVariationOption, ResourceNotFoundException::class, 'Category variation option not found');
 

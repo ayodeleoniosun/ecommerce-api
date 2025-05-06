@@ -7,7 +7,7 @@ use App\Domain\Inventory\Resources\CategoryResourceCollection;
 use App\Infrastructure\Models\Category;
 use Illuminate\Http\Request;
 
-class CategoryRepository implements CategoryRepositoryInterface
+class CategoryRepository extends BaseRepository implements CategoryRepositoryInterface
 {
     public function index(Request $request): CategoryResourceCollection
     {
@@ -22,10 +22,5 @@ class CategoryRepository implements CategoryRepositoryInterface
             ->paginate(10);
 
         return new CategoryResourceCollection($result);
-    }
-
-    public function findByColumn(string $field, string $value): ?Category
-    {
-        return Category::where($field, $value)->first();
     }
 }

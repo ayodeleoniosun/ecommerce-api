@@ -5,6 +5,7 @@ namespace App\Domain\Admin\Actions\Category;
 use App\Domain\Admin\Dtos\CreateCategoryVariationOptionDto;
 use App\Domain\Admin\Interfaces\CategoryVariationOptionRepositoryInterface;
 use App\Domain\Admin\Interfaces\CategoryVariationRepositoryInterface;
+use App\Infrastructure\Models\CategoryVariation;
 
 class CreateCategoryVariationOptions
 {
@@ -15,7 +16,7 @@ class CreateCategoryVariationOptions
 
     public function execute(CreateCategoryVariationOptionDto $categoryVariationOptionDto): array
     {
-        $categoryVariation = $this->categoryVariationRepository->findByColumn('uuid',
+        $categoryVariation = $this->categoryVariationRepository->findByColumn(CategoryVariation::class, 'uuid',
             $categoryVariationOptionDto->getCategoryVariationUUID());
 
         $categoryVariationOptionDto->setCategoryVariationId($categoryVariation->id);
