@@ -5,17 +5,17 @@ namespace App\Infrastructure\Repositories\Vendor\Products;
 use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductDto;
 use App\Domain\Vendor\Products\Interfaces\ProductRepositoryInterface;
-use App\Domain\Vendor\Products\Resource\ProductResourceCollection;
 use App\Infrastructure\Models\Category;
 use App\Infrastructure\Models\Product;
 use App\Infrastructure\Repositories\Inventory\BaseRepository;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 
 class ProductRepository extends BaseRepository implements ProductRepositoryInterface
 {
     use UtilitiesTrait;
 
-    public function index(Request $request): ProductResourceCollection
+    public function index(Request $request): LengthAwarePaginator
     {
         $search = $request->input('search') ?? null;
         $filter = $request->input('filter') ?? null;
@@ -53,9 +53,7 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
             $products->latest();
         }
 
-        $result = $products->paginate(50);
-
-        return new ProductResourceCollection($result);
+        return $products->paginate(50);
     }
 
     public function storeOrUpdate(CreateOrUpdateProductDto $createOrUpdateProductDto): Product
@@ -83,5 +81,10 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
         return Product::where('vendor_id', $vendorId)
             ->where('name', $name)
             ->first();
+    }
+
+    public function view(Product $product): Product
+    {
+        return $product->load(['items', 'category', 'items.images', 'items.variationOption']);
     }
 }

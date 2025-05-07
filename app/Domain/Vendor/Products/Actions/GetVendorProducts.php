@@ -14,6 +14,8 @@ class GetVendorProducts
 
     public function execute(Request $request): ProductResourceCollection
     {
-        return $this->productRepository->index($request);
+        $products = $this->productRepository->index($request);
+
+        return new ProductResourceCollection($products);
     }
 }

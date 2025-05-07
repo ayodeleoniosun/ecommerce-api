@@ -17,7 +17,6 @@ class ProductImageResource extends JsonResource
         return [
             'id' => $this->uuid,
             'path' => $this->path,
-            'uploaded_on' => $this->created_at->diffForHumans(),
         ];
     }
 }

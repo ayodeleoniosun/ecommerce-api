@@ -7,6 +7,7 @@ use App\Domain\Vendor\Products\Actions\CreateOrUpdateProduct;
 use App\Domain\Vendor\Products\Actions\CreateOrUpdateProductItem;
 use App\Domain\Vendor\Products\Actions\GetVendorProducts;
 use App\Domain\Vendor\Products\Actions\UploadProductItemImage;
+use App\Domain\Vendor\Products\Actions\ViewVendorProduct;
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductDto;
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductItemDto;
 use App\Domain\Vendor\Products\Dtos\UploadProductItemImageDto;
@@ -22,6 +23,7 @@ class ProductController
 {
     public function __construct(
         private readonly GetVendorProducts $vendorProducts,
+        private readonly ViewVendorProduct $vendorProduct,
         private readonly CreateOrUpdateProduct $createOrUpdateProduct,
         private readonly CreateOrUpdateProductItem $createOrUpdateProductItem,
         private readonly UploadProductItemImage $uploadProductItemImage,
@@ -38,12 +40,12 @@ class ProductController
         }
     }
 
-    public function view(Request $request): JsonResponse
+    public function view(string $productItemUUID): JsonResponse
     {
         try {
-            $data = $this->vendorProducts->execute($request);
+            $data = $this->vendorProduct->execute($productItemUUID);
 
-            return ApiResponse::success('Products successfully retrieved', $data);
+            return ApiResponse::success('Product successfully retrieved', $data);
         } catch (Exception $e) {
             return ApiResponse::error($e->getMessage(), $e->getCode());
         }

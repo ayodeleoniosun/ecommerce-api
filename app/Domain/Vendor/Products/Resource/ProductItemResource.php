@@ -2,7 +2,7 @@
 
 namespace App\Domain\Vendor\Products\Resource;
 
-use App\Domain\Admin\Resources\Inventory\CategoryVariationOptionResource;
+use App\Application\Shared\Enum\ProductEnum;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -19,11 +19,11 @@ class ProductItemResource extends JsonResource
             'id' => $this->uuid,
             'sku' => $this->sku,
             'quantity' => $this->quantity,
+            'status' => $this->quantity > 0 ? ProductEnum::IN_STOCK : ProductEnum::OUT_OF_STOCK,
             'price' => number_format($this->price, 2),
-            'image' => new ProductImageResource($this->whenLoaded('firstImage')),
-            'attribute' => new CategoryVariationOptionResource($this->whenLoaded('variationOption')),
-            'created_at' => $this->created_at->diffForHumans(),
-            'updated_at' => $this->updated_at->diffForHumans(),
+            'attribute' => $this->whenLoaded('variationOption', function ($attribute) {
+                return $attribute->value;
+            }),
         ];
     }
 }

@@ -15,7 +15,7 @@ class ProductResourceCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            'products' => ProductResource::collection($this->items()),
+            'products' => AllProductResource::collection($this->items()),
             'paginations' => [
                 'current_page' => $this->currentPage(),
                 'from' => $this->firstItem(),

@@ -4,7 +4,7 @@ namespace App\Domain\Vendor\Products\Actions;
 
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductDto;
 use App\Domain\Vendor\Products\Interfaces\ProductRepositoryInterface;
-use App\Domain\Vendor\Products\Resource\ProductResource;
+use App\Domain\Vendor\Products\Resource\AllProductResource;
 
 class CreateOrUpdateProduct
 {
@@ -23,7 +23,7 @@ class CreateOrUpdateProduct
 
         return [
             'is_existing_product' => (bool) $existingProduct,
-            'product' => new ProductResource($product),
+            'product' => new AllProductResource($product),
         ];
     }
 }

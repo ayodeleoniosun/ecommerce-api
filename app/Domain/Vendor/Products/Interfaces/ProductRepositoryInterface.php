@@ -3,13 +3,15 @@
 namespace App\Domain\Vendor\Products\Interfaces;
 
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductDto;
-use App\Domain\Vendor\Products\Resource\ProductResourceCollection;
 use App\Infrastructure\Models\Product;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 
 interface ProductRepositoryInterface
 {
-    public function index(Request $request): ProductResourceCollection;
+    public function index(Request $request): LengthAwarePaginator;
+
+    public function view(Product $product): Product;
 
     public function storeOrUpdate(CreateOrUpdateProductDto $createOrUpdateProductDto): Product;
 
