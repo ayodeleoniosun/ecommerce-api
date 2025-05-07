@@ -5,6 +5,7 @@ namespace App\Domain\Vendor\Products\Controllers;
 use App\Application\Shared\Responses\ApiResponse;
 use App\Domain\Vendor\Products\Actions\CreateOrUpdateProduct;
 use App\Domain\Vendor\Products\Actions\CreateOrUpdateProductItem;
+use App\Domain\Vendor\Products\Actions\GetVendorProducts;
 use App\Domain\Vendor\Products\Actions\UploadProductItemImage;
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductDto;
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductItemDto;
@@ -14,15 +15,28 @@ use App\Domain\Vendor\Products\Requests\StoreOrUpdateProductRequest;
 use App\Domain\Vendor\Products\Requests\StoreProductItemImageRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class ProductController
 {
     public function __construct(
+        private readonly GetVendorProducts $vendorProducts,
         private readonly CreateOrUpdateProduct $createOrUpdateProduct,
         private readonly CreateOrUpdateProductItem $createOrUpdateProductItem,
         private readonly UploadProductItemImage $uploadProductItemImage,
     ) {}
+
+    public function index(Request $request): JsonResponse
+    {
+        try {
+            $data = $this->vendorProducts->execute($request);
+
+            return ApiResponse::success('Products successfully retrieved', $data);
+        } catch (Exception $e) {
+            return ApiResponse::error($e->getMessage(), $e->getCode());
+        }
+    }
 
     public function storeOrUpdateProduct(StoreOrUpdateProductRequest $request): JsonResponse
     {

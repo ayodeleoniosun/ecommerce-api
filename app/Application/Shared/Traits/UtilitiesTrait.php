@@ -25,4 +25,13 @@ trait UtilitiesTrait
     {
         return Carbon::parse($date)->format('F jS, Y h:i:s');
     }
+
+    public static function filterColumn(): array
+    {
+        return [
+            'date' => 'created_at',
+            'price' => 'price',
+            'quantity' => 'quantity',
+        ];
+    }
 }

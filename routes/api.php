@@ -66,7 +66,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         });
 
         Route::prefix('products')->group(function () {
-            //            Route::get('', [ProductController::class, 'index']);
+            Route::get('', [ProductController::class, 'index']);
             //            Route::get('/{id}', [ProductController::class, 'view']);
             Route::post('', [ProductController::class, 'storeOrUpdateProduct']);
             Route::post('/items', [ProductController::class, 'storeOrUpdateProductItems']);

@@ -22,8 +22,8 @@ class ProductResource extends JsonResource
             'description' => ucfirst($this->description),
             'category' => new CategoryResource($this->whenLoaded('category')),
             'vendor' => new VendorResource($this->whenLoaded('vendor')),
+            'items' => ProductItemResource::collection($this->whenLoaded('items')),
             'created_at' => $this->created_at->diffForHumans(),
-            'updated_at' => $this->updated_at->diffForHumans(),
         ];
     }
 }

@@ -35,7 +35,7 @@ class CreateOrUpdateProductDto
         if ($this->productId) {
             return [
                 'category_id' => $this->categoryId,
-                'name' => $this->name,
+                'name' => strtolower($this->name),
                 'description' => $this->description,
             ];
         }
@@ -43,7 +43,7 @@ class CreateOrUpdateProductDto
         return [
             'vendor_id' => $this->vendorId,
             'category_id' => $this->categoryId,
-            'name' => $this->name,
+            'name' => strtolower($this->name),
             'description' => $this->description,
             'status' => ProductEnum::ACTIVE->value,
         ];
