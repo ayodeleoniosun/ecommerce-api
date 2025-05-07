@@ -5,6 +5,9 @@ namespace App\Domain\Vendor\Products\Controllers;
 use App\Application\Shared\Responses\ApiResponse;
 use App\Domain\Vendor\Products\Actions\CreateOrUpdateProduct;
 use App\Domain\Vendor\Products\Actions\CreateOrUpdateProductItem;
+use App\Domain\Vendor\Products\Actions\DeleteVendorProduct;
+use App\Domain\Vendor\Products\Actions\DeleteVendorProductImage;
+use App\Domain\Vendor\Products\Actions\DeleteVendorProductItem;
 use App\Domain\Vendor\Products\Actions\GetVendorProducts;
 use App\Domain\Vendor\Products\Actions\UploadProductItemImage;
 use App\Domain\Vendor\Products\Actions\ViewVendorProduct;
@@ -27,6 +30,9 @@ class ProductController
         private readonly CreateOrUpdateProduct $createOrUpdateProduct,
         private readonly CreateOrUpdateProductItem $createOrUpdateProductItem,
         private readonly UploadProductItemImage $uploadProductItemImage,
+        private readonly DeleteVendorProductImage $deleteVendorProductImage,
+        private readonly DeleteVendorProductItem $deleteVendorProductItem,
+        private readonly DeleteVendorProduct $deleteVendorProduct,
     ) {}
 
     public function index(Request $request): JsonResponse
@@ -94,6 +100,41 @@ class ProductController
 
             return ApiResponse::success('Product image successfully uploaded', $data, Response::HTTP_CREATED);
         } catch (Exception $e) {
+            return ApiResponse::error($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function deleteProductImage(string $productImageUUID): JsonResponse
+    {
+        try {
+            $this->deleteVendorProductImage->execute($productImageUUID);
+
+            return ApiResponse::success('Product image successfully deleted');
+        } catch (Exception $e) {
+            return ApiResponse::error($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function deleteProductItem(string $productItemUUID): JsonResponse
+    {
+        try {
+            $this->deleteVendorProductItem->execute($productItemUUID);
+
+            return ApiResponse::success('Product item successfully deleted');
+        } catch (Exception $e) {
+            return ApiResponse::error($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function deleteProduct(string $productUUID): JsonResponse
+    {
+        try {
+            $this->deleteVendorProduct->execute($productUUID);
+
+            return ApiResponse::success('Product successfully deleted');
+        } catch (Exception $e) {
+            dd($e);
+
             return ApiResponse::error($e->getMessage(), $e->getCode());
         }
     }

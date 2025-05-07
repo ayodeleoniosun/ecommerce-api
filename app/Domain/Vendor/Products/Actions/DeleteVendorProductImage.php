@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Domain\Vendor\Products\Actions;
+
+use App\Application\Shared\Exceptions\ResourceNotFoundException;
+use App\Domain\Vendor\Products\Interfaces\ProductImageRepositoryInterface;
+use App\Infrastructure\Models\ProductImage;
+
+class DeleteVendorProductImage
+{
+    public function __construct(
+        private readonly ProductImageRepositoryInterface $productImageRepository,
+    ) {}
+
+    public function execute(string $productImageUUID): void
+    {
+        $productImage = $this->productImageRepository->findByColumn(ProductImage::class, 'uuid', $productImageUUID);
+
+        throw_if(! $productImage, ResourceNotFoundException::class, 'Product image not found');
+
+        $this->productImageRepository->delete($productImage);
+    }
+}

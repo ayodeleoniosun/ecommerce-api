@@ -39,6 +39,15 @@ class ProductItem extends Model
             $model->uuid = self::generateUUID();
             $model->sku = 'PRO-SKU-'.self::generateRandomCharacters();
         });
+
+        static::deleting(function ($model) {
+            $model->images()->delete();
+        });
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(ProductImage::class, 'product_item_id', 'id');
     }
 
     public function product(): BelongsTo
@@ -49,11 +58,6 @@ class ProductItem extends Model
     public function variationOption(): BelongsTo
     {
         return $this->belongsTo(CategoryVariationOption::class);
-    }
-
-    public function images(): HasMany
-    {
-        return $this->hasMany(ProductImage::class, 'product_item_id', 'id');
     }
 
     public function firstImage(): HasOne

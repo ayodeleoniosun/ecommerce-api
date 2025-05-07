@@ -71,7 +71,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             Route::post('', [ProductController::class, 'storeOrUpdateProduct']);
             Route::post('/items', [ProductController::class, 'storeOrUpdateProductItems']);
             Route::post('/images', [ProductController::class, 'storeImages']);
-            //            Route::delete('/{id}', [ProductController::class, 'delete']);
+            Route::delete('/images/{productImageUUID}', [ProductController::class, 'deleteProductImage']);
+            Route::delete('/items/{productItemUUID}', [ProductController::class, 'deleteProductItem']);
+            Route::delete('/{productUUID}', [ProductController::class, 'deleteProduct']);
         });
     });
 });

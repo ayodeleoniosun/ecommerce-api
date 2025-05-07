@@ -27,6 +27,15 @@ class Product extends Model
         static::creating(function ($model) {
             $model->uuid = self::generateUUID();
         });
+
+        static::deleting(function ($model) {
+            $model->items()->delete();
+        });
+    }
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(ProductItem::class, 'product_id', 'id');
     }
 
     public function vendor(): BelongsTo
@@ -37,11 +46,6 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
-    }
-
-    public function items(): HasMany
-    {
-        return $this->hasMany(ProductItem::class, 'product_id', 'id');
     }
 
     public function firstItem(): HasOne
