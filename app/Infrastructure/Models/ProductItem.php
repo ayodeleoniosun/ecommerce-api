@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -18,6 +19,17 @@ class ProductItem extends Model
     use HasFactory, SoftDeletes, UtilitiesTrait;
 
     protected $guarded = ['id', 'uuid'];
+
+    public static function getPriceRange(int $productId): array
+    {
+        $range = self::selectRaw('MIN(price) as min, MAX(price) as max')->where('product_id', $productId)
+            ->first();
+
+        return [
+            'min' => $range->min,
+            'max' => $range->max,
+        ];
+    }
 
     protected static function boot()
     {
@@ -31,7 +43,7 @@ class ProductItem extends Model
 
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
     public function variationOption(): BelongsTo
@@ -39,8 +51,13 @@ class ProductItem extends Model
         return $this->belongsTo(CategoryVariationOption::class);
     }
 
-    public function productImages(): HasMany
+    public function images(): HasMany
     {
         return $this->hasMany(ProductImage::class, 'product_item_id', 'id');
+    }
+
+    public function firstImage(): HasOne
+    {
+        return $this->hasOne(ProductImage::class, 'product_item_id', 'id')->latest();
     }
 }

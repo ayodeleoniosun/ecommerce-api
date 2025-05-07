@@ -38,6 +38,17 @@ class ProductController
         }
     }
 
+    public function view(Request $request): JsonResponse
+    {
+        try {
+            $data = $this->vendorProducts->execute($request);
+
+            return ApiResponse::success('Products successfully retrieved', $data);
+        } catch (Exception $e) {
+            return ApiResponse::error($e->getMessage(), $e->getCode());
+        }
+    }
+
     public function storeOrUpdateProduct(StoreOrUpdateProductRequest $request): JsonResponse
     {
         $product = CreateOrUpdateProductDto::fromRequest($request->validated());

@@ -20,7 +20,7 @@ class ProductItemResource extends JsonResource
             'sku' => $this->sku,
             'quantity' => $this->quantity,
             'price' => number_format($this->price, 2),
-            'product' => new ProductResource($this->whenLoaded('product')),
+            'image' => new ProductImageResource($this->whenLoaded('firstImage')),
             'attribute' => new CategoryVariationOptionResource($this->whenLoaded('variationOption')),
             'created_at' => $this->created_at->diffForHumans(),
             'updated_at' => $this->updated_at->diffForHumans(),

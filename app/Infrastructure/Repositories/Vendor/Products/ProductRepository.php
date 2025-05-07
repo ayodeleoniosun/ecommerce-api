@@ -19,34 +19,36 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
     {
         $search = $request->input('search') ?? null;
         $filter = $request->input('filter') ?? null;
-        $filterValue = $request->input('value') ?? null;
+        $sort = $request->input('sort') ?? null;
+        $value = $request->input('value') ?? null;
 
         $products = Product::with(
-            'vendor',
             'category',
             'items',
-            'items.variationOption',
-            'items.variationOption.variation',
-        )->when($search, function ($query) use ($search) {
-            $query->where('name', 'like', "%{$search}%");
-        })->when($filter, function ($query) use ($filter, $filterValue) {
-            $query->with([
-                'items' => function ($query) use ($filter, $filterValue) {
-                    $filterColumn = self::filterColumn();
-
-                    $query->orderBy($filterColumn[$filter], $filterValue === 'asc' ? 'asc' : 'desc');
-                },
-            ]);
-
-            if ($filter === 'category') {
-                $category = Category::where('uuid', $filterValue)->first();
-
+            'firstItem',
+            'firstItem.firstImage',
+        )->whereHas('items')
+            ->when($search, function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%");
+            })->when($sort === 'date', function ($query) use ($value) {
+                $query->whereHas('items', function ($q) use ($value) {
+                    $q->orderBy('created_at', $value === 'asc' ? 'asc' : 'desc');
+                });
+            })->when($sort === 'price', function ($query) use ($value) {
+                $query->whereHas('items')
+                    ->withMin('items as items_price_min', 'price')
+                    ->orderBy('items_price_min', $value === 'asc' ? 'asc' : 'desc');
+            })->when($filter === 'price' && is_array($value), function ($query) use ($value) {
+                $query->whereHas('items', function ($q) use ($value) {
+                    $q->whereBetween('price', [$value[0], $value[1]]);
+                });
+            })->when($filter === 'category', function ($query) use ($value) {
+                $category = Category::where('uuid', $value)->first();
                 $query->where('category_id', $category?->id);
-            }
-        });
+            });
 
-        if ($filter === 'date') {
-            $products->orderBy('created_at', $filterValue === 'asc' ? 'asc' : 'desc');
+        if ($sort === 'date') {
+            $products->orderBy('created_at', $value === 'asc' ? 'asc' : 'desc');
         } else {
             $products->latest();
         }

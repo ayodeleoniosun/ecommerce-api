@@ -4,6 +4,7 @@ namespace App\Domain\Vendor\Products\Resource;
 
 use App\Domain\Admin\Resources\Inventory\CategoryResource;
 use App\Domain\Admin\Resources\User\VendorResource;
+use App\Infrastructure\Models\ProductItem;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -22,7 +23,10 @@ class ProductResource extends JsonResource
             'description' => ucfirst($this->description),
             'category' => new CategoryResource($this->whenLoaded('category')),
             'vendor' => new VendorResource($this->whenLoaded('vendor')),
-            'items' => ProductItemResource::collection($this->whenLoaded('items')),
+            'price_range' => ProductItem::getPriceRange($this->id),
+            'image' => $this->whenLoaded('firstItem', function () {
+                return $this->firstItem->firstImage->path ?? null;
+            }),
             'created_at' => $this->created_at->diffForHumans(),
         ];
     }
