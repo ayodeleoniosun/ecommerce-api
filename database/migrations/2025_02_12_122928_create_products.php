@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained('categories')->nullOnDelete();
             $table->string('name');
             $table->text('description');
-            $table->string('status')->default(ProductEnum::ACTIVE->value);
+            $table->string('status')->default(ProductEnum::IN_STOCK->value);
             $table->timestamp('disabled_at')->nullable();
             $table->timestamps();
             $table->softDeletes();

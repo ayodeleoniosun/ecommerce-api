@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('uuid')->unique();
             $table->foreignId('cart_id')->constrained('carts')->nullOnDelete();
-            $table->foreignId('product_id')->constrained('products')->nullOnDelete();
+            $table->foreignId('product_item_id')->constrained('product_items')->nullOnDelete();
             $table->string('quantity');
             $table->timestamps();
             $table->softDeletes();

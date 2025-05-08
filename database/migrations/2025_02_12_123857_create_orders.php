@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('uuid')->unique();
             $table->string('reference')->unique();
             $table->foreignId('user_id')->constrained('users')->nullOnDelete();
-            $table->foreignId('product_id')->constrained('products')->nullOnDelete();
+            $table->foreignId('product_item_id')->constrained('product_items')->nullOnDelete();
             $table->string('quantity');
             $table->string('status')->default(PaymentEnum::PENDING->value);
             $table->timestamps();
