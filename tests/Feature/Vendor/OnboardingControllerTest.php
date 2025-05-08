@@ -26,7 +26,7 @@ describe('create vendor contact information', function () {
             'contact_name' => 'John Doe',
         ];
 
-        $response = $this->postJson('/api/vendor/setup/contact', $payload);
+        $response = $this->postJson('/api/vendors/setup/contact', $payload);
         $content = json_decode($response->getContent());
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
@@ -49,7 +49,7 @@ describe('create vendor contact information', function () {
             'address' => 'Bodija, Ibadan',
         ];
 
-        $response = $this->postJson('/api/vendor/setup/contact', $payload);
+        $response = $this->postJson('/api/vendors/setup/contact', $payload);
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_CONFLICT);
@@ -73,7 +73,7 @@ describe('create vendor contact information', function () {
             'address' => 'Bodija, Ibadan',
         ];
 
-        $response = $this->postJson('/api/vendor/setup/contact', $payload);
+        $response = $this->postJson('/api/vendors/setup/contact', $payload);
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_CONFLICT);
@@ -93,7 +93,7 @@ describe('create vendor contact information', function () {
             'address' => 'Bodija, Ibadan',
         ];
 
-        $response = $this->postJson('/api/vendor/setup/contact', $payload);
+        $response = $this->postJson('/api/vendors/setup/contact', $payload);
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_OK)
@@ -129,7 +129,7 @@ describe('create vendor business information', function () {
             'company_name' => 'Company name',
         ];
 
-        $response = $this->postJson('/api/vendor/setup/business', $payload);
+        $response = $this->postJson('/api/vendors/setup/business', $payload);
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -150,7 +150,7 @@ describe('create vendor business information', function () {
             'tax_identification_number' => '123456789',
         ];
 
-        $response = $this->postJson('/api/vendor/setup/business', $payload);
+        $response = $this->postJson('/api/vendors/setup/business', $payload);
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_CONFLICT);
@@ -171,7 +171,7 @@ describe('create vendor business information', function () {
             'tax_identification_number' => '123456789',
         ];
 
-        $response = $this->postJson('/api/vendor/setup/business', $payload);
+        $response = $this->postJson('/api/vendors/setup/business', $payload);
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_CONFLICT);
@@ -192,7 +192,7 @@ describe('create vendor business information', function () {
             'tax_identification_number' => $vendorBusinessInformation->tax_identification_number,
         ];
 
-        $response = $this->postJson('/api/vendor/setup/business', $payload);
+        $response = $this->postJson('/api/vendors/setup/business', $payload);
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_CONFLICT);
@@ -209,7 +209,7 @@ describe('create vendor business information', function () {
             'tax_identification_number' => '12345678',
         ];
 
-        $response = $this->postJson('/api/vendor/setup/business', $payload);
+        $response = $this->postJson('/api/vendors/setup/business', $payload);
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_OK)
@@ -242,7 +242,7 @@ describe('create vendor legal information', function () {
             'fullname' => 'John Doe',
         ];
 
-        $response = $this->postJson('/api/vendor/setup/legal', $payload);
+        $response = $this->postJson('/api/vendors/setup/legal', $payload);
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -262,7 +262,7 @@ describe('create vendor legal information', function () {
             'legal_certificate_path' => UploadedFile::fake()->image('legal-certificate.jpg'),
         ];
 
-        $response = $this->postJson('/api/vendor/setup/legal', $payload);
+        $response = $this->postJson('/api/vendors/setup/legal', $payload);
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_CONFLICT);
@@ -278,7 +278,7 @@ describe('create vendor legal information', function () {
             'legal_certificate_path' => UploadedFile::fake()->image('legal-certificate.jpg'),
         ];
 
-        $response = $this->postJson('/api/vendor/setup/legal', $payload);
+        $response = $this->postJson('/api/vendors/setup/legal', $payload);
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_OK)
@@ -305,7 +305,7 @@ describe('create vendor payment information', function () {
             'account_name' => 'John Doe',
         ];
 
-        $response = $this->postJson('/api/vendor/setup/payment', $payload);
+        $response = $this->postJson('/api/vendors/setup/payment', $payload);
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -323,7 +323,7 @@ describe('create vendor payment information', function () {
             'swift_code' => '123456',
         ];
 
-        $response = $this->postJson('/api/vendor/setup/payment', $payload);
+        $response = $this->postJson('/api/vendors/setup/payment', $payload);
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_OK)
@@ -367,7 +367,7 @@ describe('get vendor setup status', function () {
             'user_id' => $this->user->id,
         ]);
 
-        $response = $this->getJson('/api/vendor/setup/status');
+        $response = $this->getJson('/api/vendors/setup/status');
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_OK)

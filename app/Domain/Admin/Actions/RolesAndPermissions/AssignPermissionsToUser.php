@@ -16,7 +16,7 @@ class AssignPermissionsToUser
 
     public function execute(Request $request): Collection
     {
-        $user = $this->userRepository->findByColumn('uuid', $request->input('permission_user_id'));
+        $user = $this->userRepository->findByColumn('uuid', $request->input('user_id'));
 
         throw_if(! $user->email_verified_at, BadRequestException::class, 'User not yet verified');
 

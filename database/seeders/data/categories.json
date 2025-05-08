@@ -40,5 +40,19 @@
                 "slug": "personal-budgeting"
             }
         ]
+    },
+    {
+        "name": "Clothing",
+        "slug": "clothing",
+        "subcategories": [
+            {
+                "name": "Men wears",
+                "slug": "men-wears"
+            },
+            {
+                "name": "Women wears",
+                "slug": "women-wears"
+            }
+        ]
     }
 ]

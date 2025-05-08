@@ -4,6 +4,7 @@ namespace App\Domain\Admin\Requests\RolesAndPermissions;
 
 use App\Application\Shared\Responses\ApiResponse;
 use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
+use App\Infrastructure\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -30,17 +31,25 @@ class AssignPermissionsToUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'permission_user_id' => ['required', 'string', 'exists:users,uuid'],
+            'user_id' => ['required', 'string', 'exists:users,uuid'],
             'permissions' => ['required', 'array'],
             'permissions.*' => ['required', 'exists:permissions,name'],
         ];
     }
 
-    public function prepareForValidation()
+    protected function prepareForValidation(): void
     {
-        $this->merge([
-            'user_id' => auth()->user()->id,
-        ]);
+        $userUUID = $this->input('user_id');
+
+        if (empty($userUUID)) {
+            return;
+        }
+
+        $user = User::where('uuid', $userUUID)->first();
+
+        if (! $user) {
+            throw new HttpResponseException(ApiResponse::error('User does not exist', Response::HTTP_NOT_FOUND));
+        }
     }
 
     /**
