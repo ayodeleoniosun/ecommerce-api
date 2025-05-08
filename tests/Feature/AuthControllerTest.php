@@ -643,7 +643,7 @@ describe('authenticated', function () {
 
     it('should throw an error if user is not yet verified', function () {
         $this->user = User::factory()->create();
-        $this->actingAs($this->user);
+        $this->actingAs($this->user, 'sanctum');
 
         $response = $this->getJson('/api/authenticated');
         $content = json_decode($response->getContent());
@@ -658,7 +658,7 @@ describe('authenticated', function () {
         $this->user = User::factory()->create([
             'email_verified_at' => now(),
         ]);
-        $this->actingAs($this->user);
+        $this->actingAs($this->user, 'sanctum');
 
         $response = $this->getJson('/api/authenticated');
         $content = json_decode($response->getContent());

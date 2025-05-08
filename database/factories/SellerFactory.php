@@ -3,16 +3,18 @@
 namespace Database\Factories;
 
 use App\Application\Shared\Enum\UserEnum;
+use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Infrastructure\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Model>
  */
 class SellerFactory extends Factory
 {
+    use UtilitiesTrait;
+
     /**
      * Define the model's default state.
      *
@@ -22,7 +24,7 @@ class SellerFactory extends Factory
     {
         return [
             'user_id' => User::factory()->create()->id,
-            'uuid' => str::uuid(),
+            'uuid' => self::generateUUID(),
             'phone_number' => fake()->phoneNumber,
             'office_address' => fake()->address,
             'business_name' => fake()->company(),

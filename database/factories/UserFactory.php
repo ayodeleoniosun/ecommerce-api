@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Application\Shared\Enum\UserEnum;
 use App\Application\Shared\Enum\UserTypeEnum;
+use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Infrastructure\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -14,6 +15,8 @@ use Illuminate\Support\Str;
  */
 class UserFactory extends Factory
 {
+    use UtilitiesTrait;
+
     /**
      * The current password being used by the factory.
      */
@@ -29,7 +32,7 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'uuid' => str::uuid(),
+            'uuid' => self::generateUUID(),
             'firstname' => fake()->firstName,
             'lastname' => fake()->firstName,
             'email' => fake()->unique()->safeEmail(),

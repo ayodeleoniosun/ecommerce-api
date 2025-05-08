@@ -17,7 +17,7 @@ beforeEach(function () {
         'status' => UserEnum::ACTIVE->value,
     ]);
 
-    $this->actingAs($this->user);
+    $this->actingAs($this->user, 'sanctum');
 });
 
 describe('create seller contact information', function () {

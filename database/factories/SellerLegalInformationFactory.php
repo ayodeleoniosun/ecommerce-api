@@ -3,16 +3,18 @@
 namespace Database\Factories;
 
 use App\Application\Shared\Enum\UserEnum;
+use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Infrastructure\Models\SellerLegalInformation;
 use App\Infrastructure\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 /**
  * @extends Factory<SellerLegalInformation>
  */
 class SellerLegalInformationFactory extends Factory
 {
+    use UtilitiesTrait;
+
     protected $model = SellerLegalInformation::class;
 
     /**
@@ -23,7 +25,7 @@ class SellerLegalInformationFactory extends Factory
     public function definition(): array
     {
         return [
-            'uuid' => str::uuid(),
+            'uuid' => self::generateUUID(),
             'user_id' => User::factory()->create()->id,
             'fullname' => fake()->firstName,
             'email' => fake()->unique()->safeEmail(),
