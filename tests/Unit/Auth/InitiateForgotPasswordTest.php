@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Application\Actions\Auth;
+namespace Tests\Unit\Auth;
 
 use App\Application\Shared\Enum\UserEnum;
 use App\Application\Shared\Exceptions\BadRequestException;

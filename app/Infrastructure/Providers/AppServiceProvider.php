@@ -7,10 +7,10 @@ use App\Domain\Admin\Interfaces\CategoryVariationRepositoryInterface;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface;
 use App\Domain\Inventory\Interfaces\CategoryRepositoryInterface;
-use App\Domain\Vendor\Onboarding\Interfaces\SellerBusinessInformationRepositoryInterface;
-use App\Domain\Vendor\Onboarding\Interfaces\SellerContactInformationRepositoryInterface;
-use App\Domain\Vendor\Onboarding\Interfaces\SellerLegalInformationRepositoryInterface;
-use App\Domain\Vendor\Onboarding\Interfaces\SellerPaymentInformationRepositoryInterface;
+use App\Domain\Vendor\Onboarding\Interfaces\VendorBusinessInformationRepositoryInterface;
+use App\Domain\Vendor\Onboarding\Interfaces\VendorContactInformationRepositoryInterface;
+use App\Domain\Vendor\Onboarding\Interfaces\VendorLegalInformationRepositoryInterface;
+use App\Domain\Vendor\Onboarding\Interfaces\VendorPaymentInformationRepositoryInterface;
 use App\Domain\Vendor\Products\Interfaces\ProductImageRepositoryInterface;
 use App\Domain\Vendor\Products\Interfaces\ProductItemRepositoryInterface;
 use App\Domain\Vendor\Products\Interfaces\ProductRepositoryInterface;
@@ -19,10 +19,10 @@ use App\Infrastructure\Repositories\Auth\UserVerificationRepository;
 use App\Infrastructure\Repositories\Inventory\CategoryRepository;
 use App\Infrastructure\Repositories\Inventory\CategoryVariationOptionRepository;
 use App\Infrastructure\Repositories\Inventory\CategoryVariationRepository;
-use App\Infrastructure\Repositories\Vendor\Onboarding\SellerBusinessInformationRepository;
-use App\Infrastructure\Repositories\Vendor\Onboarding\SellerContactInformationRepository;
-use App\Infrastructure\Repositories\Vendor\Onboarding\SellerLegalInformationRepository;
-use App\Infrastructure\Repositories\Vendor\Onboarding\SellerPaymentInformationRepository;
+use App\Infrastructure\Repositories\Vendor\Onboarding\VendorBusinessInformationRepository;
+use App\Infrastructure\Repositories\Vendor\Onboarding\VendorContactInformationRepository;
+use App\Infrastructure\Repositories\Vendor\Onboarding\VendorLegalInformationRepository;
+use App\Infrastructure\Repositories\Vendor\Onboarding\VendorPaymentInformationRepository;
 use App\Infrastructure\Repositories\Vendor\Products\ProductImageRepository;
 use App\Infrastructure\Repositories\Vendor\Products\ProductItemRepository;
 use App\Infrastructure\Repositories\Vendor\Products\ProductRepository;
@@ -40,14 +40,14 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(UserVerificationRepositoryInterface::class, UserVerificationRepository::class);
 
         /* Vendor Onboarding */
-        $this->app->bind(SellerContactInformationRepositoryInterface::class,
-            SellerContactInformationRepository::class);
-        $this->app->bind(SellerBusinessInformationRepositoryInterface::class,
-            SellerBusinessInformationRepository::class);
-        $this->app->bind(SellerLegalInformationRepositoryInterface::class,
-            SellerLegalInformationRepository::class);
-        $this->app->bind(SellerPaymentInformationRepositoryInterface::class,
-            SellerPaymentInformationRepository::class);
+        $this->app->bind(VendorContactInformationRepositoryInterface::class,
+            VendorContactInformationRepository::class);
+        $this->app->bind(VendorBusinessInformationRepositoryInterface::class,
+            VendorBusinessInformationRepository::class);
+        $this->app->bind(VendorLegalInformationRepositoryInterface::class,
+            VendorLegalInformationRepository::class);
+        $this->app->bind(VendorPaymentInformationRepositoryInterface::class,
+            VendorPaymentInformationRepository::class);
 
         /* Vendor Products */
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);

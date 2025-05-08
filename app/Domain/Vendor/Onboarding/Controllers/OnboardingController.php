@@ -3,19 +3,19 @@
 namespace App\Domain\Vendor\Onboarding\Controllers;
 
 use App\Application\Shared\Responses\ApiResponse;
-use App\Domain\Vendor\Onboarding\Actions\CreateSellerBusinessInformation;
-use App\Domain\Vendor\Onboarding\Actions\CreateSellerContactInformation;
-use App\Domain\Vendor\Onboarding\Actions\CreateSellerLegalInformation;
-use App\Domain\Vendor\Onboarding\Actions\CreateSellerPaymentInformation;
-use App\Domain\Vendor\Onboarding\Actions\GetSellerSetupStatus;
-use App\Domain\Vendor\Onboarding\Dtos\CreateSellerBusinessInformationDto;
-use App\Domain\Vendor\Onboarding\Dtos\CreateSellerContactInformationDto;
-use App\Domain\Vendor\Onboarding\Dtos\CreateSellerLegalInformationDto;
-use App\Domain\Vendor\Onboarding\Dtos\CreateSellerPaymentInformationDto;
-use App\Domain\Vendor\Onboarding\Requests\SellerBusinessInformationRequest;
-use App\Domain\Vendor\Onboarding\Requests\SellerContactInformationRequest;
-use App\Domain\Vendor\Onboarding\Requests\SellerLegalInformationRequest;
-use App\Domain\Vendor\Onboarding\Requests\SellerPaymentInformationRequest;
+use App\Domain\Vendor\Onboarding\Actions\CreateVendorBusinessInformation;
+use App\Domain\Vendor\Onboarding\Actions\CreateVendorContactInformation;
+use App\Domain\Vendor\Onboarding\Actions\CreateVendorLegalInformation;
+use App\Domain\Vendor\Onboarding\Actions\CreateVendorPaymentInformation;
+use App\Domain\Vendor\Onboarding\Actions\GetVendorSetupStatus;
+use App\Domain\Vendor\Onboarding\Dtos\CreateVendorBusinessInformationDto;
+use App\Domain\Vendor\Onboarding\Dtos\CreateVendorContactInformationDto;
+use App\Domain\Vendor\Onboarding\Dtos\CreateVendorLegalInformationDto;
+use App\Domain\Vendor\Onboarding\Dtos\CreateVendorPaymentInformationDto;
+use App\Domain\Vendor\Onboarding\Requests\VendorBusinessInformationRequest;
+use App\Domain\Vendor\Onboarding\Requests\VendorContactInformationRequest;
+use App\Domain\Vendor\Onboarding\Requests\VendorLegalInformationRequest;
+use App\Domain\Vendor\Onboarding\Requests\VendorPaymentInformationRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -23,11 +23,11 @@ use Illuminate\Http\Request;
 class OnboardingController
 {
     public function __construct(
-        private readonly CreateSellerContactInformation $createSellerContactInformation,
-        private readonly CreateSellerBusinessInformation $createSellerBusinessInformation,
-        private readonly CreateSellerLegalInformation $createSellerLegalInformation,
-        private readonly CreateSellerPaymentInformation $createSellerPaymentInformation,
-        private readonly GetSellerSetupStatus $setupStatus,
+        private readonly CreateVendorContactInformation $createVendorContactInformation,
+        private readonly CreateVendorBusinessInformation $createVendorBusinessInformation,
+        private readonly CreateVendorLegalInformation $createVendorLegalInformation,
+        private readonly CreateVendorPaymentInformation $createVendorPaymentInformation,
+        private readonly GetVendorSetupStatus $setupStatus,
     ) {}
 
     public function status(Request $request): JsonResponse
@@ -41,53 +41,53 @@ class OnboardingController
         }
     }
 
-    public function contact(SellerContactInformationRequest $request): JsonResponse
+    public function contact(VendorContactInformationRequest $request): JsonResponse
     {
-        $contact = CreateSellerContactInformationDto::fromRequest($request);
+        $contact = CreateVendorContactInformationDto::fromRequest($request);
 
         try {
-            $data = $this->createSellerContactInformation->execute($contact);
+            $data = $this->createVendorContactInformation->execute($contact);
 
-            return ApiResponse::success('Seller contact information successfully updated', $data);
+            return ApiResponse::success('Vendor contact information successfully updated', $data);
         } catch (Exception $e) {
             return ApiResponse::error($e->getMessage(), $e->getCode());
         }
     }
 
-    public function business(SellerBusinessInformationRequest $request): JsonResponse
+    public function business(VendorBusinessInformationRequest $request): JsonResponse
     {
-        $business = CreateSellerBusinessInformationDto::fromRequest($request);
+        $business = CreateVendorBusinessInformationDto::fromRequest($request);
 
         try {
-            $data = $this->createSellerBusinessInformation->execute($business);
+            $data = $this->createVendorBusinessInformation->execute($business);
 
-            return ApiResponse::success('Seller business information successfully updated', $data);
+            return ApiResponse::success('Vendor business information successfully updated', $data);
         } catch (Exception $e) {
             return ApiResponse::error($e->getMessage(), $e->getCode());
         }
     }
 
-    public function legal(SellerLegalInformationRequest $request): JsonResponse
+    public function legal(VendorLegalInformationRequest $request): JsonResponse
     {
-        $legal = CreateSellerLegalInformationDto::fromRequest($request);
+        $legal = CreateVendorLegalInformationDto::fromRequest($request);
 
         try {
-            $data = $this->createSellerLegalInformation->execute($legal);
+            $data = $this->createVendorLegalInformation->execute($legal);
 
-            return ApiResponse::success('Seller legal information successfully updated', $data);
+            return ApiResponse::success('Vendor legal information successfully updated', $data);
         } catch (Exception $e) {
             return ApiResponse::error($e->getMessage(), $e->getCode());
         }
     }
 
-    public function payment(SellerPaymentInformationRequest $request): JsonResponse
+    public function payment(VendorPaymentInformationRequest $request): JsonResponse
     {
-        $payment = CreateSellerPaymentInformationDto::fromRequest($request);
+        $payment = CreateVendorPaymentInformationDto::fromRequest($request);
 
         try {
-            $data = $this->createSellerPaymentInformation->execute($payment);
+            $data = $this->createVendorPaymentInformation->execute($payment);
 
-            return ApiResponse::success('Seller payment information successfully updated', $data);
+            return ApiResponse::success('Vendor payment information successfully updated', $data);
         } catch (Exception $e) {
             return ApiResponse::error($e->getMessage(), $e->getCode());
         }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Application\Actions\Auth;
+namespace Tests\Feature;
 
 use App\Application\Events\Auth\VerificationMailResentEvent;
 use App\Application\Shared\Enum\UserEnum;

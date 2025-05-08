@@ -66,7 +66,7 @@ class User extends Authenticatable
         return $this->hasOne(CustomerProfile::class);
     }
 
-    public function seller(): HasOne
+    public function vendor(): HasOne
     {
         return $this->hasOne(SellerProfile::class);
     }

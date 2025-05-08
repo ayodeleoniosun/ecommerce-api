@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Actions\Auth;
+namespace Tests\Unit\Auth;
 
 use App\Application\Events\Auth\UserRegisteredEvent;
 use App\Application\Shared\Enum\UserTypeEnum;
