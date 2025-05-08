@@ -17,12 +17,16 @@ Route::prefix('auth')->group(function () {
     Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 });
 
-Route::prefix('categories')->group(function () {
-    Route::get('', [CategoryController::class, 'index']);
+Route::prefix('inventory')->group(function () {
+    Route::get('/products', [CategoryController::class, 'index']);
 
-    Route::prefix('variations')->group(function () {
-        Route::get('/{categoryUUID}', [CategoryController::class, 'getCategoryVariations']);
-        Route::get('/{variationUUID}/options', [CategoryController::class, 'getCategoryVariationOptions']);
+    Route::prefix('categories')->group(function () {
+        Route::get('', [CategoryController::class, 'index']);
+
+        Route::prefix('variations')->group(function () {
+            Route::get('/{categoryUUID}', [CategoryController::class, 'getCategoryVariations']);
+            Route::get('/{variationUUID}/options', [CategoryController::class, 'getCategoryVariationOptions']);
+        });
     });
 });
 

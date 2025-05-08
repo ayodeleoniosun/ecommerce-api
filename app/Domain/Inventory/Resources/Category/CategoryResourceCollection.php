@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Inventory\Resources;
+namespace App\Domain\Inventory\Resources\Category;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;

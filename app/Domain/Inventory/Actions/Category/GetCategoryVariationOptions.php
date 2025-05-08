@@ -5,6 +5,8 @@ namespace App\Domain\Inventory\Actions\Category;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Admin\Interfaces\CategoryVariationOptionRepositoryInterface;
 use App\Domain\Admin\Interfaces\CategoryVariationRepositoryInterface;
+use App\Domain\Admin\Resources\Inventory\CategoryVariationOptionResource;
+use App\Infrastructure\Models\CategoryVariation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -17,10 +19,14 @@ class GetCategoryVariationOptions
 
     public function execute(Request $request, string $variationUUID): AnonymousResourceCollection
     {
-        $categoryVariation = $this->categoryVariationRepository->findByColumn('uuid', $variationUUID);
+        $categoryVariation = $this->categoryVariationRepository->findByColumn(CategoryVariation::class, 'uuid',
+            $variationUUID);
 
         throw_if(! $categoryVariation, ResourceNotFoundException::class, 'Category variation not found');
 
-        return $this->categoryVariationOptionRepository->index($request, $categoryVariation->id);
+        $options = $this->categoryVariationOptionRepository->index($request, $categoryVariation->id);
+
+        return CategoryVariationOptionResource::collection($options);
+
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Domain\Inventory\Actions\Category;
 
 use App\Domain\Inventory\Interfaces\CategoryRepositoryInterface;
-use App\Domain\Inventory\Resources\CategoryResourceCollection;
+use App\Domain\Inventory\Resources\Category\CategoryResourceCollection;
 use Illuminate\Http\Request;
 
 class GetProductCategories
@@ -14,6 +14,8 @@ class GetProductCategories
 
     public function execute(Request $request): CategoryResourceCollection
     {
-        return $this->categoryRepository->index($request);
+        $categories = $this->categoryRepository->index($request);
+
+        return new CategoryResourceCollection($categories);
     }
 }
