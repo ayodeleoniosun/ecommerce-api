@@ -11,8 +11,8 @@ class UploadProductItemImageDto
 
     public function __construct(
         private readonly string $productItemUUID,
-        private readonly ?int $productItemId,
         private readonly UploadedFile $image,
+        private readonly ?int $productItemId = null,
         private ?string $path = null,
         private ?string $uuid = null,
     ) {}
@@ -21,8 +21,8 @@ class UploadProductItemImageDto
     {
         return new self(
             productItemUUID: $payload['product_item_id'],
-            productItemId: $payload['merged_product_item_id'] ?? null,
             image: $payload['image'],
+            productItemId: $payload['merged_product_item_id'] ?? null,
             path: $payload['path'] ?? null,
         );
     }

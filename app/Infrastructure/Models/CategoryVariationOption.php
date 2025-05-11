@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Models;
 
+use Database\Factories\CategoryVariationOptionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,6 +17,11 @@ class CategoryVariationOption extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = ['id', 'uuid'];
+
+    protected static function newFactory(): CategoryVariationOptionFactory
+    {
+        return CategoryVariationOptionFactory::new();
+    }
 
     public function variation(): BelongsTo
     {

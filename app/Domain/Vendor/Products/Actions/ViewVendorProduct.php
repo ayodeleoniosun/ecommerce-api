@@ -13,9 +13,9 @@ class ViewVendorProduct
         private readonly ProductRepositoryInterface $productRepository,
     ) {}
 
-    public function execute(string $productItemUUID): ViewProductResource
+    public function execute(string $productUUID): ViewProductResource
     {
-        $product = $this->productRepository->findByColumn(Product::class, 'uuid', $productItemUUID);
+        $product = $this->productRepository->findByColumn(Product::class, 'uuid', $productUUID);
 
         throw_if(! $product, ResourceNotFoundException::class, 'Product not found');
 

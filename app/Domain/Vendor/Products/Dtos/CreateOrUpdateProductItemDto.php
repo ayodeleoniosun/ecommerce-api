@@ -12,10 +12,10 @@ class CreateOrUpdateProductItemDto
         private readonly string $productUUID,
         private readonly string $categoryVariationOptionUUID,
         private readonly int $productId,
-        private readonly ?int $productItemId,
         private readonly int $categoryVariationOptionId,
         private readonly int $price,
         private readonly int $quantity,
+        private readonly ?int $productItemId = null,
     ) {}
 
     public static function fromRequest(array $payload): self
@@ -24,10 +24,10 @@ class CreateOrUpdateProductItemDto
             productUUID: $payload['product_id'],
             categoryVariationOptionUUID: $payload['variation_option_id'],
             productId: $payload['merged_product_id'],
-            productItemId: $payload['merged_product_item_id'] ?? null,
             categoryVariationOptionId: $payload['merged_variation_option_id'],
             price: $payload['price'],
             quantity: $payload['quantity'],
+            productItemId: $payload['merged_product_item_id'] ?? null,
         );
     }
 
@@ -39,6 +39,16 @@ class CreateOrUpdateProductItemDto
             'price' => $this->price,
             'quantity' => $this->quantity,
         ];
+    }
+
+    public function getPrice(): int
+    {
+        return $this->price;
+    }
+
+    public function getQuantity(): int
+    {
+        return $this->quantity;
     }
 
     public function getProductId(): int

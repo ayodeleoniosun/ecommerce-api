@@ -46,10 +46,10 @@ class ProductController
         }
     }
 
-    public function view(string $productItemUUID): JsonResponse
+    public function view(string $productUUID): JsonResponse
     {
         try {
-            $data = $this->vendorProduct->execute($productItemUUID);
+            $data = $this->vendorProduct->execute($productUUID);
 
             return ApiResponse::success('Product successfully retrieved', $data);
         } catch (Exception $e) {
@@ -133,8 +133,6 @@ class ProductController
 
             return ApiResponse::success('Product successfully deleted');
         } catch (Exception $e) {
-            dd($e);
-
             return ApiResponse::error($e->getMessage(), $e->getCode());
         }
     }

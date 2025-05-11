@@ -12,12 +12,12 @@ class DeleteVendorProductImage
         private readonly ProductImageRepositoryInterface $productImageRepository,
     ) {}
 
-    public function execute(string $productImageUUID): void
+    public function execute(string $productImageUUID): ?bool
     {
         $productImage = $this->productImageRepository->findByColumn(ProductImage::class, 'uuid', $productImageUUID);
 
         throw_if(! $productImage, ResourceNotFoundException::class, 'Product image not found');
 
-        $this->productImageRepository->delete($productImage);
+        return $this->productImageRepository->delete($productImage);
     }
 }

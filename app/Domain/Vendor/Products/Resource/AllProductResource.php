@@ -23,7 +23,7 @@ class AllProductResource extends JsonResource
             'description' => ucfirst($this->description),
             'category' => new CategoryResource($this->whenLoaded('category')),
             'vendor' => new VendorResource($this->whenLoaded('vendor')),
-            'price_range' => ProductItem::getPriceRange($this->id),
+            'price' => ProductItem::getPriceRange($this->id),
             'image' => $this->whenLoaded('firstItem', function () {
                 return $this->firstItem->firstImage->path ?? null;
             }),

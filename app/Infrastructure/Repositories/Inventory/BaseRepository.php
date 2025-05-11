@@ -11,8 +11,8 @@ class BaseRepository
         return $model::where($field, $value)->first();
     }
 
-    public function delete(Model $model): void
+    public function delete(Model $model): ?bool
     {
-        $model->delete();
+        return $model->delete();
     }
 }

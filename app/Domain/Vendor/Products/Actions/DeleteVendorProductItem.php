@@ -12,12 +12,12 @@ class DeleteVendorProductItem
         private readonly ProductItemRepositoryInterface $productItemRepository,
     ) {}
 
-    public function execute(string $productItemUUID): void
+    public function execute(string $productItemUUID): ?bool
     {
         $productItem = $this->productItemRepository->findByColumn(ProductItem::class, 'uuid', $productItemUUID);
 
         throw_if(! $productItem, ResourceNotFoundException::class, 'Product item not found');
 
-        $this->productItemRepository->delete($productItem);
+        return $this->productItemRepository->delete($productItem);
     }
 }

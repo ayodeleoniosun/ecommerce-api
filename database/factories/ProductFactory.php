@@ -3,17 +3,21 @@
 namespace Database\Factories;
 
 use App\Application\Shared\Enum\ProductEnum;
+use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Infrastructure\Models\Category;
 use App\Infrastructure\Models\Product;
 use App\Infrastructure\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Product>
  */
 class ProductFactory extends Factory
 {
+    use UtilitiesTrait;
+
+    protected $model = Product::class;
+
     /**
      * Define the model's default state.
      *
@@ -22,21 +26,26 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            'uuid' => str::uuid(),
-            'user_id' => User::factory()->create()->id,
+            'uuid' => self::generateUUID(),
+            'vendor_id' => User::factory()->create()->id,
             'category_id' => Category::factory()->create()->id,
             'name' => fake()->name,
-            'quantity' => 10,
-            'price' => 1000,
             'description' => fake()->text,
-            'sku' => 10,
+            'status' => ProductEnum::IN_STOCK->value,
         ];
     }
 
     public function active(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => ProductEnum::ACTIVE->value,
+            'status' => ProductEnum::IN_STOCK->value,
+        ]);
+    }
+
+    public function inStock(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => ProductEnum::IN_STOCK->value,
         ]);
     }
 

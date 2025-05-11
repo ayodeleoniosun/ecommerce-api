@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Models;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
+use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,6 +37,11 @@ class Product extends Model
     public function items(): HasMany
     {
         return $this->hasMany(ProductItem::class, 'product_id', 'id');
+    }
+
+    protected static function newFactory(): ProductFactory
+    {
+        return ProductFactory::new();
     }
 
     public function vendor(): BelongsTo

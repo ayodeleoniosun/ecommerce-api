@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Models;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
+use Database\Factories\ProductItemFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,10 +21,14 @@ class ProductItem extends Model
 
     protected $guarded = ['id', 'uuid'];
 
-    public static function getPriceRange(int $productId): array
+    public static function getPriceRange(int $productId): array|string
     {
         $range = self::selectRaw('MIN(price) as min, MAX(price) as max')->where('product_id', $productId)
             ->first();
+
+        if ($range->min === $range->max) {
+            return $range->min;
+        }
 
         return [
             'min' => $range->min,
@@ -48,6 +53,11 @@ class ProductItem extends Model
     public function images(): HasMany
     {
         return $this->hasMany(ProductImage::class, 'product_item_id', 'id');
+    }
+
+    protected static function newFactory(): ProductItemFactory
+    {
+        return ProductItemFactory::new();
     }
 
     public function product(): BelongsTo

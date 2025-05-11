@@ -1,0 +1,36 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Application\Shared\Traits\UtilitiesTrait;
+use App\Infrastructure\Models\CategoryVariationOption;
+use App\Infrastructure\Models\Product;
+use App\Infrastructure\Models\ProductItem;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+/**
+ * @extends Factory<Product>
+ */
+class ProductItemFactory extends Factory
+{
+    use UtilitiesTrait;
+
+    protected $model = ProductItem::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            'uuid' => self::generateUUID(),
+            'product_id' => Product::factory()->create()->id,
+            'variation_option_id' => CategoryVariationOption::factory()->create()->id,
+            'price' => 10000,
+            'sku' => self::generateRandomCharacters(),
+            'quantity' => 10,
+        ];
+    }
+}

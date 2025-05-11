@@ -3,17 +3,19 @@
 namespace Database\Factories;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Infrastructure\Models\Category;
+use App\Infrastructure\Models\CategoryVariation;
+use App\Infrastructure\Models\CategoryVariationOption;
+use App\Infrastructure\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Category>
+ * @extends Factory<Product>
  */
-class CategoryFactory extends Factory
+class CategoryVariationOptionFactory extends Factory
 {
     use UtilitiesTrait;
 
-    protected $model = Category::class;
+    protected $model = CategoryVariationOption::class;
 
     /**
      * Define the model's default state.
@@ -24,8 +26,8 @@ class CategoryFactory extends Factory
     {
         return [
             'uuid' => self::generateUUID(),
-            'name' => fake()->name,
-            'slug' => fake()->name,
+            'variation_id' => CategoryVariation::factory()->create()->id,
+            'value' => fake()->name,
         ];
     }
 }

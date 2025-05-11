@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Models;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
+use Database\Factories\CategoryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -24,6 +25,11 @@ class Category extends Model
         static::creating(function ($model) {
             $model->uuid = self::generateUUID();
         });
+    }
+
+    protected static function newFactory(): CategoryFactory
+    {
+        return CategoryFactory::new();
     }
 
     public function subCategories(): HasMany
