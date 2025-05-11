@@ -27,7 +27,9 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
             'items',
             'firstItem',
             'firstItem.firstImage',
-        )->whereHas('items')
+        )->when($request->isVendor, function ($query) {
+            $query->where('vendor_id', auth()->user()->id);
+        })->whereHas('items')
             ->when($search, function ($query) use ($search) {
                 $query->where('name', 'like', "%{$search}%");
             })->when($sort === 'date', function ($query) use ($value) {

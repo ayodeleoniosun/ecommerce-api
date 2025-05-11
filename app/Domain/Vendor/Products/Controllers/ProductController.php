@@ -38,6 +38,7 @@ class ProductController
     public function index(Request $request): JsonResponse
     {
         try {
+            $request->isVendor = true;
             $data = $this->vendorProducts->execute($request);
 
             return ApiResponse::success('Products successfully retrieved', $data);

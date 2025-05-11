@@ -4,8 +4,9 @@ use App\Domain\Admin\Controllers\CategoryController as AdminCategoryController;
 use App\Domain\Admin\Controllers\RoleController;
 use App\Domain\Auth\Controllers\AuthController;
 use App\Domain\Inventory\Controllers\CategoryController;
+use App\Domain\Inventory\Controllers\ProductController;
 use App\Domain\Vendor\Onboarding\Controllers\OnboardingController;
-use App\Domain\Vendor\Products\Controllers\ProductController;
+use App\Domain\Vendor\Products\Controllers\ProductController as VendorProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
@@ -18,7 +19,10 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::prefix('inventory')->group(function () {
-    Route::get('/products', [CategoryController::class, 'index']);
+    Route::prefix('products')->group(function () {
+        Route::get('/', [ProductController::class, 'index']);
+        Route::get('/{productUUID}', [ProductController::class, 'view']);
+    });
 
     Route::prefix('categories')->group(function () {
         Route::get('', [CategoryController::class, 'index']);
@@ -70,14 +74,14 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         });
 
         Route::prefix('products')->group(function () {
-            Route::get('', [ProductController::class, 'index']);
-            Route::get('/{productUUID}', [ProductController::class, 'view']);
-            Route::post('', [ProductController::class, 'storeOrUpdateProduct']);
-            Route::post('/items', [ProductController::class, 'storeOrUpdateProductItems']);
-            Route::post('/images', [ProductController::class, 'storeImages']);
-            Route::delete('/images/{productImageUUID}', [ProductController::class, 'deleteProductImage']);
-            Route::delete('/items/{productItemUUID}', [ProductController::class, 'deleteProductItem']);
-            Route::delete('/{productUUID}', [ProductController::class, 'deleteProduct']);
+            Route::get('', [VendorProductController::class, 'index']);
+            Route::get('/{productUUID}', [VendorProductController::class, 'view']);
+            Route::post('', [VendorProductController::class, 'storeOrUpdateProduct']);
+            Route::post('/items', [VendorProductController::class, 'storeOrUpdateProductItems']);
+            Route::post('/images', [VendorProductController::class, 'storeImages']);
+            Route::delete('/images/{productImageUUID}', [VendorProductController::class, 'deleteProductImage']);
+            Route::delete('/items/{productItemUUID}', [VendorProductController::class, 'deleteProductItem']);
+            Route::delete('/{productUUID}', [VendorProductController::class, 'deleteProduct']);
         });
     });
 });
