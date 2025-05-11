@@ -22,7 +22,7 @@ describe('user registration', function () {
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('The lastname field is required.');
     });
 
@@ -40,7 +40,7 @@ describe('user registration', function () {
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('The email field must be a valid email address.');
     });
 
@@ -58,7 +58,7 @@ describe('user registration', function () {
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('The password field must contain at least one uppercase and one lowercase letter.');
     });
 
@@ -87,7 +87,7 @@ describe('user registration', function () {
                 ],
             ]);
 
-        expect($content->success)->toBe(true)
+        expect($content->success)->toBeTrue()
             ->and($content->message)->toBe('User registered successfully')
             ->and($content->data->firstname)->toBe($payload['firstname'])
             ->and($content->data->lastname)->toBe($payload['lastname'])
@@ -110,7 +110,7 @@ describe('user registration', function () {
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('The email has already been taken.');
     });
 });
@@ -126,7 +126,7 @@ describe('user login', function () {
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('Email address does not exist. Try registering a new account');
     });
 
@@ -142,7 +142,7 @@ describe('user login', function () {
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_BAD_REQUEST);
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('Email not yet verified');
     });
 
@@ -160,7 +160,7 @@ describe('user login', function () {
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_BAD_REQUEST);
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('Account is inactive');
     });
 
@@ -179,7 +179,7 @@ describe('user login', function () {
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_BAD_REQUEST);
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('Invalid login credentials');
     });
 
@@ -212,7 +212,7 @@ describe('user login', function () {
                 ],
             ]);
 
-        expect($content->success)->toBe(true)
+        expect($content->success)->toBeTrue()
             ->and($content->data->firstname)->toBe($user->firstname)
             ->and($content->data->lastname)->toBe($user->lastname)
             ->and($content->data->email)->toBe($user->email)
@@ -230,7 +230,7 @@ describe('verify token', function () {
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('The selected token is invalid.');
     });
 
@@ -247,7 +247,7 @@ describe('verify token', function () {
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_BAD_REQUEST);
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('Token already expired');
     });
 
@@ -265,7 +265,7 @@ describe('verify token', function () {
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_BAD_REQUEST);
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('Account already verified');
     });
 
@@ -295,7 +295,7 @@ describe('verify token', function () {
                 ],
             ]);
 
-        expect($content->success)->toBe(true)
+        expect($content->success)->toBeTrue()
             ->and($content->message)->toBe('User verified successfully')
             ->and($content->data->status)->toBe(UserEnum::ACTIVE->value);
     });
@@ -311,7 +311,7 @@ describe('resend token', function () {
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('The selected email is invalid.');
     });
 
@@ -328,7 +328,7 @@ describe('resend token', function () {
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_BAD_REQUEST);
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('User already verified');
     });
 
@@ -350,7 +350,7 @@ describe('resend token', function () {
                 'message',
             ]);
 
-        expect($content->success)->toBe(true)
+        expect($content->success)->toBeTrue()
             ->and($content->message)->toBe('Verification link resent successfully');
 
         Event::assertDispatched(VerificationMailResentEvent::class, function ($event) use ($user) {
@@ -369,7 +369,7 @@ describe('forgot password', function () {
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('The selected email is invalid.');
     });
 
@@ -384,7 +384,7 @@ describe('forgot password', function () {
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_BAD_REQUEST);
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('User not yet verified');
     });
 
@@ -401,7 +401,7 @@ describe('forgot password', function () {
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_BAD_REQUEST);
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('User not active');
     });
 
@@ -424,7 +424,7 @@ describe('forgot password', function () {
                 'message',
             ]);
 
-        expect($content->success)->toBe(true)
+        expect($content->success)->toBeTrue()
             ->and($content->message)->toBe('Forgot password link resent successfully');
     });
 
@@ -443,7 +443,7 @@ describe('forgot password', function () {
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_TOO_MANY_REQUESTS);
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('You cannot send more than 1 password request per minute. Try again later.');
     });
 });
@@ -458,7 +458,7 @@ describe('reset password', function () {
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('The selected email is invalid.');
     });
 
@@ -480,7 +480,7 @@ describe('reset password', function () {
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('The password field confirmation does not match.');
     });
 
@@ -502,7 +502,7 @@ describe('reset password', function () {
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('The password confirmation field must be at least 8 characters.');
     });
 
@@ -524,7 +524,7 @@ describe('reset password', function () {
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('The password confirmation field must contain at least one number.');
     });
 
@@ -546,7 +546,7 @@ describe('reset password', function () {
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('The password confirmation field must contain at least one symbol.');
     });
 
@@ -568,7 +568,7 @@ describe('reset password', function () {
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_BAD_REQUEST);
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('User not yet verified');
     });
 
@@ -592,7 +592,7 @@ describe('reset password', function () {
         $content = json_decode($response->getContent());
 
         $response->assertStatus(Response::HTTP_BAD_REQUEST);
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('User not active');
     });
 
@@ -623,7 +623,7 @@ describe('reset password', function () {
                 'success',
                 'message',
             ]);
-        expect($content->success)->toBe(true)
+        expect($content->success)->toBeTrue()
             ->and($content->message)->toBe('Password successfully reset. You can login now');
 
         Event::assertDispatched(PasswordReset::class, function ($event) use ($user) {
@@ -650,7 +650,7 @@ describe('authenticated', function () {
 
         $response->assertStatus(Response::HTTP_UNAUTHORIZED);
 
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('User not yet verified');
     });
 
@@ -665,7 +665,7 @@ describe('authenticated', function () {
 
         $response->assertStatus(Response::HTTP_UNAUTHORIZED);
 
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('User not active');
     });
 });

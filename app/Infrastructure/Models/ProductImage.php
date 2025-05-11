@@ -12,7 +12,7 @@ class ProductImage extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $guarded = ['id', 'uuid'];
+    protected $guarded = ['id'];
 
     protected static function newFactory(): ProductImageFactory
     {

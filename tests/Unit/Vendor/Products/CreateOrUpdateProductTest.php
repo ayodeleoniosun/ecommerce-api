@@ -37,14 +37,6 @@ beforeEach(function () {
 });
 
 it('should create a new vendor product', function () {
-    $this->productRepo->shouldReceive('findExistingProduct')
-        ->once()
-        ->with(
-            $this->productDto->getVendorId(),
-            $this->productDto->getName(),
-        )
-        ->andReturn(null);
-
     $this->productRepo->shouldReceive('storeOrUpdate')
         ->once()
         ->with($this->productDto)
@@ -62,13 +54,7 @@ it('should create a new vendor product', function () {
 });
 
 it('should update an existing vendor product', function () {
-    $this->productRepo->shouldReceive('findExistingProduct')
-        ->once()
-        ->with(
-            $this->productDto->getVendorId(),
-            $this->productDto->getName(),
-        )
-        ->andReturn($this->product);
+    $this->productDto->setProductId(1);
 
     $this->productRepo->shouldReceive('storeOrUpdate')
         ->once()

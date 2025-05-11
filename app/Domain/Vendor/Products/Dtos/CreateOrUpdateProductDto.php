@@ -14,7 +14,7 @@ class CreateOrUpdateProductDto
         private readonly int $categoryId,
         private readonly string $name,
         private readonly string $description,
-        private readonly ?int $productId = null,
+        private ?int $productId = null,
     ) {}
 
     public static function fromRequest(array $payload): self
@@ -55,6 +55,11 @@ class CreateOrUpdateProductDto
     public function getCategoryId(): int
     {
         return $this->categoryId;
+    }
+
+    public function setProductId(int $productId): void
+    {
+        $this->productId = $productId;
     }
 
     public function getProductId(): ?int

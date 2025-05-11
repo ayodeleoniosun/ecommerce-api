@@ -30,7 +30,7 @@ describe('create vendor contact information', function () {
         $content = json_decode($response->getContent());
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('The contact phone number field is required.');
     });
 
@@ -54,7 +54,7 @@ describe('create vendor contact information', function () {
 
         $response->assertStatus(Response::HTTP_CONFLICT);
 
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('Email address exist for another vendor');
     });
 
@@ -78,7 +78,7 @@ describe('create vendor contact information', function () {
 
         $response->assertStatus(Response::HTTP_CONFLICT);
 
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('Phone number exist for another vendor');
     });
 
@@ -111,7 +111,7 @@ describe('create vendor contact information', function () {
                 ],
             ]);
 
-        expect($content->success)->toBe(true)
+        expect($content->success)->toBeTrue()
             ->and($content->message)->toBe('Vendor contact information successfully updated')
             ->and($content->data->name)->toBe($payload['contact_name'])
             ->and($content->data->email)->toBe($payload['contact_email'])
@@ -134,7 +134,7 @@ describe('create vendor business information', function () {
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('The description field is required.');
     });
 
@@ -155,7 +155,7 @@ describe('create vendor business information', function () {
 
         $response->assertStatus(Response::HTTP_CONFLICT);
 
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('Business name exist for another vendor');
     });
 
@@ -176,7 +176,7 @@ describe('create vendor business information', function () {
 
         $response->assertStatus(Response::HTTP_CONFLICT);
 
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('Registration number exist for another vendor');
     });
 
@@ -197,7 +197,7 @@ describe('create vendor business information', function () {
 
         $response->assertStatus(Response::HTTP_CONFLICT);
 
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('Tax identification number exist for another vendor');
     });
 
@@ -226,7 +226,7 @@ describe('create vendor business information', function () {
                 ],
             ]);
 
-        expect($content->success)->toBe(true)
+        expect($content->success)->toBeTrue()
             ->and($content->message)->toBe('Vendor business information successfully updated')
             ->and($content->data->name)->toBe($payload['company_name'])
             ->and($content->data->description)->toBe($payload['description'])
@@ -247,7 +247,7 @@ describe('create vendor legal information', function () {
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('The email field is required.');
     });
 
@@ -267,7 +267,7 @@ describe('create vendor legal information', function () {
 
         $response->assertStatus(Response::HTTP_CONFLICT);
 
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('Legal email address exist for another vendor');
     });
 
@@ -292,7 +292,7 @@ describe('create vendor legal information', function () {
                 ],
             ]);
 
-        expect($content->success)->toBe(true)
+        expect($content->success)->toBeTrue()
             ->and($content->message)->toBe('Vendor legal information successfully updated')
             ->and($content->data->fullname)->toBe($payload['fullname'])
             ->and($content->data->email)->toBe($payload['email']);
@@ -310,7 +310,7 @@ describe('create vendor payment information', function () {
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
-        expect($content->success)->toBe(false)
+        expect($content->success)->toBeFalse()
             ->and($content->message)->toBe('The account number field is required.');
     });
 
@@ -339,7 +339,7 @@ describe('create vendor payment information', function () {
                 ],
             ]);
 
-        expect($content->success)->toBe(true)
+        expect($content->success)->toBeTrue()
             ->and($content->message)->toBe('Vendor payment information successfully updated')
             ->and($content->data->account_name)->toBe($payload['account_name'])
             ->and($content->data->account_number)->toBe($payload['account_number'])
@@ -382,11 +382,11 @@ describe('get vendor setup status', function () {
                 ],
             ]);
 
-        expect($content->success)->toBe(true)
+        expect($content->success)->toBeTrue()
             ->and($content->message)->toBe('Setup status successfully retrieved')
-            ->and($content->data->completed_contact_information)->toBe(true)
-            ->and($content->data->completed_business_information)->toBe(true)
-            ->and($content->data->completed_legal_information)->toBe(true)
-            ->and($content->data->completed_payment_information)->toBe(true);
+            ->and($content->data->completed_contact_information)->toBeTrue()
+            ->and($content->data->completed_business_information)->toBeTrue()
+            ->and($content->data->completed_legal_information)->toBeTrue()
+            ->and($content->data->completed_payment_information)->toBeTrue();
     });
 });

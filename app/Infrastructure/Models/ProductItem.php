@@ -21,7 +21,7 @@ class ProductItem extends Model
 
     protected $guarded = ['id', 'uuid'];
 
-    public static function getPriceRange(int $productId): array|string
+    public static function getPriceRange(int $productId): array|string|null
     {
         $range = self::selectRaw('MIN(price) as min, MAX(price) as max')->where('product_id', $productId)
             ->first();
