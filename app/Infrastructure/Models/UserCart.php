@@ -17,9 +17,9 @@ class UserCart extends Model
 
     protected $guarded = ['id'];
 
-    public function cartItems(): HasMany
+    public function items(): HasMany
     {
-        return $this->hasMany(UserCartItem::class);
+        return $this->hasMany(UserCartItem::class, 'cart_id', 'id');
     }
 
     public function user(): BelongsTo

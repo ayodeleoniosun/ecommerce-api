@@ -16,11 +16,13 @@ class CartResource extends JsonResource
     {
         return [
             'id' => $this->uuid,
+            'product_item_id' => $this->productItem->uuid,
             'product_name' => $this->productItem->product->name,
             'cart_quantity' => $this->quantity,
             'remaining_quantity' => $this->productItem->quantity,
             'unit_price' => number_format($this->productItem->price, 2),
             'total_price' => number_format($this->productItem->price * $this->quantity, 2),
+            'image' => $this->productItem->firstImage->path ?? null,
             'attribute' => $this->productItem->variationOption->value,
         ];
     }
