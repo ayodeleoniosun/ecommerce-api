@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Vendor\Products;
 
-use App\Application\Shared\Enum\ProductEnum;
+use App\Application\Shared\Enum\ProductStatusEnum;
 use App\Domain\Vendor\Products\Actions\ViewVendorProduct;
 use App\Domain\Vendor\Products\Resource\ViewProductResource;
 use App\Infrastructure\Models\Category;
@@ -46,7 +46,7 @@ it('should return product details', function () {
     expect($response)->toBeInstanceOf(ViewProductResource::class)
         ->and($response->resource->vendor_id)->toBe($product->vendor_id)
         ->and($response->resource->category_id)->toBe($product->category_id)
-        ->and($response->resource->status)->toBe(ProductEnum::IN_STOCK->value)
+        ->and($response->resource->status)->toBe(ProductStatusEnum::IN_STOCK->value)
         ->and($response->resource->items->count())->toBe(3)
         ->and($response->resource->items->map(fn ($item) => $item->price)->all())->toEqual([1000, 2000, 3000])
         ->and($response->resource->items->map(fn ($item) => $item->quantity)->all())->toEqual([10, 15, 20]);

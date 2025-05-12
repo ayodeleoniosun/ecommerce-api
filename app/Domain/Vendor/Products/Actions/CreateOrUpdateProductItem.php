@@ -5,7 +5,6 @@ namespace App\Domain\Vendor\Products\Actions;
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductItemDto;
 use App\Domain\Vendor\Products\Interfaces\ProductItemRepositoryInterface;
 use App\Domain\Vendor\Products\Resource\ProductItemResource;
-use App\Infrastructure\Models\ProductItem;
 
 class CreateOrUpdateProductItem
 {
@@ -13,15 +12,16 @@ class CreateOrUpdateProductItem
         private readonly ProductItemRepositoryInterface $productItemRepository,
     ) {}
 
-    public function execute(CreateOrUpdateProductItemDto $createProductItemDto): array
+    public function execute(CreateOrUpdateProductItemDto $createOrUpdateProductItemDto): array
     {
-        $existingProductItem = $this->productItemRepository->findByColumn(ProductItem::class, 'product_id',
-            $createProductItemDto->getProductId());
+        $isExist = (bool) $this->productItemRepository->findExistingProductItem($createOrUpdateProductItemDto->getProductId(),
+            $createOrUpdateProductItemDto->getCategoryVariationOptionId());
+        $isUpdating = (bool) $createOrUpdateProductItemDto->getProductItemId();
 
-        $productItem = $this->productItemRepository->storeOrUpdate($createProductItemDto);
+        $productItem = $this->productItemRepository->storeOrUpdate($createOrUpdateProductItemDto);
 
         return [
-            'is_existing_product_item' => (bool) $existingProductItem,
+            'is_existing_product_item' => $isExist || $isUpdating,
             'product_item' => new ProductItemResource($productItem),
         ];
     }

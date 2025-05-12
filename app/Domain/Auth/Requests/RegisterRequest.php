@@ -31,7 +31,9 @@ class RegisterRequest extends FormRequest
         return [
             'firstname' => ['required', 'string'],
             'lastname' => ['required', 'string'],
-            'type' => ['required', 'string', Rule::in([UserTypeEnum::CUSTOMER->value, UserTypeEnum::SELLER->value])],
+            'type' => [
+                'required', 'string', Rule::in([UserTypeEnum::CUSTOMER->value, UserTypeEnum::VENDOR->value]),
+            ],
             'email' => ['required', 'email', 'unique:users'],
             'password' => [
                 'required', Password::min(8)

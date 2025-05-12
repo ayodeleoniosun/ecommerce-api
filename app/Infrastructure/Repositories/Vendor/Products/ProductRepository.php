@@ -60,7 +60,10 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
 
     public function storeOrUpdate(CreateOrUpdateProductDto $createOrUpdateProductDto): Product
     {
-        if ($createOrUpdateProductDto->getProductId()) {
+        $existingProduct = $this->findExistingProduct($createOrUpdateProductDto->getVendorId(),
+            $createOrUpdateProductDto->getName());
+
+        if ($existingProduct || $createOrUpdateProductDto->getProductId()) {
             $searchToUpdateBy = [
                 'id' => $createOrUpdateProductDto->getProductId(),
             ];

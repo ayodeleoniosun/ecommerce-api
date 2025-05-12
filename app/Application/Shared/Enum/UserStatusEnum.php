@@ -2,7 +2,7 @@
 
 namespace App\Application\Shared\Enum;
 
-enum UserEnum: string
+enum UserStatusEnum: string
 {
     case PENDING = 'pending';
     case ACTIVE = 'active';

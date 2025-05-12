@@ -1,6 +1,6 @@
 <?php
 
-use App\Application\Shared\Enum\ProductEnum;
+use App\Application\Shared\Enum\ProductStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained('categories')->nullOnDelete();
             $table->string('name');
             $table->text('description');
-            $table->string('status')->default(ProductEnum::IN_STOCK->value);
+            $table->string('status')->default(ProductStatusEnum::IN_STOCK->value);
             $table->timestamp('disabled_at')->nullable();
             $table->timestamps();
             $table->softDeletes();

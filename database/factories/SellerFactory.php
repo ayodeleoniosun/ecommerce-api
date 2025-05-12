@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Application\Shared\Enum\UserEnum;
+use App\Application\Shared\Enum\UserStatusEnum;
 use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Infrastructure\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -35,7 +35,7 @@ class SellerFactory extends Factory
     public function pending(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => UserEnum::PENDING->value,
+            'status' => UserStatusEnum::PENDING->value,
             'verified_at' => null,
             'disabled_at' => null,
         ]);
@@ -44,7 +44,7 @@ class SellerFactory extends Factory
     public function active(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => UserEnum::ACTIVE->value,
+            'status' => UserStatusEnum::ACTIVE->value,
             'verified_at' => now(),
             'disabled_at' => null,
         ]);
@@ -53,7 +53,7 @@ class SellerFactory extends Factory
     public function inactive(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => UserEnum::INACTIVE->value,
+            'status' => UserStatusEnum::INACTIVE->value,
             'disabled_at' => now(),
         ]);
     }

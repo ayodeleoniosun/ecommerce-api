@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Application\Shared\Enum\UserEnum;
+use App\Application\Shared\Enum\UserStatusEnum;
 use App\Application\Shared\Enum\UserTypeEnum;
 use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Infrastructure\Models\User;
@@ -55,7 +55,7 @@ class UserFactory extends Factory
     public function active(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => UserEnum::ACTIVE->value,
+            'status' => UserStatusEnum::ACTIVE->value,
             'email_verified_at' => now(),
         ]);
     }
@@ -63,7 +63,7 @@ class UserFactory extends Factory
     public function inactive(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => UserEnum::INACTIVE->value,
+            'status' => UserStatusEnum::INACTIVE->value,
         ]);
     }
 }

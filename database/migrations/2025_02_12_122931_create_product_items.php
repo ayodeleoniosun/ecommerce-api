@@ -1,6 +1,6 @@
 <?php
 
-use App\Application\Shared\Enum\ProductEnum;
+use App\Application\Shared\Enum\ProductStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,7 +20,7 @@ return new class extends Migration
             $table->decimal('price', total: 10);
             $table->integer('quantity');
             $table->string('sku');
-            $table->string('status')->default(ProductEnum::IN_STOCK->value);
+            $table->string('status')->default(ProductStatusEnum::IN_STOCK->value);
             $table->timestamps();
             $table->softDeletes();
         });

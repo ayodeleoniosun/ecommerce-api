@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Vendor\Products;
 
-use App\Application\Shared\Enum\ProductEnum;
+use App\Application\Shared\Enum\ProductStatusEnum;
 use App\Domain\Vendor\Products\Actions\CreateOrUpdateProduct;
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductDto;
 use App\Domain\Vendor\Products\Interfaces\ProductRepositoryInterface;
@@ -30,13 +30,18 @@ beforeEach(function () {
         'category_id' => $this->productDto->getCategoryId(),
         'name' => $this->productDto->getName(),
         'description' => $this->productDto->getDescription(),
-        'status' => ProductEnum::IN_STOCK->value,
+        'status' => ProductStatusEnum::IN_STOCK->value,
     ]);
 
     $this->createOrUpdateProduct = new CreateOrUpdateProduct($this->productRepo);
 });
 
 it('should create a new vendor product', function () {
+    $this->productRepo->shouldReceive('findExistingProduct')
+        ->once()
+        ->with($this->productDto->getVendorId(), $this->productDto->getName())
+        ->andReturn(null);
+
     $this->productRepo->shouldReceive('storeOrUpdate')
         ->once()
         ->with($this->productDto)
@@ -50,11 +55,14 @@ it('should create a new vendor product', function () {
         ->and($response['product']->resource->category_id)->toBe($this->productDto->getCategoryId())
         ->and($response['product']->resource->name)->toBe($this->productDto->getName())
         ->and($response['product']->resource->description)->toBe($this->productDto->getDescription())
-        ->and($response['product']->resource->status)->toBe(ProductEnum::IN_STOCK->value);
+        ->and($response['product']->resource->status)->toBe(ProductStatusEnum::IN_STOCK->value);
 });
 
 it('should update an existing vendor product', function () {
-    $this->productDto->setProductId(1);
+    $this->productRepo->shouldReceive('findExistingProduct')
+        ->once()
+        ->with($this->productDto->getVendorId(), $this->productDto->getName())
+        ->andReturn($this->product);
 
     $this->productRepo->shouldReceive('storeOrUpdate')
         ->once()
@@ -69,5 +77,5 @@ it('should update an existing vendor product', function () {
         ->and($response['product']->resource->category_id)->toBe($this->productDto->getCategoryId())
         ->and($response['product']->resource->name)->toBe($this->productDto->getName())
         ->and($response['product']->resource->description)->toBe($this->productDto->getDescription())
-        ->and($response['product']->resource->status)->toBe(ProductEnum::IN_STOCK->value);
+        ->and($response['product']->resource->status)->toBe(ProductStatusEnum::IN_STOCK->value);
 });

@@ -2,7 +2,7 @@
 
 namespace App\Domain\Vendor\Onboarding\Dtos;
 
-use App\Application\Shared\Enum\UserEnum;
+use App\Application\Shared\Enum\UserStatusEnum;
 use App\Domain\Vendor\Onboarding\Requests\VendorBusinessInformationRequest;
 use Illuminate\Http\UploadedFile;
 
@@ -40,7 +40,7 @@ class CreateVendorBusinessInformationDto
             'registration_number' => $this->registrationNumber,
             'tax_identification_number' => $this->taxIdentificationNumber,
             'certificate_path' => $this->businessCertificatePath,
-            'status' => UserEnum::ACTIVE->value,
+            'status' => UserStatusEnum::ACTIVE->value,
             'verified_at' => now()->toDateTimeString(),
         ];
     }

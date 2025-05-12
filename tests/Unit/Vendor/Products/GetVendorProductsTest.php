@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Vendor\Products;
 
-use App\Application\Shared\Enum\ProductEnum;
+use App\Application\Shared\Enum\ProductStatusEnum;
 use App\Domain\Vendor\Products\Actions\GetVendorProducts;
 use App\Domain\Vendor\Products\Resource\ProductResourceCollection;
 use App\Infrastructure\Models\Category;
@@ -51,5 +51,5 @@ it('should return all vendor products', function () {
         ->and($items)->toHaveCount(3)
         ->and($items->every(fn ($item) => $item->vendor_id === $this->products[0]->vendor->id))->toBeTrue()
         ->and($items->every(fn ($item) => $item->category_id === $this->products[0]->category->id))->toBeTrue()
-        ->and($items->every(fn ($item) => $item->status === ProductEnum::IN_STOCK->value))->toBeTrue();
+        ->and($items->every(fn ($item) => $item->status === ProductStatusEnum::IN_STOCK->value))->toBeTrue();
 });

@@ -2,9 +2,9 @@
 
 namespace App\Application\Shared\Enum;
 
-enum PaymentEnum: string
+enum CartStatusEnum: string
 {
     case PENDING = 'pending';
     case PROCESSING = 'processing';
-    case SUCCESS = 'success';
+    case CHECKED_OUT = 'checked_out';
 }

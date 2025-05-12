@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Repositories\Auth;
 
-use App\Application\Shared\Enum\UserEnum;
+use App\Application\Shared\Enum\UserStatusEnum;
 use App\Domain\Auth\Dtos\CreateUserDto;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface;
@@ -47,7 +47,7 @@ class UserRepository implements UserRepositoryInterface
             $verification->save();
 
             $verification->user->update([
-                'status' => UserEnum::ACTIVE->value,
+                'status' => UserStatusEnum::ACTIVE->value,
                 'email_verified_at' => now(),
             ]);
         });

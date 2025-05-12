@@ -5,5 +5,5 @@ namespace App\Application\Shared\Enum;
 enum UserTypeEnum: string
 {
     case CUSTOMER = 'customer';
-    case SELLER = 'vendor';
+    case VENDOR = 'vendor';
 }

@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Vendor;
 
-use App\Application\Shared\Enum\ProductEnum;
-use App\Application\Shared\Enum\UserEnum;
+use App\Application\Shared\Enum\ProductStatusEnum;
+use App\Application\Shared\Enum\UserStatusEnum;
 use App\Infrastructure\Models\Category;
 use App\Infrastructure\Models\CategoryVariationOption;
 use App\Infrastructure\Models\Product;
@@ -17,7 +17,7 @@ use Illuminate\Http\UploadedFile;
 beforeEach(function () {
     $this->user = User::factory()->create([
         'email_verified_at' => now(),
-        'status' => UserEnum::ACTIVE->value,
+        'status' => UserStatusEnum::ACTIVE->value,
     ]);
 
     $this->category = Category::factory()->create();
@@ -94,11 +94,13 @@ describe('create or update vendor products', function () {
     });
 
     it('should update an existing product', function () {
+        $product = Product::factory()->create([
+            'vendor_id' => $this->user->id,
+            'name' => 'product name',
+        ]);
+
         $payload = [
-            'product_id' => Product::factory()->create([
-                'vendor_id' => $this->user->id,
-                'name' => 'product name',
-            ])->uuid,
+            'product_id' => $product->uuid,
             'category_id' => $this->category->uuid,
             'name' => 'new product name',
             'description' => 'product description',
@@ -115,7 +117,7 @@ describe('create or update vendor products', function () {
             ->and($content->data->product->name)->toBe(ucfirst($payload['name']))
             ->and($content->data->product->description)->toBe(ucfirst($payload['description']))
             ->and($content->data->product->category->id)->toBe($this->category->uuid);
-    });
+    })->group('test');
 });
 
 describe('create or update vendor product items', function () {
@@ -190,7 +192,7 @@ describe('create or update vendor product items', function () {
             ->and($content->data->is_existing_product_item)->toBeFalse()
             ->and($content->data->product_item->quantity)->toBe($payload['quantity'])
             ->and($content->data->product_item->price)->toBe(number_format($payload['price'], 2))
-            ->and($content->data->product_item->status)->toBe(ProductEnum::IN_STOCK->value);
+            ->and($content->data->product_item->status)->toBe(ProductStatusEnum::IN_STOCK->value);
     });
 
     it('should return an error if product item does not exist while updating product item', function () {
@@ -240,7 +242,7 @@ describe('create or update vendor product items', function () {
             ->and($content->data->is_existing_product_item)->toBeTrue()
             ->and($content->data->product_item->quantity)->toBe($payload['quantity'])
             ->and($content->data->product_item->price)->toBe(number_format($payload['price'], 2))
-            ->and($content->data->product_item->status)->toBe(ProductEnum::IN_STOCK->value);
+            ->and($content->data->product_item->status)->toBe(ProductStatusEnum::IN_STOCK->value);
     });
 });
 
@@ -341,7 +343,7 @@ describe('view product details', function () {
             ->and($content->data->price_range->min)->toBe(1000)
             ->and($content->data->price_range->max)->toBe(3000)
             ->and(collect($content->data->variations)->every(fn ($item) => $item->status))
-            ->toEqual(ProductEnum::IN_STOCK->value)
+            ->toEqual(ProductStatusEnum::IN_STOCK->value)
             ->and(count($content->data->variations))->toBe(3)
             ->and(count($content->data->images))->toBe(3);
     });

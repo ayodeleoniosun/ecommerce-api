@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Application\Shared\Enum\UserEnum;
+use App\Application\Shared\Enum\UserStatusEnum;
 use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Infrastructure\Models\User;
 use App\Infrastructure\Models\VendorBusinessInformation;
@@ -37,21 +37,21 @@ class VendorBusinessInformationFactory extends Factory
     public function pending(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => UserEnum::PENDING->value,
+            'status' => UserStatusEnum::PENDING->value,
         ]);
     }
 
     public function active(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => UserEnum::ACTIVE->value,
+            'status' => UserStatusEnum::ACTIVE->value,
         ]);
     }
 
     public function inactive(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => UserEnum::INACTIVE->value,
+            'status' => UserStatusEnum::INACTIVE->value,
         ]);
     }
 }

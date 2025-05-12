@@ -1,6 +1,5 @@
 <?php
 
-use App\Application\Shared\Enum\WishlistStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('wishlists', function (Blueprint $table) {
+        Schema::create('guest_cart_items', function (Blueprint $table) {
             $table->id();
             $table->string('uuid')->unique();
-            $table->foreignId('user_id')->constrained('users')->nullOnDelete();
+            $table->foreignId('guest_cart_id')->constrained('guest_carts')->nullOnDelete();
             $table->foreignId('product_item_id')->constrained('product_items')->nullOnDelete();
-            $table->string('status')->default(WishlistStatusEnum::IN_STOCK->value);
+            $table->string('quantity');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('wishlists');
+        Schema::dropIfExists('guest_cart_items');
     }
 };

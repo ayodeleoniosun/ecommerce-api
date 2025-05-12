@@ -5,6 +5,7 @@ use App\Domain\Admin\Controllers\RoleController;
 use App\Domain\Auth\Controllers\AuthController;
 use App\Domain\Inventory\Controllers\CategoryController;
 use App\Domain\Inventory\Controllers\ProductController;
+use App\Domain\Order\Controllers\CartController;
 use App\Domain\Vendor\Onboarding\Controllers\OnboardingController;
 use App\Domain\Vendor\Products\Controllers\ProductController as VendorProductController;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +32,12 @@ Route::prefix('inventory')->group(function () {
             Route::get('/{categoryUUID}', [CategoryController::class, 'getCategoryVariations']);
             Route::get('/{variationUUID}/options', [CategoryController::class, 'getCategoryVariationOptions']);
         });
+    });
+});
+
+Route::prefix('orders')->group(function () {
+    Route::prefix('carts')->group(function () {
+        Route::post('/', [CartController::class, 'addToCart']);
     });
 });
 

@@ -11,9 +11,12 @@ class ProductItemRepository extends BaseRepository implements ProductItemReposit
 {
     public function storeOrUpdate(CreateOrUpdateProductItemDto $createOrUpdateProductItemDto): ProductItem
     {
-        if ($createOrUpdateProductItemDto->getProductItemId()) {
+        $existingProductItem = $this->findExistingProductItem($createOrUpdateProductItemDto->getProductId(),
+            $createOrUpdateProductItemDto->getCategoryVariationOptionId());
+
+        if ($existingProductItem || $createOrUpdateProductItemDto->getProductItemId()) {
             $searchToUpdateBy = [
-                'id' => $createOrUpdateProductItemDto->getProductItemId(),
+                'id' => $existingProductItem?->id ?? $createOrUpdateProductItemDto->getProductItemId(),
             ];
         } else {
             $searchToUpdateBy = [
@@ -27,5 +30,12 @@ class ProductItemRepository extends BaseRepository implements ProductItemReposit
         $productItem->load('product', 'variationOption');
 
         return $productItem;
+    }
+
+    public function findExistingProductItem(int $productId, string $variationOptionId): ?ProductItem
+    {
+        return ProductItem::where('product_id', $productId)
+            ->where('variation_option_id', $variationOptionId)
+            ->first();
     }
 }

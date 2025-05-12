@@ -2,7 +2,7 @@
 
 namespace App\Domain\Vendor\Onboarding\Dtos;
 
-use App\Application\Shared\Enum\UserEnum;
+use App\Application\Shared\Enum\UserStatusEnum;
 use App\Domain\Vendor\Onboarding\Requests\VendorPaymentInformationRequest;
 
 class CreateVendorPaymentInformationDto
@@ -37,7 +37,7 @@ class CreateVendorPaymentInformationDto
             'bank_code' => $this->bankCode,
             'bank_name' => $this->bankName,
             'swift_code' => $this->swiftCode,
-            'status' => UserEnum::ACTIVE->value,
+            'status' => UserStatusEnum::ACTIVE->value,
             'verified_at' => now()->toDateTimeString(),
         ];
     }

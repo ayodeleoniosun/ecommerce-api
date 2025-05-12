@@ -1,6 +1,6 @@
 <?php
 
-use App\Application\Shared\Enum\PaymentEnum;
+use App\Application\Shared\Enum\PaymentStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -21,9 +21,10 @@ return new class extends Migration
             $table->decimal('order_amount', total: 10);
             $table->decimal('fee');
             $table->decimal('vat');
+            $table->string('payment_method');
             $table->string('processor')->nullable();
             $table->string('processor_reference')->nullable();
-            $table->string('status')->default(PaymentEnum::PENDING->value);
+            $table->string('status')->default(PaymentStatusEnum::PENDING->value);
             $table->text('narration')->nullable();
             $table->timestamp('completed_at')->nullable();
             $table->timestamps();

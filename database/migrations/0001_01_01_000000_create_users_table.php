@@ -1,6 +1,6 @@
 <?php
 
-use App\Application\Shared\Enum\UserEnum;
+use App\Application\Shared\Enum\UserStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('lastname');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('status')->default(UserEnum::PENDING->value);
+            $table->string('status')->default(UserStatusEnum::PENDING->value);
             $table->string('type');
             $table->rememberToken();
             $table->timestamp('email_verified_at')->nullable();

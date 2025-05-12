@@ -2,7 +2,7 @@
 
 namespace App\Domain\Vendor\Onboarding\Dtos;
 
-use App\Application\Shared\Enum\UserEnum;
+use App\Application\Shared\Enum\UserStatusEnum;
 use App\Domain\Vendor\Onboarding\Requests\VendorContactInformationRequest;
 
 class CreateVendorContactInformationDto
@@ -43,7 +43,7 @@ class CreateVendorContactInformationDto
             'state' => $this->state,
             'city' => $this->city,
             'address' => $this->address,
-            'status' => UserEnum::ACTIVE->value,
+            'status' => UserStatusEnum::ACTIVE->value,
             'verified_at' => now()->toDateTimeString(),
         ];
     }

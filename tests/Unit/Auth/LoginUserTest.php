@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Auth;
 
-use App\Application\Shared\Enum\UserEnum;
+use App\Application\Shared\Enum\UserStatusEnum;
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Auth\Actions\LoginUser;
@@ -51,7 +51,7 @@ it('should throw an exception if account is inactive', function () {
 
 it('should throw an exception if password does not match', function () {
     $this->user->email_verified_at = now();
-    $this->user->status = UserEnum::ACTIVE->value;
+    $this->user->status = UserStatusEnum::ACTIVE->value;
     $this->payload['password'] = 'wrong_password';
 
     $this->userRepo->shouldReceive('findByColumn')
@@ -64,7 +64,7 @@ it('should throw an exception if password does not match', function () {
 
 it('can login successfully', function () {
     $this->user->email_verified_at = now();
-    $this->user->status = UserEnum::ACTIVE->value;
+    $this->user->status = UserStatusEnum::ACTIVE->value;
 
     $this->userRepo->shouldReceive('findByColumn')
         ->once()

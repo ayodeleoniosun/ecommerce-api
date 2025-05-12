@@ -2,7 +2,7 @@
 
 namespace App\Domain\Auth\Actions;
 
-use App\Application\Shared\Enum\UserEnum;
+use App\Application\Shared\Enum\UserStatusEnum;
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
@@ -35,7 +35,7 @@ class LoginUser
 
         throw_if(! $user->email_verified_at, BadRequestException::class, 'Email not yet verified');
 
-        $isActive = $user->status === UserEnum::ACTIVE->value;
+        $isActive = $user->status === UserStatusEnum::ACTIVE->value;
 
         throw_if(! $isActive, BadRequestException::class, 'Account is inactive');
     }

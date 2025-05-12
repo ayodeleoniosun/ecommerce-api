@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Application\Events\Auth\VerificationMailResentEvent;
-use App\Application\Shared\Enum\UserEnum;
+use App\Application\Shared\Enum\UserStatusEnum;
 use App\Application\Shared\Enum\UserTypeEnum;
 use App\Infrastructure\Models\PasswordResetToken;
 use App\Infrastructure\Models\User;
@@ -167,7 +167,7 @@ describe('user login', function () {
     it('should return an error if login credentials is invalid', function () {
         $user = User::factory()->create([
             'email_verified_at' => now(),
-            'status' => UserEnum::ACTIVE->value,
+            'status' => UserStatusEnum::ACTIVE->value,
         ]);
 
         $payload = [
@@ -186,7 +186,7 @@ describe('user login', function () {
     it('should login successfully', function () {
         $user = User::factory()->create([
             'email_verified_at' => now(),
-            'status' => UserEnum::ACTIVE->value,
+            'status' => UserStatusEnum::ACTIVE->value,
         ]);
 
         $payload = [
@@ -297,7 +297,7 @@ describe('verify token', function () {
 
         expect($content->success)->toBeTrue()
             ->and($content->message)->toBe('User verified successfully')
-            ->and($content->data->status)->toBe(UserEnum::ACTIVE->value);
+            ->and($content->data->status)->toBe(UserStatusEnum::ACTIVE->value);
     });
 });
 
@@ -408,7 +408,7 @@ describe('forgot password', function () {
     it('should send forgot password mail to user', function () {
         $user = User::factory()->create([
             'email_verified_at' => now(),
-            'status' => UserEnum::ACTIVE->value,
+            'status' => UserStatusEnum::ACTIVE->value,
         ]);
 
         $payload = [
@@ -431,7 +431,7 @@ describe('forgot password', function () {
     it('should throw an error if forgot password mail is attempted to be run more than once in 1 minute', function () {
         $user = User::factory()->create([
             'email_verified_at' => now(),
-            'status' => UserEnum::ACTIVE->value,
+            'status' => UserStatusEnum::ACTIVE->value,
         ]);
 
         $payload = [
@@ -601,7 +601,7 @@ describe('reset password', function () {
 
         $user = User::factory()->create([
             'email_verified_at' => now(),
-            'status' => UserEnum::ACTIVE->value,
+            'status' => UserStatusEnum::ACTIVE->value,
         ]);
 
         PasswordResetToken::factory()->create([

@@ -2,7 +2,7 @@
 
 namespace App\Domain\Vendor\Products\Resource;
 
-use App\Application\Shared\Enum\ProductEnum;
+use App\Application\Shared\Enum\ProductStatusEnum;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -19,7 +19,7 @@ class ProductItemResource extends JsonResource
             'id' => $this->uuid,
             'sku' => $this->sku,
             'quantity' => $this->quantity,
-            'status' => $this->quantity > 0 ? ProductEnum::IN_STOCK : ProductEnum::OUT_OF_STOCK,
+            'status' => $this->quantity > 0 ? ProductStatusEnum::IN_STOCK : ProductStatusEnum::OUT_OF_STOCK,
             'price' => number_format($this->price, 2),
             'attribute' => $this->whenLoaded('variationOption', function ($attribute) {
                 return $attribute->value;

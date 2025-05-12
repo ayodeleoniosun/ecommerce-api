@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Application\Shared\Enum\UserEnum;
+use App\Application\Shared\Enum\UserStatusEnum;
 use App\Infrastructure\Models\User;
 use App\Infrastructure\Models\UserVerification;
 use Carbon\Carbon;
@@ -49,7 +49,7 @@ class UserVerificationFactory extends Factory
     public function inactive(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => UserEnum::INACTIVE->value,
+            'status' => UserStatusEnum::INACTIVE->value,
         ]);
     }
 }

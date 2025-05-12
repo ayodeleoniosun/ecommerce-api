@@ -14,10 +14,14 @@ class CreateOrUpdateProduct
 
     public function execute(CreateOrUpdateProductDto $createOrUpdateProductDto): array
     {
+        $isExist = (bool) $this->productRepository->findExistingProduct($createOrUpdateProductDto->getVendorId(),
+            $createOrUpdateProductDto->getName());
+        $isUpdating = (bool) $createOrUpdateProductDto->getProductId();
+
         $product = $this->productRepository->storeOrUpdate($createOrUpdateProductDto);
 
         return [
-            'is_existing_product' => (bool) $createOrUpdateProductDto->getProductId(),
+            'is_existing_product' => $isExist || $isUpdating,
             'product' => new AllProductResource($product),
         ];
     }

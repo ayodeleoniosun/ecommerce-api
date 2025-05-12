@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Vendor;
 
-use App\Application\Shared\Enum\UserEnum;
+use App\Application\Shared\Enum\UserStatusEnum;
 use App\Infrastructure\Models\User;
 use App\Infrastructure\Models\VendorBusinessInformation;
 use App\Infrastructure\Models\VendorContactInformation;
@@ -14,7 +14,7 @@ use Illuminate\Http\UploadedFile;
 beforeEach(function () {
     $this->user = User::factory()->create([
         'email_verified_at' => now(),
-        'status' => UserEnum::ACTIVE->value,
+        'status' => UserStatusEnum::ACTIVE->value,
     ]);
 
     $this->actingAs($this->user, 'sanctum');

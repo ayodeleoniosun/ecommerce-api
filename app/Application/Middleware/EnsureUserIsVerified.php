@@ -2,7 +2,7 @@
 
 namespace App\Application\Middleware;
 
-use App\Application\Shared\Enum\UserEnum;
+use App\Application\Shared\Enum\UserStatusEnum;
 use App\Application\Shared\Responses\ApiResponse;
 use Closure;
 use Illuminate\Http\Request;
@@ -25,7 +25,7 @@ class EnsureUserIsVerified
             return ApiResponse::error('User not yet verified', Response::HTTP_UNAUTHORIZED);
         }
 
-        if ($user->status !== UserEnum::ACTIVE->value) {
+        if ($user->status !== UserStatusEnum::ACTIVE->value) {
             return ApiResponse::error('User not active', Response::HTTP_UNAUTHORIZED);
         }
 

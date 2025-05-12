@@ -1,6 +1,6 @@
 <?php
 
-use App\Application\Shared\Enum\UserEnum;
+use App\Application\Shared\Enum\UserStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('country');
             $table->string('state');
             $table->string('city');
-            $table->string('status')->default(UserEnum::PENDING->value);
+            $table->string('status')->default(UserStatusEnum::PENDING->value);
             $table->timestamp('verified_at')->nullable();
             $table->timestamps();
             $table->softDeletes();

@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Vendor\Products;
 
-use App\Application\Shared\Enum\ProductEnum;
+use App\Application\Shared\Enum\ProductStatusEnum;
 use App\Domain\Vendor\Products\Actions\CreateOrUpdateProductItem;
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductItemDto;
 use App\Domain\Vendor\Products\Resource\ProductItemResource;
@@ -32,13 +32,18 @@ beforeEach(function () {
         'variation_option_id' => $this->productItemDto->getCategoryVariationOptionId(),
         'price' => $this->productItemDto->getPrice(),
         'quantity' => $this->productItemDto->getQuantity(),
-        'status' => ProductEnum::IN_STOCK->value,
+        'status' => ProductStatusEnum::IN_STOCK->value,
     ]);
 
     $this->createOrUpdateProductItem = new CreateOrUpdateProductItem($this->productItemRepo);
 });
 
 it('should create a new vendor product item', function () {
+    $this->productItemRepo->shouldReceive('findExistingProductItem')
+        ->once()
+        ->with($this->productItemDto->getProductId(), $this->productItemDto->getCategoryVariationOptionId())
+        ->andReturn(null);
+
     $this->productItemRepo->shouldReceive('storeOrUpdate')
         ->once()
         ->with($this->productItemDto)
@@ -52,11 +57,16 @@ it('should create a new vendor product item', function () {
         ->and($response['product_item']->resource->variation_option_id)->toBe($this->productItemDto->getCategoryVariationOptionId())
         ->and($response['product_item']->resource->price)->toBe($this->productItemDto->getPrice())
         ->and($response['product_item']->resource->quantity)->toBe($this->productItemDto->getQuantity())
-        ->and($response['product_item']->resource->status)->toBe(ProductEnum::IN_STOCK->value);
+        ->and($response['product_item']->resource->status)->toBe(ProductStatusEnum::IN_STOCK->value);
 });
 
 it('should update an existing vendor product', function () {
     $productItem = ProductItem::factory()->create($this->productItem->toArray());
+
+    $this->productItemRepo->shouldReceive('findExistingProductItem')
+        ->once()
+        ->with($this->productItemDto->getProductId(), $this->productItemDto->getCategoryVariationOptionId())
+        ->andReturn($productItem);
 
     $this->productItemRepo->shouldReceive('storeOrUpdate')
         ->once()
@@ -71,5 +81,5 @@ it('should update an existing vendor product', function () {
         ->and($response['product_item']->resource->variation_option_id)->toBe($this->productItemDto->getCategoryVariationOptionId())
         ->and($response['product_item']->resource->price)->toBe($this->productItemDto->getPrice())
         ->and($response['product_item']->resource->quantity)->toBe($this->productItemDto->getQuantity())
-        ->and($response['product_item']->resource->status)->toBe(ProductEnum::IN_STOCK->value);
+        ->and($response['product_item']->resource->status)->toBe(ProductStatusEnum::IN_STOCK->value);
 });

@@ -2,7 +2,7 @@
 
 namespace App\Domain\Vendor\Onboarding\Dtos;
 
-use App\Application\Shared\Enum\UserEnum;
+use App\Application\Shared\Enum\UserStatusEnum;
 use App\Domain\Vendor\Onboarding\Requests\VendorLegalInformationRequest;
 use Illuminate\Http\UploadedFile;
 
@@ -34,7 +34,7 @@ class CreateVendorLegalInformationDto
             'fullname' => $this->fullName,
             'email' => $this->email,
             'certificate_path' => $this->legalCertificatePath,
-            'status' => UserEnum::ACTIVE->value,
+            'status' => UserStatusEnum::ACTIVE->value,
             'verified_at' => now()->toDateTimeString(),
         ];
     }
