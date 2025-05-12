@@ -12,6 +12,7 @@ class AddToCartDto
         private readonly string $productItemUUID,
         private readonly int $productItemId,
         private int $quantity,
+        private readonly string $type,
         private ?int $userId = null,
         private ?int $cartId = null,
         private ?string $identifier = null,
@@ -23,6 +24,7 @@ class AddToCartDto
             productItemUUID: $payload['product_item_id'],
             productItemId: $payload['merged_product_item_id'],
             quantity: $payload['quantity'],
+            type: $payload['type'],
             userId: $payload['user_id'] ?? null,
             identifier: $payload['identifier'] ?? null
         );
@@ -45,12 +47,18 @@ class AddToCartDto
             'product_item_id' => $this->productItemId,
             'quantity' => $this->getQuantity(),
             'cart_id' => $this->cartId,
+            'reserved_until' => now()->addMinutes(20),
         ];
     }
 
     public function getQuantity(): int
     {
         return $this->quantity;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
     }
 
     public function getProductItemUUID(): string

@@ -38,4 +38,16 @@ class ProductItemRepository extends BaseRepository implements ProductItemReposit
             ->where('variation_option_id', $variationOptionId)
             ->first();
     }
+
+    public function lockItem(int $productItemId): ?ProductItem
+    {
+        return ProductItem::where('id', $productItemId)
+            ->lockForUpdate()
+            ->first();
+    }
+
+    public function decreaseStock(ProductItem $productItem, int $quantity): bool|int
+    {
+        return $productItem->decrement('quantity', $quantity);
+    }
 }

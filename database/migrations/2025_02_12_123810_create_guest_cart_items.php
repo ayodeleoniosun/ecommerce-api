@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('guest_cart_id')->constrained('guest_carts')->nullOnDelete();
             $table->foreignId('product_item_id')->constrained('product_items')->nullOnDelete();
             $table->integer('quantity');
+            $table->timestamp('reserved_until')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

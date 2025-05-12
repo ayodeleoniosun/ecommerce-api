@@ -2,10 +2,12 @@
 
 namespace App\Domain\Order\Requests;
 
+use App\Application\Shared\Enum\CartOperationEnum;
 use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
 use App\Infrastructure\Models\ProductItem;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class AddToCartRequest extends FormRequest
 {
@@ -29,8 +31,8 @@ class AddToCartRequest extends FormRequest
         return [
             'product_item_id' => ['required', 'string', 'exists:product_items,uuid'],
             'merged_product_item_id' => ['required', 'integer'],
-            // 'identifier' => ['sometimes', 'string'],
             'quantity' => ['required', 'integer', 'min:1'],
+            'type' => ['required', new Enum(CartOperationEnum::class)],
         ];
     }
 

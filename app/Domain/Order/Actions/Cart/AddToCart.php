@@ -2,6 +2,7 @@
 
 namespace App\Domain\Order\Actions\Cart;
 
+use App\Application\Shared\Enum\CartOperationEnum;
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Order\Dtos\AddToCartDto;
@@ -22,46 +23,59 @@ class AddToCart
 
     public function execute(AddToCartDto $addToCartDto): CartResource
     {
-        $productItem = $this->productItemRepository->findByColumn(ProductItem::class, 'uuid',
-            $addToCartDto->getProductItemUUID());
+        $productItem = $this->productItemRepository->findByColumn(
+            ProductItem::class,
+            'uuid',
+            $addToCartDto->getProductItemUUID(),
+        );
 
         throw_if(! $productItem, ResourceNotFoundException::class, 'Product item not found');
 
-        $incrementedQuantity = $this->getQuantity($addToCartDto->getQuantity(), $addToCartDto->getUserId(),
-            $productItem->id);
+        return DB::transaction(function () use ($productItem, $addToCartDto) {
+            $lockedItem = $this->productItemRepository->lockItem($productItem->id);
 
-        throw_if($incrementedQuantity > $productItem->quantity, BadRequestException::class,
-            'Insufficient product quantity');
+            $cartQuantity = $addToCartDto->getQuantity();
 
-        $addToCartDto->setQuantity($incrementedQuantity);
+            throw_if(
+                $cartQuantity > $lockedItem->quantity,
+                BadRequestException::class,
+                'Insufficient product quantity',
+            );
 
-        return DB::transaction(function () use ($addToCartDto) {
+            $updatedQuantity = $this->updateQuantity($addToCartDto);
+
+            $addToCartDto->setQuantity($updatedQuantity);
+
             $cart = $this->userCartRepository->findOrCreate($addToCartDto);
 
             $addToCartDto->setCartId($cart->id);
 
             $cartItem = $this->userCartItemRepository->storeOrUpdate($addToCartDto);
 
+            $this->productItemRepository->decreaseStock($lockedItem, $cartQuantity);
+
             return new CartResource($cartItem->load('productItem', 'productItem.product', 'productItem.variationOption',
                 'cart'));
         });
     }
 
-    public function getQuantity(int $quantity, int $userId, int $productItemId): int
+    public function updateQuantity(AddToCartDto $addToCartDto): int
     {
-        $existingCartItem = null;
+        $existingCart = $this->userCartRepository->findPendingCart($addToCartDto->getUserId());
 
-        $existingCart = $this->userCartRepository->findPendingCart($userId);
-
-        if ($existingCart) {
-            $existingCartItem = $this->userCartItemRepository->findExistingCartItem($existingCart->id,
-                $productItemId);
-        }
+        $existingCartItem = $this->userCartItemRepository->findExistingCartItem($existingCart?->id,
+            $addToCartDto->getProductItemId());
 
         if ($existingCartItem) {
-            return $existingCartItem->quantity + $quantity;
+            if ($addToCartDto->getType() === CartOperationEnum::INCREMENT->value) {
+                return $existingCartItem->quantity + $addToCartDto->getQuantity();
+            }
+
+            if ($addToCartDto->getType() === CartOperationEnum::DECREMENT->value) {
+                return $existingCartItem->quantity - $addToCartDto->getQuantity();
+            }
         }
 
-        return $quantity;
+        return $addToCartDto->getQuantity();
     }
 }

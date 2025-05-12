@@ -50,6 +50,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::prefix('carts')->group(function () {
             Route::get('/', [CartController::class, 'index']);
             Route::post('/', [CartController::class, 'addToCart']);
+            Route::delete('/{cartItemUUID}', [CartController::class, 'removeCartItem']);
         });
     });
 
