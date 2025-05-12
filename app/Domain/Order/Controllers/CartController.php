@@ -2,22 +2,30 @@
 
 namespace App\Domain\Order\Controllers;
 
+use App\Application\Shared\Responses\ApiResponse;
+use App\Domain\Order\Actions\Cart\AddToCart;
+use App\Domain\Order\Dtos\AddToCartDto;
+use App\Domain\Order\Requests\AddToCartRequest;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
+
 class CartController
 {
-    //    public function addToCart(AddToCartRequest $request): JsonResponse
-    //    {
-    //        $product = CreateOrUpdateProductDto::fromRequest($request->validated());
-    //
-    //        try {
-    //            $data = $this->createOrUpdateProduct->execute($product);
-    //
-    //            if ($data['is_existing_product'] || $product->getProductId()) {
-    //                return ApiResponse::success('Product successfully updated', $data);
-    //            }
-    //
-    //            return ApiResponse::success('Product successfully added', $data, Response::HTTP_CREATED);
-    //        } catch (Exception $e) {
-    //            return ApiResponse::error($e->getMessage(), $e->getCode());
-    //        }
-    //    }
+    public function __construct(
+        private readonly AddToCart $addToCart,
+    ) {}
+
+    public function addToCart(AddToCartRequest $request): JsonResponse
+    {
+        $cartDto = AddToCartDto::fromRequest($request->validated());
+
+        try {
+            $data = $this->addToCart->execute($cartDto);
+
+            return ApiResponse::success('Item successfully added to cart', $data, Response::HTTP_CREATED);
+        } catch (Exception $e) {
+            return ApiResponse::error($e->getMessage(), $e->getCode());
+        }
+    }
 }

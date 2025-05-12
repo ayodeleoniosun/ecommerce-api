@@ -28,6 +28,8 @@ class AddToCartRequest extends FormRequest
     {
         return [
             'product_item_id' => ['required', 'string', 'exists:product_items,uuid'],
+            'merged_product_item_id' => ['required', 'integer'],
+            // 'identifier' => ['sometimes', 'string'],
             'quantity' => ['required', 'integer', 'min:1'],
         ];
     }
@@ -35,7 +37,7 @@ class AddToCartRequest extends FormRequest
     public function validated($key = null, $default = null): array
     {
         return array_merge(parent::validated($key, $default), [
-            'user_id' => auth()->user()->id,
+            'user_id' => auth()->user()?->id,
         ]);
     }
 

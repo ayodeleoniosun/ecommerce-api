@@ -35,14 +35,22 @@ Route::prefix('inventory')->group(function () {
     });
 });
 
-Route::prefix('orders')->group(function () {
-    Route::prefix('carts')->group(function () {
-        Route::post('/', [CartController::class, 'addToCart']);
-    });
-});
+// Route::middleware(['auth:sanctum'])->group(function () {
+//    Route::prefix('orders')->group(function () {
+//        Route::prefix('carts')->group(function () {
+//            Route::post('/', [CartController::class, 'addToCart']);
+//        });
+//    });
+// });
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('authenticated', [AuthController::class, 'authenticated']);
+
+    Route::prefix('orders')->group(function () {
+        Route::prefix('carts')->group(function () {
+            Route::post('/', [CartController::class, 'addToCart']);
+        });
+    });
 
     Route::prefix('admin')->group(function () {
         Route::get('roles', [RoleController::class, 'roles']);

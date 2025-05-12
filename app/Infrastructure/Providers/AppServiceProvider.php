@@ -7,6 +7,10 @@ use App\Domain\Admin\Interfaces\CategoryVariationRepositoryInterface;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface;
 use App\Domain\Inventory\Interfaces\CategoryRepositoryInterface;
+use App\Domain\Order\Interfaces\GuestCartItemRepositoryInterface;
+use App\Domain\Order\Interfaces\GuestCartRepositoryInterface;
+use App\Domain\Order\Interfaces\UserCartItemRepositoryInterface;
+use App\Domain\Order\Interfaces\UserCartRepositoryInterface;
 use App\Domain\Vendor\Onboarding\Interfaces\VendorBusinessInformationRepositoryInterface;
 use App\Domain\Vendor\Onboarding\Interfaces\VendorContactInformationRepositoryInterface;
 use App\Domain\Vendor\Onboarding\Interfaces\VendorLegalInformationRepositoryInterface;
@@ -19,6 +23,10 @@ use App\Infrastructure\Repositories\Auth\UserVerificationRepository;
 use App\Infrastructure\Repositories\Inventory\CategoryRepository;
 use App\Infrastructure\Repositories\Inventory\CategoryVariationOptionRepository;
 use App\Infrastructure\Repositories\Inventory\CategoryVariationRepository;
+use App\Infrastructure\Repositories\Order\GuestCartItemRepository;
+use App\Infrastructure\Repositories\Order\GuestCartRepository;
+use App\Infrastructure\Repositories\Order\UserCartItemRepository;
+use App\Infrastructure\Repositories\Order\UserCartRepository;
 use App\Infrastructure\Repositories\Vendor\Onboarding\VendorBusinessInformationRepository;
 use App\Infrastructure\Repositories\Vendor\Onboarding\VendorContactInformationRepository;
 use App\Infrastructure\Repositories\Vendor\Onboarding\VendorLegalInformationRepository;
@@ -58,6 +66,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CategoryRepositoryInterface::class, CategoryRepository::class);
         $this->app->bind(CategoryVariationRepositoryInterface::class, CategoryVariationRepository::class);
         $this->app->bind(CategoryVariationOptionRepositoryInterface::class, CategoryVariationOptionRepository::class);
+
+        /* Cart */
+        $this->app->bind(GuestCartRepositoryInterface::class, GuestCartRepository::class);
+        $this->app->bind(GuestCartItemRepositoryInterface::class, GuestCartItemRepository::class);
+        $this->app->bind(UserCartRepositoryInterface::class, UserCartRepository::class);
+        $this->app->bind(UserCartItemRepositoryInterface::class, UserCartItemRepository::class);
     }
 
     /**
