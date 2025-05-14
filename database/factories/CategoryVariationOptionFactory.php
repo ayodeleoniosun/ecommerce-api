@@ -3,9 +3,9 @@
 namespace Database\Factories;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Infrastructure\Models\CategoryVariation;
-use App\Infrastructure\Models\CategoryVariationOption;
-use App\Infrastructure\Models\Product;
+use App\Infrastructure\Models\Inventory\CategoryVariation;
+use App\Infrastructure\Models\Inventory\CategoryVariationOption;
+use App\Infrastructure\Models\Inventory\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

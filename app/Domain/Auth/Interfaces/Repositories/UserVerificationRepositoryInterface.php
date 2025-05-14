@@ -2,7 +2,7 @@
 
 namespace App\Domain\Auth\Interfaces\Repositories;
 
-use App\Infrastructure\Models\UserVerification;
+use App\Infrastructure\Models\User\UserVerification;
 
 interface UserVerificationRepositoryInterface
 {

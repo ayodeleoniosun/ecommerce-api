@@ -7,7 +7,7 @@ use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Auth\Actions\InitiateForgotPassword;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
-use App\Infrastructure\Models\User;
+use App\Infrastructure\Models\User\User;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Password;
 use Mockery;

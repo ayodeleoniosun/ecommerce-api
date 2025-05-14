@@ -5,7 +5,7 @@ namespace App\Domain\Vendor\Onboarding\Actions;
 use App\Application\Shared\Exceptions\ConflictHttpException;
 use App\Domain\Vendor\Onboarding\Dtos\CreateVendorContactInformationDto;
 use App\Domain\Vendor\Onboarding\Interfaces\VendorContactInformationRepositoryInterface;
-use App\Infrastructure\Models\VendorContactInformation;
+use App\Infrastructure\Models\Vendor\VendorContactInformation;
 
 class CreateVendorContactInformation
 {

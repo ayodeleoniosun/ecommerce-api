@@ -5,7 +5,7 @@ namespace App\Infrastructure\Repositories\Order;
 use App\Application\Shared\Enum\CartStatusEnum;
 use App\Domain\Order\Dtos\AddToCartDto;
 use App\Domain\Order\Interfaces\GuestCartRepositoryInterface;
-use App\Infrastructure\Models\GuestCart;
+use App\Infrastructure\Models\Order\GuestCart;
 use App\Infrastructure\Repositories\Inventory\BaseRepository;
 
 class GuestCartRepository extends BaseRepository implements GuestCartRepositoryInterface

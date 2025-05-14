@@ -3,7 +3,7 @@
 namespace App\Domain\Vendor\Products\Interfaces;
 
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductItemDto;
-use App\Infrastructure\Models\ProductItem;
+use App\Infrastructure\Models\Inventory\ProductItem;
 
 interface ProductItemRepositoryInterface
 {

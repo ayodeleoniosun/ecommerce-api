@@ -7,9 +7,9 @@ use App\Domain\Vendor\Products\Actions\CreateOrUpdateProduct;
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductDto;
 use App\Domain\Vendor\Products\Interfaces\ProductRepositoryInterface;
 use App\Domain\Vendor\Products\Resource\AllProductResource;
-use App\Infrastructure\Models\Category;
-use App\Infrastructure\Models\Product;
-use App\Infrastructure\Models\User;
+use App\Infrastructure\Models\Inventory\Category;
+use App\Infrastructure\Models\Inventory\Product;
+use App\Infrastructure\Models\User\User;
 use Mockery;
 
 beforeEach(function () {

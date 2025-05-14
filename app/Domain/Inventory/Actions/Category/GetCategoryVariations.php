@@ -6,7 +6,7 @@ use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Admin\Interfaces\CategoryVariationRepositoryInterface;
 use App\Domain\Admin\Resources\Inventory\CategoryVariationResource;
 use App\Domain\Inventory\Interfaces\CategoryRepositoryInterface;
-use App\Infrastructure\Models\Category;
+use App\Infrastructure\Models\Inventory\Category;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 

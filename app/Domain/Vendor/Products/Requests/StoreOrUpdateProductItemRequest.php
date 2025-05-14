@@ -4,9 +4,9 @@ namespace App\Domain\Vendor\Products\Requests;
 
 use App\Application\Shared\Responses\ApiResponse;
 use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
-use App\Infrastructure\Models\CategoryVariationOption;
-use App\Infrastructure\Models\Product;
-use App\Infrastructure\Models\ProductItem;
+use App\Infrastructure\Models\Inventory\CategoryVariationOption;
+use App\Infrastructure\Models\Inventory\Product;
+use App\Infrastructure\Models\Inventory\ProductItem;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;

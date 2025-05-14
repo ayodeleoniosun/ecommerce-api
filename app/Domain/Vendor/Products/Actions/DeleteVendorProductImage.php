@@ -4,7 +4,7 @@ namespace App\Domain\Vendor\Products\Actions;
 
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Vendor\Products\Interfaces\ProductImageRepositoryInterface;
-use App\Infrastructure\Models\ProductImage;
+use App\Infrastructure\Models\Inventory\ProductImage;
 
 class DeleteVendorProductImage
 {

@@ -4,12 +4,12 @@ namespace Tests\Feature\Vendor;
 
 use App\Application\Shared\Enum\ProductStatusEnum;
 use App\Application\Shared\Enum\UserStatusEnum;
-use App\Infrastructure\Models\Category;
-use App\Infrastructure\Models\CategoryVariationOption;
-use App\Infrastructure\Models\Product;
-use App\Infrastructure\Models\ProductImage;
-use App\Infrastructure\Models\ProductItem;
-use App\Infrastructure\Models\User;
+use App\Infrastructure\Models\Inventory\Category;
+use App\Infrastructure\Models\Inventory\CategoryVariationOption;
+use App\Infrastructure\Models\Inventory\Product;
+use App\Infrastructure\Models\Inventory\ProductImage;
+use App\Infrastructure\Models\Inventory\ProductItem;
+use App\Infrastructure\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Http\Response;
 use Illuminate\Http\UploadedFile;

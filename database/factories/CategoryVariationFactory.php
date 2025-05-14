@@ -3,13 +3,12 @@
 namespace Database\Factories;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Infrastructure\Models\Category;
-use App\Infrastructure\Models\CategoryVariation;
-use App\Infrastructure\Models\Product;
+use App\Infrastructure\Models\Inventory\Category;
+use App\Infrastructure\Models\Inventory\CategoryVariation;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Product>
+ * @extends Factory<\App\Infrastructure\Models\Inventory\Product>
  */
 class CategoryVariationFactory extends Factory
 {

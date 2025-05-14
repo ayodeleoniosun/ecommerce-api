@@ -4,6 +4,7 @@ use App\Application\Middleware\EnsureUserIsVerified;
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Application\Shared\Responses\ApiResponse;
+use App\Domain\Order\Commands\RestoreAbandonedCartQuantity;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -23,6 +24,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withEvents(discover: [
         __DIR__.'/../app/Domain/*/Events',
         __DIR__.'/../app/Domain/*/Listeners',
+    ])
+    ->withCommands([
+        RestoreAbandonedCartQuantity::class,
     ])
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->report(function (ResourceNotFoundException $e) {

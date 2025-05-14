@@ -8,7 +8,7 @@ use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Auth\Actions\ResetPassword;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Domain\Auth\Requests\ResetPasswordRequest;
-use App\Infrastructure\Models\User;
+use App\Infrastructure\Models\User\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Password;

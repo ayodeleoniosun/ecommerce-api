@@ -10,7 +10,7 @@ use App\Domain\Order\Interfaces\UserCartItemRepositoryInterface;
 use App\Domain\Order\Interfaces\UserCartRepositoryInterface;
 use App\Domain\Order\Resources\CartResource;
 use App\Domain\Vendor\Products\Interfaces\ProductItemRepositoryInterface;
-use App\Infrastructure\Models\ProductItem;
+use App\Infrastructure\Models\Inventory\ProductItem;
 use Illuminate\Support\Facades\DB;
 
 class AddToCart

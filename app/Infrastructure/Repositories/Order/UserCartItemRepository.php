@@ -4,7 +4,7 @@ namespace App\Infrastructure\Repositories\Order;
 
 use App\Domain\Order\Dtos\AddToCartDto;
 use App\Domain\Order\Interfaces\UserCartItemRepositoryInterface;
-use App\Infrastructure\Models\UserCartItem;
+use App\Infrastructure\Models\Order\UserCartItem;
 use App\Infrastructure\Repositories\Inventory\BaseRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
@@ -34,7 +34,7 @@ class UserCartItemRepository extends BaseRepository implements UserCartItemRepos
         );
     }
 
-    public function findExistingCartItem(int $cartId, int $productItemId): ?UserCartItem
+    public function findExistingCartItem(?int $cartId, int $productItemId): ?UserCartItem
     {
         return UserCartItem::query()
             ->where('cart_id', $cartId)

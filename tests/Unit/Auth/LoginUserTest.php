@@ -7,7 +7,7 @@ use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Auth\Actions\LoginUser;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
-use App\Infrastructure\Models\User;
+use App\Infrastructure\Models\User\User;
 use Mockery;
 
 beforeEach(function () {

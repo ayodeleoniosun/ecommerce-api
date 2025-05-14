@@ -3,11 +3,11 @@
 namespace Tests\Feature\Vendor;
 
 use App\Application\Shared\Enum\UserStatusEnum;
-use App\Infrastructure\Models\User;
-use App\Infrastructure\Models\VendorBusinessInformation;
-use App\Infrastructure\Models\VendorContactInformation;
-use App\Infrastructure\Models\VendorLegalInformation;
-use App\Infrastructure\Models\VendorPaymentInformation;
+use App\Infrastructure\Models\User\User;
+use App\Infrastructure\Models\Vendor\VendorBusinessInformation;
+use App\Infrastructure\Models\Vendor\VendorContactInformation;
+use App\Infrastructure\Models\Vendor\VendorLegalInformation;
+use App\Infrastructure\Models\Vendor\VendorPaymentInformation;
 use Illuminate\Http\Response;
 use Illuminate\Http\UploadedFile;
 

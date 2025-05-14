@@ -3,11 +3,11 @@
 namespace Database\Factories;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Infrastructure\Models\Category;
+use App\Infrastructure\Models\Inventory\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Category>
+ * @extends Factory<\App\Infrastructure\Models\Inventory\Category>
  */
 class CategoryFactory extends Factory
 {

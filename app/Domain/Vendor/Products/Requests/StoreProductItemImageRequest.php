@@ -3,7 +3,7 @@
 namespace App\Domain\Vendor\Products\Requests;
 
 use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
-use App\Infrastructure\Models\ProductItem;
+use App\Infrastructure\Models\Inventory\ProductItem;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 

@@ -4,7 +4,7 @@ namespace App\Infrastructure\Repositories\Vendor\Onboarding;
 
 use App\Domain\Vendor\Onboarding\Dtos\CreateVendorLegalInformationDto;
 use App\Domain\Vendor\Onboarding\Interfaces\VendorLegalInformationRepositoryInterface;
-use App\Infrastructure\Models\VendorLegalInformation;
+use App\Infrastructure\Models\Vendor\VendorLegalInformation;
 
 class VendorLegalInformationRepository implements VendorLegalInformationRepositoryInterface
 {

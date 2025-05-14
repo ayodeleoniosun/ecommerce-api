@@ -6,8 +6,8 @@ use App\Application\Shared\Exceptions\ConflictHttpException;
 use App\Domain\Vendor\Onboarding\Actions\CreateVendorPaymentInformation;
 use App\Domain\Vendor\Onboarding\Dtos\CreateVendorPaymentInformationDto;
 use App\Domain\Vendor\Onboarding\Interfaces\VendorPaymentInformationRepositoryInterface;
-use App\Infrastructure\Models\User;
-use App\Infrastructure\Models\VendorPaymentInformation;
+use App\Infrastructure\Models\User\User;
+use App\Infrastructure\Models\Vendor\VendorPaymentInformation;
 use Mockery;
 
 beforeEach(function () {

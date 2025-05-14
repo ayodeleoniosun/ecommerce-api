@@ -4,7 +4,7 @@ namespace App\Domain\Admin\Actions\Category;
 
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Admin\Interfaces\CategoryVariationOptionRepositoryInterface;
-use App\Infrastructure\Models\CategoryVariationOption;
+use App\Infrastructure\Models\Inventory\CategoryVariationOption;
 
 class DeleteCategoryVariationOptions
 {

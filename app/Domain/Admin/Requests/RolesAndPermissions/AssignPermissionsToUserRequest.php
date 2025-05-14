@@ -4,7 +4,7 @@ namespace App\Domain\Admin\Requests\RolesAndPermissions;
 
 use App\Application\Shared\Responses\ApiResponse;
 use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
-use App\Infrastructure\Models\User;
+use App\Infrastructure\Models\User\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;

@@ -8,8 +8,8 @@ use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Auth\Actions\ResendToken;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface;
-use App\Infrastructure\Models\User;
-use App\Infrastructure\Models\UserVerification;
+use App\Infrastructure\Models\User\User;
+use App\Infrastructure\Models\User\UserVerification;
 use Illuminate\Support\Facades\Event;
 use Mockery;
 

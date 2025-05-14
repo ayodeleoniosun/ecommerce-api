@@ -4,7 +4,7 @@ namespace App\Domain\Vendor\Products\Resource;
 
 use App\Domain\Admin\Resources\Inventory\CategoryResource;
 use App\Domain\Admin\Resources\User\VendorResource;
-use App\Infrastructure\Models\ProductItem;
+use App\Infrastructure\Models\Inventory\ProductItem;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

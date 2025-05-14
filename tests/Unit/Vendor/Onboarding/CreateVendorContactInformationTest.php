@@ -6,8 +6,8 @@ use App\Application\Shared\Exceptions\ConflictHttpException;
 use App\Domain\Vendor\Onboarding\Actions\CreateVendorContactInformation;
 use App\Domain\Vendor\Onboarding\Dtos\CreateVendorContactInformationDto;
 use App\Domain\Vendor\Onboarding\Interfaces\VendorContactInformationRepositoryInterface;
-use App\Infrastructure\Models\User;
-use App\Infrastructure\Models\VendorContactInformation;
+use App\Infrastructure\Models\User\User;
+use App\Infrastructure\Models\Vendor\VendorContactInformation;
 use Mockery;
 
 beforeEach(function () {

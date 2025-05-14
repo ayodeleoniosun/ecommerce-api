@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Infrastructure\Models\Product;
-use App\Infrastructure\Models\User;
-use App\Infrastructure\Models\Wishlist;
+use App\Infrastructure\Models\Inventory\Product;
+use App\Infrastructure\Models\Order\Wishlist;
+use App\Infrastructure\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 

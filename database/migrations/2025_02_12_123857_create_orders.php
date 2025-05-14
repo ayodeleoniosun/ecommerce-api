@@ -1,6 +1,6 @@
 <?php
 
-use App\Application\Shared\Enum\PaymentStatusEnum;
+use App\Application\Shared\Enum\OrderStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,12 +17,7 @@ return new class extends Migration
             $table->string('uuid')->unique();
             $table->string('reference')->unique();
             $table->foreignId('user_id')->constrained('users')->nullOnDelete();
-            $table->foreignId('cart_item_id')->constrained('user_cart_items')->nullOnDelete();
-            $table->text('shipping_address');
-            $table->text('shipping_additional_note');
-            $table->text('state');
-            $table->text('city');
-            $table->string('status')->default(PaymentStatusEnum::PENDING->value);
+            $table->string('status')->default(OrderStatusEnum::PENDING->value);
             $table->timestamps();
             $table->softDeletes();
         });

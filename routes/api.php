@@ -35,14 +35,6 @@ Route::prefix('inventory')->group(function () {
     });
 });
 
-// Route::middleware(['auth:sanctum'])->group(function () {
-//    Route::prefix('orders')->group(function () {
-//        Route::prefix('carts')->group(function () {
-//            Route::post('/', [CartController::class, 'addToCart']);
-//        });
-//    });
-// });
-
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('authenticated', [AuthController::class, 'authenticated']);
 
@@ -51,6 +43,14 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             Route::get('/', [CartController::class, 'index']);
             Route::post('/', [CartController::class, 'addToCart']);
             Route::delete('/{cartItemUUID}', [CartController::class, 'removeCartItem']);
+        });
+    });
+
+    Route::prefix('customers')->group(function () {
+        Route::prefix('addresses')->group(function () {
+            Route::post('/', [CartController::class, 'store']);
+            Route::get('/', [CartController::class, 'index']);
+            Route::delete('/{addressUUID}', [CartController::class, 'delete']);
         });
     });
 

@@ -7,7 +7,7 @@ use App\Application\Shared\Traits\FileUploadTrait;
 use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Domain\Vendor\Onboarding\Dtos\CreateVendorBusinessInformationDto;
 use App\Domain\Vendor\Onboarding\Interfaces\VendorBusinessInformationRepositoryInterface;
-use App\Infrastructure\Models\VendorBusinessInformation;
+use App\Infrastructure\Models\Vendor\VendorBusinessInformation;
 use Illuminate\Http\UploadedFile;
 
 class CreateVendorBusinessInformation

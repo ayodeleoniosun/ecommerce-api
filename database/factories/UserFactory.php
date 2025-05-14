@@ -5,7 +5,7 @@ namespace Database\Factories;
 use App\Application\Shared\Enum\UserStatusEnum;
 use App\Application\Shared\Enum\UserTypeEnum;
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Infrastructure\Models\User;
+use App\Infrastructure\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;

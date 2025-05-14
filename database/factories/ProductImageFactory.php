@@ -3,13 +3,12 @@
 namespace Database\Factories;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Infrastructure\Models\Product;
-use App\Infrastructure\Models\ProductImage;
-use App\Infrastructure\Models\ProductItem;
+use App\Infrastructure\Models\Inventory\ProductImage;
+use App\Infrastructure\Models\Inventory\ProductItem;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Product>
+ * @extends Factory<\App\Infrastructure\Models\Inventory\Product>
  */
 class ProductImageFactory extends Factory
 {

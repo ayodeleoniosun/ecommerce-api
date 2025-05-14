@@ -4,9 +4,9 @@ namespace Database\Factories;
 
 use App\Application\Shared\Enum\ProductStatusEnum;
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Infrastructure\Models\Category;
-use App\Infrastructure\Models\Product;
-use App\Infrastructure\Models\User;
+use App\Infrastructure\Models\Inventory\Category;
+use App\Infrastructure\Models\Inventory\Product;
+use App\Infrastructure\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

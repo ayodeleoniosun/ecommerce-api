@@ -4,7 +4,7 @@ namespace App\Infrastructure\Repositories\Inventory;
 
 use App\Domain\Admin\Dtos\CreateCategoryVariationOptionDto;
 use App\Domain\Admin\Interfaces\CategoryVariationOptionRepositoryInterface;
-use App\Infrastructure\Models\CategoryVariationOption;
+use App\Infrastructure\Models\Inventory\CategoryVariationOption;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 

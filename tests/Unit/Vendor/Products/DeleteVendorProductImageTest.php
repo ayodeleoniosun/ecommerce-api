@@ -4,7 +4,7 @@ namespace Tests\Unit\Vendor\Products;
 
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Vendor\Products\Actions\DeleteVendorProductImage;
-use App\Infrastructure\Models\ProductImage;
+use App\Infrastructure\Models\Inventory\ProductImage;
 use App\Infrastructure\Repositories\Vendor\Products\ProductImageRepository;
 use Mockery;
 

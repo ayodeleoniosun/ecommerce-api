@@ -4,11 +4,11 @@ namespace Tests\Unit\Vendor\Products;
 
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Vendor\Products\Actions\DeleteVendorProductItem;
-use App\Infrastructure\Models\Category;
-use App\Infrastructure\Models\CategoryVariationOption;
-use App\Infrastructure\Models\Product;
-use App\Infrastructure\Models\ProductItem;
-use App\Infrastructure\Models\User;
+use App\Infrastructure\Models\Inventory\Category;
+use App\Infrastructure\Models\Inventory\CategoryVariationOption;
+use App\Infrastructure\Models\Inventory\Product;
+use App\Infrastructure\Models\Inventory\ProductItem;
+use App\Infrastructure\Models\User\User;
 use App\Infrastructure\Repositories\Vendor\Products\ProductItemRepository;
 use Mockery;
 

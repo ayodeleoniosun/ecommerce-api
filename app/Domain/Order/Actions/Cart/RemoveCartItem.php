@@ -4,7 +4,7 @@ namespace App\Domain\Order\Actions\Cart;
 
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Order\Interfaces\UserCartItemRepositoryInterface;
-use App\Infrastructure\Models\UserCartItem;
+use App\Infrastructure\Models\Order\UserCartItem;
 
 class RemoveCartItem
 {

@@ -20,6 +20,7 @@ class CartResource extends JsonResource
             'product_name' => $this->productItem->product->name,
             'cart_quantity' => $this->quantity,
             'remaining_quantity' => $this->productItem->quantity,
+            'status' => $this->productItem->status,
             'unit_price' => number_format($this->productItem->price, 2),
             'total_price' => number_format($this->productItem->price * $this->quantity, 2),
             'image' => $this->productItem->firstImage->path ?? null,

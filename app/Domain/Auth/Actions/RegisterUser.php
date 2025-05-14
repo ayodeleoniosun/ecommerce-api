@@ -5,7 +5,7 @@ namespace App\Domain\Auth\Actions;
 use App\Application\Events\Auth\UserRegisteredEvent;
 use App\Domain\Auth\Dtos\CreateUserDto;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
-use App\Infrastructure\Models\User;
+use App\Infrastructure\Models\User\User;
 
 class RegisterUser
 {

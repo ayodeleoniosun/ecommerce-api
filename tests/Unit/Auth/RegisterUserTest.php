@@ -7,7 +7,7 @@ use App\Application\Shared\Enum\UserTypeEnum;
 use App\Domain\Auth\Actions\RegisterUser;
 use App\Domain\Auth\Dtos\CreateUserDto;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
-use App\Infrastructure\Models\User;
+use App\Infrastructure\Models\User\User;
 use Illuminate\Support\Facades\Event;
 use Mockery;
 

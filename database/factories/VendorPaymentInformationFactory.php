@@ -4,12 +4,12 @@ namespace Database\Factories;
 
 use App\Application\Shared\Enum\UserStatusEnum;
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Infrastructure\Models\User;
-use App\Infrastructure\Models\VendorPaymentInformation;
+use App\Infrastructure\Models\User\User;
+use App\Infrastructure\Models\Vendor\VendorPaymentInformation;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<VendorPaymentInformation>
+ * @extends Factory<\App\Infrastructure\Models\Vendor\VendorPaymentInformation>
  */
 class VendorPaymentInformationFactory extends Factory
 {

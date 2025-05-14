@@ -2,7 +2,7 @@
 
 namespace App\Application\Events\Auth;
 
-use App\Infrastructure\Models\UserVerification;
+use App\Infrastructure\Models\User\UserVerification;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;

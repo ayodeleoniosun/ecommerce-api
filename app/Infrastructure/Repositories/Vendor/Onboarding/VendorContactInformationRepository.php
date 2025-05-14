@@ -4,7 +4,7 @@ namespace App\Infrastructure\Repositories\Vendor\Onboarding;
 
 use App\Domain\Vendor\Onboarding\Dtos\CreateVendorContactInformationDto;
 use App\Domain\Vendor\Onboarding\Interfaces\VendorContactInformationRepositoryInterface;
-use App\Infrastructure\Models\VendorContactInformation;
+use App\Infrastructure\Models\Vendor\VendorContactInformation;
 
 class VendorContactInformationRepository implements VendorContactInformationRepositoryInterface
 {

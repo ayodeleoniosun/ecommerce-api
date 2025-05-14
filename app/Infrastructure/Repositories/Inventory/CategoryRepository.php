@@ -3,7 +3,7 @@
 namespace App\Infrastructure\Repositories\Inventory;
 
 use App\Domain\Inventory\Interfaces\CategoryRepositoryInterface;
-use App\Infrastructure\Models\Category;
+use App\Infrastructure\Models\Inventory\Category;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 

@@ -4,7 +4,7 @@ namespace App\Infrastructure\Repositories\Vendor\Onboarding;
 
 use App\Domain\Vendor\Onboarding\Dtos\CreateVendorPaymentInformationDto;
 use App\Domain\Vendor\Onboarding\Interfaces\VendorPaymentInformationRepositoryInterface;
-use App\Infrastructure\Models\VendorPaymentInformation;
+use App\Infrastructure\Models\Vendor\VendorPaymentInformation;
 
 class VendorPaymentInformationRepository implements VendorPaymentInformationRepositoryInterface
 {

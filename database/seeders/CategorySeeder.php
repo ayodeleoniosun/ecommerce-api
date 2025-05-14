@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Infrastructure\Models\Category;
-use App\Infrastructure\Models\SubCategory;
+use App\Infrastructure\Models\Inventory\Category;
+use App\Infrastructure\Models\Inventory\SubCategory;
 use Kdabrow\SeederOnce\SeederOnce;
 
 class CategorySeeder extends SeederOnce

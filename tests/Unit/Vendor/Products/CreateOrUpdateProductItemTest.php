@@ -6,9 +6,9 @@ use App\Application\Shared\Enum\ProductStatusEnum;
 use App\Domain\Vendor\Products\Actions\CreateOrUpdateProductItem;
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductItemDto;
 use App\Domain\Vendor\Products\Resource\ProductItemResource;
-use App\Infrastructure\Models\CategoryVariationOption;
-use App\Infrastructure\Models\Product;
-use App\Infrastructure\Models\ProductItem;
+use App\Infrastructure\Models\Inventory\CategoryVariationOption;
+use App\Infrastructure\Models\Inventory\Product;
+use App\Infrastructure\Models\Inventory\ProductItem;
 use App\Infrastructure\Repositories\Vendor\Products\ProductItemRepository;
 use Mockery;
 

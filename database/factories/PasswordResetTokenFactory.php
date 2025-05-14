@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Infrastructure\Models\PasswordResetToken;
-use App\Infrastructure\Models\User;
+use App\Infrastructure\Models\User\PasswordResetToken;
+use App\Infrastructure\Models\User\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;

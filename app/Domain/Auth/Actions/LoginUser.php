@@ -6,7 +6,7 @@ use App\Application\Shared\Enum\UserStatusEnum;
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
-use App\Infrastructure\Models\User;
+use App\Infrastructure\Models\User\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 

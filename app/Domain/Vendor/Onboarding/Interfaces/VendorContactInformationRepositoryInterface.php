@@ -3,7 +3,7 @@
 namespace App\Domain\Vendor\Onboarding\Interfaces;
 
 use App\Domain\Vendor\Onboarding\Dtos\CreateVendorContactInformationDto;
-use App\Infrastructure\Models\VendorContactInformation;
+use App\Infrastructure\Models\Vendor\VendorContactInformation;
 
 interface VendorContactInformationRepositoryInterface
 {

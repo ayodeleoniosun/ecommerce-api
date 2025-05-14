@@ -3,13 +3,12 @@
 namespace Database\Factories;
 
 use App\Application\Shared\Enum\PaymentStatusEnum;
-use App\Infrastructure\Models\Order;
-use App\Infrastructure\Models\OrderPayment;
+use App\Infrastructure\Models\Order\Order;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends Factory<OrderPayment>
+ * @extends Factory<\App\Infrastructure\Models\Order\OrderPayment>
  */
 class OrderPaymentFactory extends Factory
 {

@@ -3,8 +3,8 @@
 namespace App\Domain\Auth\Interfaces\Repositories;
 
 use App\Domain\Auth\Dtos\CreateUserDto;
-use App\Infrastructure\Models\User;
-use App\Infrastructure\Models\UserVerification;
+use App\Infrastructure\Models\User\User;
+use App\Infrastructure\Models\User\UserVerification;
 
 interface UserRepositoryInterface
 {

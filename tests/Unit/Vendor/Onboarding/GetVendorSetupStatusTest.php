@@ -7,7 +7,7 @@ use App\Domain\Vendor\Onboarding\Interfaces\VendorBusinessInformationRepositoryI
 use App\Domain\Vendor\Onboarding\Interfaces\VendorContactInformationRepositoryInterface;
 use App\Domain\Vendor\Onboarding\Interfaces\VendorLegalInformationRepositoryInterface;
 use App\Domain\Vendor\Onboarding\Interfaces\VendorPaymentInformationRepositoryInterface;
-use App\Infrastructure\Models\User;
+use App\Infrastructure\Models\User\User;
 use Mockery;
 
 beforeEach(function () {

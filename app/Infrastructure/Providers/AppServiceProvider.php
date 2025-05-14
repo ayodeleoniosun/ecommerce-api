@@ -18,8 +18,6 @@ use App\Domain\Vendor\Onboarding\Interfaces\VendorPaymentInformationRepositoryIn
 use App\Domain\Vendor\Products\Interfaces\ProductImageRepositoryInterface;
 use App\Domain\Vendor\Products\Interfaces\ProductItemRepositoryInterface;
 use App\Domain\Vendor\Products\Interfaces\ProductRepositoryInterface;
-use App\Infrastructure\Repositories\Auth\UserRepository;
-use App\Infrastructure\Repositories\Auth\UserVerificationRepository;
 use App\Infrastructure\Repositories\Inventory\CategoryRepository;
 use App\Infrastructure\Repositories\Inventory\CategoryVariationOptionRepository;
 use App\Infrastructure\Repositories\Inventory\CategoryVariationRepository;
@@ -27,6 +25,8 @@ use App\Infrastructure\Repositories\Order\GuestCartItemRepository;
 use App\Infrastructure\Repositories\Order\GuestCartRepository;
 use App\Infrastructure\Repositories\Order\UserCartItemRepository;
 use App\Infrastructure\Repositories\Order\UserCartRepository;
+use App\Infrastructure\Repositories\User\UserRepository;
+use App\Infrastructure\Repositories\User\UserVerificationRepository;
 use App\Infrastructure\Repositories\Vendor\Onboarding\VendorBusinessInformationRepository;
 use App\Infrastructure\Repositories\Vendor\Onboarding\VendorContactInformationRepository;
 use App\Infrastructure\Repositories\Vendor\Onboarding\VendorLegalInformationRepository;

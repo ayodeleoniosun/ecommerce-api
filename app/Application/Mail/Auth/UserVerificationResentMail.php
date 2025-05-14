@@ -2,7 +2,7 @@
 
 namespace App\Application\Mail\Auth;
 
-use App\Infrastructure\Models\UserVerification;
+use App\Infrastructure\Models\User\UserVerification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;

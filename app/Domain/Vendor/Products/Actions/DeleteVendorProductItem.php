@@ -4,7 +4,7 @@ namespace App\Domain\Vendor\Products\Actions;
 
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Vendor\Products\Interfaces\ProductItemRepositoryInterface;
-use App\Infrastructure\Models\ProductItem;
+use App\Infrastructure\Models\Inventory\ProductItem;
 
 class DeleteVendorProductItem
 {

@@ -3,13 +3,13 @@
 namespace Database\Factories;
 
 use App\Application\Shared\Enum\UserStatusEnum;
-use App\Infrastructure\Models\User;
-use App\Infrastructure\Models\UserVerification;
+use App\Infrastructure\Models\User\User;
+use App\Infrastructure\Models\User\UserVerification;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<User>
+ * @extends Factory<\App\Infrastructure\Models\User\User>
  */
 class UserVerificationFactory extends Factory
 {

@@ -3,7 +3,7 @@
 namespace App\Domain\Vendor\Products\Interfaces;
 
 use App\Domain\Vendor\Products\Dtos\UploadProductItemImageDto;
-use App\Infrastructure\Models\ProductImage;
+use App\Infrastructure\Models\Inventory\ProductImage;
 
 interface ProductImageRepositoryInterface
 {

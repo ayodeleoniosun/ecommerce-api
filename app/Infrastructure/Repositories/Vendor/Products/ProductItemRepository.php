@@ -4,7 +4,7 @@ namespace App\Infrastructure\Repositories\Vendor\Products;
 
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductItemDto;
 use App\Domain\Vendor\Products\Interfaces\ProductItemRepositoryInterface;
-use App\Infrastructure\Models\ProductItem;
+use App\Infrastructure\Models\Inventory\ProductItem;
 use App\Infrastructure\Repositories\Inventory\BaseRepository;
 
 class ProductItemRepository extends BaseRepository implements ProductItemRepositoryInterface

@@ -4,9 +4,9 @@ namespace Tests\Unit\Vendor\Products;
 
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Vendor\Products\Actions\DeleteVendorProduct;
-use App\Infrastructure\Models\Category;
-use App\Infrastructure\Models\Product;
-use App\Infrastructure\Models\User;
+use App\Infrastructure\Models\Inventory\Category;
+use App\Infrastructure\Models\Inventory\Product;
+use App\Infrastructure\Models\User\User;
 use App\Infrastructure\Repositories\Vendor\Products\ProductRepository;
 use Mockery;
 

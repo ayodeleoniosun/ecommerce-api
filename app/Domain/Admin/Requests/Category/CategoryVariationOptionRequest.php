@@ -4,8 +4,8 @@ namespace App\Domain\Admin\Requests\Category;
 
 use App\Application\Shared\Responses\ApiResponse;
 use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
-use App\Infrastructure\Models\CategoryVariation;
-use App\Infrastructure\Models\CategoryVariationOption;
+use App\Infrastructure\Models\Inventory\CategoryVariation;
+use App\Infrastructure\Models\Inventory\CategoryVariationOption;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;

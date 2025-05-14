@@ -5,7 +5,7 @@ namespace App\Infrastructure\Repositories\Order;
 use App\Application\Shared\Enum\CartStatusEnum;
 use App\Domain\Order\Dtos\AddToCartDto;
 use App\Domain\Order\Interfaces\UserCartRepositoryInterface;
-use App\Infrastructure\Models\UserCart;
+use App\Infrastructure\Models\Order\UserCart;
 use App\Infrastructure\Repositories\Inventory\BaseRepository;
 
 class UserCartRepository extends BaseRepository implements UserCartRepositoryInterface
