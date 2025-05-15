@@ -7,6 +7,7 @@ use App\Domain\Inventory\Controllers\CategoryController;
 use App\Domain\Inventory\Controllers\ProductController;
 use App\Domain\Order\Controllers\CartController;
 use App\Domain\Shipping\Controllers\PickupStationController;
+use App\Domain\Shipping\Controllers\ShippingAddressController;
 use App\Domain\Vendor\Onboarding\Controllers\OnboardingController;
 use App\Domain\Vendor\Products\Controllers\ProductController as VendorProductController;
 use Illuminate\Support\Facades\Route;
@@ -41,9 +42,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::prefix('customers')->group(function () {
         Route::prefix('addresses')->group(function () {
-            Route::post('/', [CartController::class, 'store']);
-            Route::get('/', [CartController::class, 'index']);
-            Route::delete('/{addressUUID}', [CartController::class, 'delete']);
+            Route::post('/', [ShippingAddressController::class, 'store']);
+            Route::get('/', [ShippingAddressController::class, 'index']);
         });
 
         Route::prefix('orders')->group(function () {

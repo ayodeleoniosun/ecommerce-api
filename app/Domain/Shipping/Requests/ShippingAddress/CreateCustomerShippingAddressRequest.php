@@ -1,18 +1,20 @@
 <?php
 
-namespace App\Domain\Shipping\Requests\PickupStation;
+namespace App\Domain\Shipping\Requests\ShippingAddress;
 
+use App\Application\Shared\Enum\AddressTypeEnum;
 use App\Application\Shared\Responses\ApiResponse;
 use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
 use App\Infrastructure\Models\Shipping\Address\City;
 use App\Infrastructure\Models\Shipping\Address\Country;
+use App\Infrastructure\Models\Shipping\Address\CustomerShippingAddress;
 use App\Infrastructure\Models\Shipping\Address\State;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Response;
 
-class CreatePickupStationRequest extends FormRequest
+class CreateCustomerShippingAddressRequest extends FormRequest
 {
     use OverrideDefaultValidationMethodTrait;
 
@@ -32,16 +34,18 @@ class CreatePickupStationRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'firstname' => ['required', 'string'],
+            'lastname' => ['required', 'string'],
+            'phone_number' => ['required', 'string'],
             'country_id' => ['required', 'string', 'exists:countries,uuid'],
             'state_id' => ['required', 'string', 'exists:states,uuid'],
             'city_id' => ['required', 'string', 'exists:cities,uuid'],
             'merged_country_id' => ['required', 'integer'],
             'merged_state_id' => ['required', 'integer'],
             'merged_city_id' => ['required', 'integer'],
-            'name' => ['required', 'string'],
             'address' => ['required', 'string'],
-            'contact_phone_number' => ['required', 'string'],
-            'contact_name' => ['required', 'string'],
+            'additional_note' => ['sometimes', 'string'],
+            'default' => ['sometimes', 'boolean'],
         ];
     }
 
@@ -81,6 +85,19 @@ class CreatePickupStationRequest extends FormRequest
                 'City does not exist for the selected state.',
                 Response::HTTP_NOT_FOUND,
             ));
+        }
+
+        if ($this->input('default') === true) {
+            $defaultAddress = CustomerShippingAddress::where('user_id', auth()->user()->id)
+                ->where('status', AddressTypeEnum::DEFAULT->value)
+                ->first();
+
+            if ($defaultAddress) {
+                throw new HttpResponseException(ApiResponse::error(
+                    'A default shipping address already exist',
+                    Response::HTTP_CONFLICT,
+                ));
+            }
         }
 
         $this->merge([

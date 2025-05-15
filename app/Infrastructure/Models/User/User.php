@@ -7,6 +7,7 @@ use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Cart\Wishlist;
 use App\Infrastructure\Models\Inventory\Product;
 use App\Infrastructure\Models\Order\Order;
+use App\Infrastructure\Models\Shipping\Address\CustomerShippingAddress;
 use Database\Factories\UserFactory;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -98,6 +99,11 @@ class User extends Authenticatable
     public function verification(): HasOne
     {
         return $this->hasOne(UserVerification::class);
+    }
+
+    public function shippingAddresses(): HasMany
+    {
+        return $this->hasMany(CustomerShippingAddress::class);
     }
 
     /**

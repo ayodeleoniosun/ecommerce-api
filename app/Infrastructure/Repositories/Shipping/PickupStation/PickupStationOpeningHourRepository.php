@@ -4,7 +4,7 @@ namespace App\Infrastructure\Repositories\Shipping\PickupStation;
 
 use App\Domain\Shipping\Dtos\PickupStation\CreatePickupStationOpeningHourDto;
 use App\Domain\Shipping\Interfaces\PickupStation\PickupStationOpeningHourRepositoryInterface;
-use App\Infrastructure\Models\PickupStation\PickupStationOpeningHour;
+use App\Infrastructure\Models\Shipping\PickupStation\PickupStationOpeningHour;
 use App\Infrastructure\Repositories\BaseRepository;
 
 class PickupStationOpeningHourRepository extends BaseRepository implements PickupStationOpeningHourRepositoryInterface

@@ -3,7 +3,7 @@
 namespace App\Domain\Shipping\Requests\PickupStation;
 
 use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
-use App\Infrastructure\Models\PickupStation\PickupStation;
+use App\Infrastructure\Models\Shipping\PickupStation\PickupStation;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 

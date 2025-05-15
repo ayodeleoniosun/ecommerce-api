@@ -1,34 +1,22 @@
 <?php
 
-namespace App\Infrastructure\Models\PickupStation;
+namespace App\Infrastructure\Models\Shipping\Address;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Infrastructure\Models\Address\City;
-use App\Infrastructure\Models\Address\Country;
-use App\Infrastructure\Models\Address\State;
+use App\Infrastructure\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @method static where(string $string, mixed $pickupStationUUID)
+ * @method static where(string $string, mixed $countryUUID)
  */
-class PickupStation extends Model
+class CustomerShippingAddress extends Model
 {
     use HasFactory, SoftDeletes, UtilitiesTrait;
 
     protected $guarded = ['id'];
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $model->uuid = self::generateUUID();
-        });
-    }
 
     public function country(): BelongsTo
     {
@@ -45,8 +33,8 @@ class PickupStation extends Model
         return $this->belongsTo(City::class);
     }
 
-    public function openingHours(): HasMany
+    public function user(): BelongsTo
     {
-        return $this->hasMany(PickupStationOpeningHour::class);
+        return $this->belongsTo(User::class);
     }
 }

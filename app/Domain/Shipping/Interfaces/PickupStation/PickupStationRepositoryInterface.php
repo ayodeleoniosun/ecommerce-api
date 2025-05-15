@@ -3,7 +3,7 @@
 namespace App\Domain\Shipping\Interfaces\PickupStation;
 
 use App\Domain\Shipping\Dtos\PickupStation\CreatePickupStationDto;
-use App\Infrastructure\Models\PickupStation\PickupStation;
+use App\Infrastructure\Models\Shipping\PickupStation\PickupStation;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 

@@ -1,18 +1,22 @@
 <?php
 
-namespace App\Infrastructure\Models\PickupStation;
+namespace App\Infrastructure\Models\Shipping\Address;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
+use App\Infrastructure\Models\Shipping\PickupStation\PickupStation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PickupStationOpeningHour extends Model
+/**
+ * @method static where(string $string, mixed $cityUUID)
+ */
+class City extends Model
 {
     use HasFactory, SoftDeletes, UtilitiesTrait;
 
-    protected $guarded = ['id'];
+    protected $guarded = ['id', 'uuid'];
 
     protected static function boot()
     {
@@ -23,8 +27,13 @@ class PickupStationOpeningHour extends Model
         });
     }
 
-    public function station(): BelongsTo
+    public function state(): BelongsTo
     {
-        return $this->belongsTo(PickupStation::class, 'pickup_station_id', 'id');
+        return $this->belongsTo(State::class);
+    }
+
+    public function pickupStations()
+    {
+        return $this->hasMany(PickupStation::class);
     }
 }

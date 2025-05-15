@@ -6,7 +6,7 @@ use App\Application\Shared\Exceptions\BadRequestException;
 use App\Domain\Shipping\Dtos\PickupStation\CreatePickupStationDto;
 use App\Domain\Shipping\Interfaces\PickupStation\PickupStationRepositoryInterface;
 use App\Domain\Shipping\Resources\PickupStation\PickupStationResource;
-use App\Infrastructure\Models\PickupStation\PickupStation;
+use App\Infrastructure\Models\Shipping\PickupStation\PickupStation;
 
 class CreatePickupStation
 {
@@ -14,8 +14,8 @@ class CreatePickupStation
         private readonly PickupStationRepositoryInterface $pickupStationRepository,
     ) {}
 
-    public function execute(CreatePickupStationDto $createPickupStationDto,
-    ): PickupStationResource {
+    public function execute(CreatePickupStationDto $createPickupStationDto): PickupStationResource
+    {
         $pickupStation = $this->pickupStationRepository->findByColumn(
             PickupStation::class,
             'name',
@@ -27,6 +27,5 @@ class CreatePickupStation
         $pickupStation = $this->pickupStationRepository->store($createPickupStationDto);
 
         return new PickupStationResource($pickupStation);
-
     }
 }

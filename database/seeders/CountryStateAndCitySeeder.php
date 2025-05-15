@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Infrastructure\Models\Address\City;
-use App\Infrastructure\Models\Address\Country;
-use App\Infrastructure\Models\Address\State;
+use App\Infrastructure\Models\Shipping\Address\City;
+use App\Infrastructure\Models\Shipping\Address\Country;
+use App\Infrastructure\Models\Shipping\Address\State;
 use Kdabrow\SeederOnce\SeederOnce;
 
 class CountryStateAndCitySeeder extends SeederOnce

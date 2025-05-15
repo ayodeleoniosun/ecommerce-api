@@ -5,7 +5,7 @@ namespace App\Domain\Shipping\Actions\PickupStation;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Shipping\Interfaces\PickupStation\PickupStationRepositoryInterface;
 use App\Domain\Shipping\Resources\PickupStation\PickupStationResource;
-use App\Infrastructure\Models\PickupStation\PickupStation;
+use App\Infrastructure\Models\Shipping\PickupStation\PickupStation;
 
 class GetPickupStation
 {
@@ -13,8 +13,8 @@ class GetPickupStation
         private readonly PickupStationRepositoryInterface $pickupStationRepository,
     ) {}
 
-    public function execute(string $pickupStationUUID,
-    ): PickupStationResource {
+    public function execute(string $pickupStationUUID): PickupStationResource
+    {
         $pickupStation = $this->pickupStationRepository->findByColumn(
             PickupStation::class,
             'uuid',

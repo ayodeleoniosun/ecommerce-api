@@ -12,8 +12,8 @@ class GetPickupStations
         private readonly PickupStationRepositoryInterface $pickupStationRepository,
     ) {}
 
-    public function execute(Request $request,
-    ): PickupStationResourceCollection {
+    public function execute(Request $request): PickupStationResourceCollection
+    {
         $pickupStations = $this->pickupStationRepository->index($request);
 
         return new PickupStationResourceCollection($pickupStations);
