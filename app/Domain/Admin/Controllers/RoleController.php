@@ -31,8 +31,6 @@ class RoleController extends Controller
         //        if (!auth()->user()->hasRole(RoleEnum::SUPER_ADMIN)) {
         //            return ApiResponse::error('You do not have the permission to assign roles to users',
         //                Response::HTTP_FORBIDDEN);
-        //
-        //            abort(403, 'You do not have permission to access this resource.');
         //        }
     }
 

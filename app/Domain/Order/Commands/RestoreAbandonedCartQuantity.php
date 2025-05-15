@@ -3,7 +3,7 @@
 namespace App\Domain\Order\Commands;
 
 use App\Application\Shared\Enum\CartStatusEnum;
-use App\Infrastructure\Models\Order\UserCartItem;
+use App\Infrastructure\Models\Cart\UserCartItem;
 use Illuminate\Console\Command;
 
 class RestoreAbandonedCartQuantity extends Command

@@ -3,7 +3,7 @@
 namespace App\Domain\Inventory\Actions\Category;
 
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
-use App\Domain\Admin\Interfaces\CategoryVariationRepositoryInterface;
+use App\Domain\Admin\Interfaces\Inventory\CategoryVariationRepositoryInterface;
 use App\Domain\Admin\Resources\Inventory\CategoryVariationResource;
 use App\Domain\Inventory\Interfaces\CategoryRepositoryInterface;
 use App\Infrastructure\Models\Inventory\Category;

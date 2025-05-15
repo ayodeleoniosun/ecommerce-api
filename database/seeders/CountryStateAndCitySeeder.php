@@ -2,12 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Infrastructure\Models\Order\City;
-use App\Infrastructure\Models\Order\Country;
-use App\Infrastructure\Models\Order\State;
-use Illuminate\Database\Seeder;
+use App\Infrastructure\Models\Address\City;
+use App\Infrastructure\Models\Address\Country;
+use App\Infrastructure\Models\Address\State;
+use Kdabrow\SeederOnce\SeederOnce;
 
-class CountryStateAndCitySeeder extends Seeder
+class CountryStateAndCitySeeder extends SeederOnce
 {
     /**
      * Run the database seeds.
@@ -18,10 +18,11 @@ class CountryStateAndCitySeeder extends Seeder
         $countries = json_decode($json, true);
 
         foreach ($countries as $country) {
+            // insert or update countries
             $countryRecord = Country::updateOrCreate(
-                ['code' => $country['iso2']],
+                ['code' => $country['iso2'], 'currency_code' => $country['currency']],
                 [
-                    'name' => $country['name'],
+                    'name' => strtolower($country['name']),
                     'code' => $country['iso2'],
                     'phone_code' => $country['phonecode'],
                     'currency_code' => $country['currency'],
@@ -30,24 +31,26 @@ class CountryStateAndCitySeeder extends Seeder
                 ],
             );
 
+            // insert or update states
             if (isset($country['states'])) {
                 foreach ($country['states'] as $state) {
                     $stateRecord = State::updateOrCreate(
                         ['code' => $state['state_code'], 'country_id' => $countryRecord->id],
                         [
                             'country_id' => $countryRecord->id,
-                            'name' => $state['name'],
+                            'name' => strtolower($state['name']),
                             'code' => $state['state_code'],
                         ],
                     );
 
+                    // insert or update cities
                     if (isset($state['cities'])) {
                         foreach ($state['cities'] as $city) {
                             City::updateOrCreate(
-                                ['state_id' => $stateRecord->id],
+                                ['state_id' => $stateRecord->id, 'name' => strtolower($city['name'])],
                                 [
                                     'state_id' => $stateRecord->id,
-                                    'name' => $city['name'],
+                                    'name' => strtolower($city['name']),
                                 ],
                             );
                         }

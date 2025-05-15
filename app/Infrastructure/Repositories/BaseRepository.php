@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Infrastructure\Repositories;
+
+use Illuminate\Database\Eloquent\Model;
+
+class BaseRepository
+{
+    public function findByColumn(string $model, string $field, string $value): ?Model
+    {
+        return $model::where($field, $value)->first();
+    }
+
+    public function delete(Model $model): ?bool
+    {
+        return $model->delete();
+    }
+}

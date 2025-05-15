@@ -6,6 +6,7 @@ use App\Domain\Auth\Controllers\AuthController;
 use App\Domain\Inventory\Controllers\CategoryController;
 use App\Domain\Inventory\Controllers\ProductController;
 use App\Domain\Order\Controllers\CartController;
+use App\Domain\Shipping\Controllers\PickupStationController;
 use App\Domain\Vendor\Onboarding\Controllers\OnboardingController;
 use App\Domain\Vendor\Products\Controllers\ProductController as VendorProductController;
 use Illuminate\Support\Facades\Route;
@@ -38,19 +39,19 @@ Route::prefix('inventory')->group(function () {
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('authenticated', [AuthController::class, 'authenticated']);
 
-    Route::prefix('orders')->group(function () {
-        Route::prefix('carts')->group(function () {
-            Route::get('/', [CartController::class, 'index']);
-            Route::post('/', [CartController::class, 'addToCart']);
-            Route::delete('/{cartItemUUID}', [CartController::class, 'removeCartItem']);
-        });
-    });
-
     Route::prefix('customers')->group(function () {
         Route::prefix('addresses')->group(function () {
             Route::post('/', [CartController::class, 'store']);
             Route::get('/', [CartController::class, 'index']);
             Route::delete('/{addressUUID}', [CartController::class, 'delete']);
+        });
+
+        Route::prefix('orders')->group(function () {
+            Route::prefix('carts')->group(function () {
+                Route::get('/', [CartController::class, 'index']);
+                Route::post('/', [CartController::class, 'addToCart']);
+                Route::delete('/{cartItemUUID}', [CartController::class, 'removeCartItem']);
+            });
         });
     });
 
@@ -74,10 +75,24 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             Route::prefix('variations')->group(function () {
                 Route::post('', [AdminCategoryController::class, 'storeCategoryVariations']);
                 Route::post('/options', [AdminCategoryController::class, 'storeCategoryVariationOptions']);
+
                 Route::delete('/{variationUUID}', [AdminCategoryController::class, 'deleteCategoryVariations']);
                 Route::delete('/options/{optionUUID}',
                     [AdminCategoryController::class, 'deleteCategoryVariationOptions']);
             });
+        });
+
+        Route::prefix('pickup-stations')->group(function () {
+            Route::get('', [PickupStationController::class, 'index']);
+            Route::get('/{stationUUID}', [PickupStationController::class, 'view']);
+            Route::post('', [PickupStationController::class, 'store']);
+            Route::post('/{stationUUID}/opening-hours', [PickupStationController::class, 'storeOpeningHours']);
+
+            //            Route::put('/{stationUUID}', [PickupStationController::class, 'update']);
+            //            Route::put('/{stationUUID}/opening-hours', [PickupStationController::class, 'updateOpeningHours']);
+            //
+            //            Route::delete('/{stationUUID}', [PickupStationController::class, 'delete']);
+            //            Route::delete('/{stationUUID}/opening-hours', [PickupStationController::class, 'deleteOpeningHours']);
         });
     });
 
@@ -93,9 +108,11 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::prefix('products')->group(function () {
             Route::get('', [VendorProductController::class, 'index']);
             Route::get('/{productUUID}', [VendorProductController::class, 'view']);
+
             Route::post('', [VendorProductController::class, 'storeOrUpdateProduct']);
             Route::post('/items', [VendorProductController::class, 'storeOrUpdateProductItems']);
             Route::post('/images', [VendorProductController::class, 'storeImages']);
+
             Route::delete('/images/{productImageUUID}', [VendorProductController::class, 'deleteProductImage']);
             Route::delete('/items/{productItemUUID}', [VendorProductController::class, 'deleteProductItem']);
             Route::delete('/{productUUID}', [VendorProductController::class, 'deleteProduct']);

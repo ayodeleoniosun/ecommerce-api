@@ -4,6 +4,7 @@ namespace App\Infrastructure\Repositories\Inventory;
 
 use App\Domain\Inventory\Interfaces\CategoryRepositoryInterface;
 use App\Infrastructure\Models\Inventory\Category;
+use App\Infrastructure\Repositories\BaseRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 

@@ -3,10 +3,10 @@
 namespace App\Infrastructure\Models\User;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
+use App\Infrastructure\Models\Cart\UserCart;
+use App\Infrastructure\Models\Cart\Wishlist;
 use App\Infrastructure\Models\Inventory\Product;
 use App\Infrastructure\Models\Order\Order;
-use App\Infrastructure\Models\Order\UserCart;
-use App\Infrastructure\Models\Order\Wishlist;
 use Database\Factories\UserFactory;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

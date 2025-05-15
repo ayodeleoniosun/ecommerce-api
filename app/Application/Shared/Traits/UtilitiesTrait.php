@@ -26,6 +26,11 @@ trait UtilitiesTrait
         return Carbon::parse($date)->format('F jS, Y h:i:s');
     }
 
+    public static function parseTime($time): string
+    {
+        return Carbon::parse($time)->format('h:i A');
+    }
+
     public static function filterColumn(): array
     {
         return [

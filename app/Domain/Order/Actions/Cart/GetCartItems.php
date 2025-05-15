@@ -3,7 +3,7 @@
 namespace App\Domain\Order\Actions\Cart;
 
 use App\Domain\Order\Interfaces\UserCartItemRepositoryInterface;
-use App\Domain\Order\Resources\CartResource;
+use App\Domain\Order\Resources\Cart\CartResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 

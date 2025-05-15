@@ -5,6 +5,11 @@ use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Application\Shared\Responses\ApiResponse;
 use App\Domain\Order\Commands\RestoreAbandonedCartQuantity;
+use App\Infrastructure\Providers\InventoryServiceProvider;
+use App\Infrastructure\Providers\OnboardingServiceProvider;
+use App\Infrastructure\Providers\OrderServiceProvider;
+use App\Infrastructure\Providers\ShippingServiceProvider;
+use App\Infrastructure\Providers\UserServiceProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -28,6 +33,13 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withCommands([
         RestoreAbandonedCartQuantity::class,
     ])
+    ->withProviders(([
+        UserServiceProvider::class,
+        OnboardingServiceProvider::class,
+        InventoryServiceProvider::class,
+        OrderServiceProvider::class,
+        ShippingServiceProvider::class,
+    ]))
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->report(function (ResourceNotFoundException $e) {
             return ApiResponse::error($e->getMessage(), $e->getStatusCode());

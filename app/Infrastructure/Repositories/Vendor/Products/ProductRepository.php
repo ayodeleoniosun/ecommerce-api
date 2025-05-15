@@ -7,7 +7,7 @@ use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductDto;
 use App\Domain\Vendor\Products\Interfaces\ProductRepositoryInterface;
 use App\Infrastructure\Models\Inventory\Category;
 use App\Infrastructure\Models\Inventory\Product;
-use App\Infrastructure\Repositories\Inventory\BaseRepository;
+use App\Infrastructure\Repositories\BaseRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 

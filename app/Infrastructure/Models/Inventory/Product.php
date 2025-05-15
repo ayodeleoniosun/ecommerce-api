@@ -3,9 +3,9 @@
 namespace App\Infrastructure\Models\Inventory;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
+use App\Infrastructure\Models\Cart\UserCart;
+use App\Infrastructure\Models\Cart\Wishlist;
 use App\Infrastructure\Models\Order\Order;
-use App\Infrastructure\Models\Order\UserCart;
-use App\Infrastructure\Models\Order\Wishlist;
 use App\Infrastructure\Models\User\User;
 use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

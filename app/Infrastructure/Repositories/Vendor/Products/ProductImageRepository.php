@@ -5,7 +5,7 @@ namespace App\Infrastructure\Repositories\Vendor\Products;
 use App\Domain\Vendor\Products\Dtos\UploadProductItemImageDto;
 use App\Domain\Vendor\Products\Interfaces\ProductImageRepositoryInterface;
 use App\Infrastructure\Models\Inventory\ProductImage;
-use App\Infrastructure\Repositories\Inventory\BaseRepository;
+use App\Infrastructure\Repositories\BaseRepository;
 
 class ProductImageRepository extends BaseRepository implements ProductImageRepositoryInterface
 {

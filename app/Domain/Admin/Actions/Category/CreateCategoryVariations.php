@@ -2,8 +2,8 @@
 
 namespace App\Domain\Admin\Actions\Category;
 
-use App\Domain\Admin\Dtos\CreateCategoryVariationDto;
-use App\Domain\Admin\Interfaces\CategoryVariationRepositoryInterface;
+use App\Domain\Admin\Dtos\Inventory\CreateCategoryVariationDto;
+use App\Domain\Admin\Interfaces\Inventory\CategoryVariationRepositoryInterface;
 use App\Domain\Inventory\Interfaces\CategoryRepositoryInterface;
 use App\Infrastructure\Models\Inventory\Category;
 

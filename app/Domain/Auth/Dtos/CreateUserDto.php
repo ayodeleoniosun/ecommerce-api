@@ -2,7 +2,6 @@
 
 namespace App\Domain\Auth\Dtos;
 
-use App\Domain\Auth\Requests\RegisterRequest;
 use Illuminate\Support\Facades\Hash;
 
 class CreateUserDto
@@ -15,14 +14,14 @@ class CreateUserDto
         private readonly string $type,
     ) {}
 
-    public static function fromRequest(RegisterRequest $request): self
+    public static function fromRequest(array $payload): self
     {
         return new self(
-            firstname: $request->firstname,
-            lastname: $request->lastname,
-            email: $request->email,
-            password: $request->password,
-            type: $request->type
+            firstname: $payload['firstname'],
+            lastname: $payload['lastname'],
+            email: $payload['email'],
+            password: $payload['password'],
+            type: $payload['type'],
         );
     }
 

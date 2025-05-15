@@ -34,11 +34,15 @@ class AuthController
 
     public function register(RegisterRequest $request): JsonResponse
     {
-        $user = CreateUserDto::fromRequest($request);
+        $user = CreateUserDto::fromRequest($request->validated());
 
         $data = $this->registerUser->execute($user);
 
-        return ApiResponse::success('User registered successfully', $data, Response::HTTP_CREATED);
+        try {
+            return ApiResponse::success('User registered successfully', $data, Response::HTTP_CREATED);
+        } catch (Exception $e) {
+            return ApiResponse::error($e->getMessage(), $e->getCode());
+        }
     }
 
     public function login(LoginRequest $request): JsonResponse

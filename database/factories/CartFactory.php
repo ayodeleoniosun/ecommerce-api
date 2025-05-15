@@ -3,13 +3,12 @@
 namespace Database\Factories;
 
 use App\Infrastructure\Models\Inventory\Product;
-use App\Infrastructure\Models\Order\UserCart;
 use App\Infrastructure\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends Factory<UserCart>
+ * @extends Factory<\App\Infrastructure\Models\Cart\UserCart>
  */
 class CartFactory extends Factory
 {

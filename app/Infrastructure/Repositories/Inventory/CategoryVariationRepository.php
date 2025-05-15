@@ -2,9 +2,10 @@
 
 namespace App\Infrastructure\Repositories\Inventory;
 
-use App\Domain\Admin\Dtos\CreateCategoryVariationDto;
-use App\Domain\Admin\Interfaces\CategoryVariationRepositoryInterface;
+use App\Domain\Admin\Dtos\Inventory\CreateCategoryVariationDto;
+use App\Domain\Admin\Interfaces\Inventory\CategoryVariationRepositoryInterface;
 use App\Infrastructure\Models\Inventory\CategoryVariation;
+use App\Infrastructure\Repositories\BaseRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 

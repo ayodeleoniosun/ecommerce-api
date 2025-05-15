@@ -4,8 +4,8 @@ namespace App\Infrastructure\Repositories\Order;
 
 use App\Domain\Order\Dtos\AddToCartDto;
 use App\Domain\Order\Interfaces\UserCartItemRepositoryInterface;
-use App\Infrastructure\Models\Order\UserCartItem;
-use App\Infrastructure\Repositories\Inventory\BaseRepository;
+use App\Infrastructure\Models\Cart\UserCartItem;
+use App\Infrastructure\Repositories\BaseRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 
@@ -26,7 +26,7 @@ class UserCartItemRepository extends BaseRepository implements UserCartItemRepos
         return $cartItems->paginate(50);
     }
 
-    public function storeOrUpdate(AddToCartDto $addToCartDto): UserCartItem
+    public function storeOrUpdate(AddToCartDto $addToCartDto): \App\Infrastructure\Models\Cart\UserCartItem
     {
         return UserCartItem::updateOrCreate(
             ['cart_id' => $addToCartDto->getCartId(), 'product_item_id' => $addToCartDto->getProductItemId()],

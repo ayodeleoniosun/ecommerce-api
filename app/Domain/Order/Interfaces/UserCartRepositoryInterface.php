@@ -3,7 +3,7 @@
 namespace App\Domain\Order\Interfaces;
 
 use App\Domain\Order\Dtos\AddToCartDto;
-use App\Infrastructure\Models\Order\UserCart;
+use App\Infrastructure\Models\Cart\UserCart;
 
 interface UserCartRepositoryInterface
 {

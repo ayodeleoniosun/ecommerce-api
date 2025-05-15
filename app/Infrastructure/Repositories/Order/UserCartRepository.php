@@ -5,22 +5,21 @@ namespace App\Infrastructure\Repositories\Order;
 use App\Application\Shared\Enum\CartStatusEnum;
 use App\Domain\Order\Dtos\AddToCartDto;
 use App\Domain\Order\Interfaces\UserCartRepositoryInterface;
-use App\Infrastructure\Models\Order\UserCart;
-use App\Infrastructure\Repositories\Inventory\BaseRepository;
+use App\Infrastructure\Repositories\BaseRepository;
 
 class UserCartRepository extends BaseRepository implements UserCartRepositoryInterface
 {
-    public function findOrCreate(AddToCartDto $addToCartDto): UserCart
+    public function findOrCreate(AddToCartDto $addToCartDto): \App\Infrastructure\Models\Cart\UserCart
     {
-        return UserCart::firstOrCreate(
+        return \App\Infrastructure\Models\Cart\UserCart::firstOrCreate(
             ['user_id' => $addToCartDto->getUserId(), 'status' => CartStatusEnum::PENDING->value],
             $addToCartDto->toCartArray(),
         );
     }
 
-    public function findPendingCart(int $userId): ?UserCart
+    public function findPendingCart(int $userId): ?\App\Infrastructure\Models\Cart\UserCart
     {
-        return UserCart::query()
+        return \App\Infrastructure\Models\Cart\UserCart::query()
             ->where('user_id', $userId)
             ->where('status', CartStatusEnum::PENDING->value)
             ->first();

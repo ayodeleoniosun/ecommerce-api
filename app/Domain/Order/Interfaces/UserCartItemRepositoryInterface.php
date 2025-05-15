@@ -3,7 +3,7 @@
 namespace App\Domain\Order\Interfaces;
 
 use App\Domain\Order\Dtos\AddToCartDto;
-use App\Infrastructure\Models\Order\UserCartItem;
+use App\Infrastructure\Models\Cart\UserCartItem;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 
