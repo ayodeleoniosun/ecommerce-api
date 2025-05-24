@@ -10,7 +10,7 @@ class CheckoutDto
 
     public function __construct(
         private readonly string $customerAddressUUID,
-        private readonly string $pickupStationUUID,
+        private readonly ?string $pickupStationUUID,
         private readonly string $deliveryType,
         private readonly string $paymentMethod,
     ) {}
@@ -19,7 +19,7 @@ class CheckoutDto
     {
         return new self(
             customerAddressUUID: $payload['customer_address_id'],
-            pickupStationUUID: $payload['pickup_station_id'],
+            pickupStationUUID: $payload['pickup_station_id'] ?? null,
             deliveryType: $payload['delivery_type'],
             paymentMethod: $payload['payment_method']
         );
@@ -40,7 +40,7 @@ class CheckoutDto
         return $this->customerAddressUUID;
     }
 
-    public function getPickupStationUUID(): string
+    public function getPickupStationUUID(): ?string
     {
         return $this->pickupStationUUID;
     }

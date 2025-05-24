@@ -21,8 +21,10 @@ class OrderItemRepository extends BaseRepository implements OrderItemRepositoryI
         );
     }
 
-    public function deleteItems(int $orderId): void
+    public function deleteOrderItems(int $orderId, array $productItems): void
     {
-        OrderItem::where('order_id', $orderId)->delete();
+        OrderItem::where('order_id', $orderId)
+            ->whereIn('product_item_id', $productItems)
+            ->delete();
     }
 }

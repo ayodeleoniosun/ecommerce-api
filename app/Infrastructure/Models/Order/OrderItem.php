@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @method static updateOrCreate(array $array, array $data)
+ * @method static where(string $string, int $orderId)
  */
 class OrderItem extends Model
 {

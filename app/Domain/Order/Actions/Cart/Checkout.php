@@ -57,28 +57,69 @@ class Checkout
     public function createOrderItems(int $orderId): void
     {
         $cart = $this->userCartRepository->findPendingCart(auth()->user()->id);
+        $cartItems = $cart->items->toArray();
 
-        $this->orderItemRepository->deleteByColumn(
+        $currentOrderItems = $this->orderItemRepository->findAllByColumn(
             OrderItem::class,
             'order_id',
             $orderId,
-        );
+        )->toArray();
 
-        $cart->items->each(function ($item) use ($orderId) {
-            $this->orderItemRepository->storeOrUpdate([
-                'order_id' => $orderId,
-                'product_item_id' => $item->product_item_id,
-                'quantity' => $item->quantity,
-                'total_amount' => $item->quantity * $item->productItem->price,
-            ]);
-        });
+        $difference = $this->differentiateCartItems($currentOrderItems, $cartItems);
+
+        if (empty($difference)) {
+            $cart->items->each(fn ($item) => $this->storeItem($orderId, $item));
+
+            return;
+        }
+
+        if ($difference['canDelete']) {
+            $productItemIds = array_column($difference['items'], 'product_item_id');
+            $this->orderItemRepository->deleteOrderItems($orderId, $productItemIds);
+
+            return;
+        }
+
+        foreach ($difference['items'] as $item) {
+            $this->storeItem($orderId, (object) $item);
+        }
+    }
+
+    public function differentiateCartItems(array $currentOrderItems, array $newCartItems): array
+    {
+        $orderItemsId = array_column($currentOrderItems, 'product_item_id');
+        $cartItemsId = array_column($newCartItems, 'product_item_id');
+
+        $canDelete = count($cartItemsId) < count($orderItemsId);
+        $compareSource = $canDelete ? $currentOrderItems : $newCartItems;
+        $diffIds = $canDelete
+            ? array_diff($orderItemsId, $cartItemsId)
+            : array_diff($cartItemsId, $orderItemsId);
+
+        $items = array_values(array_filter($compareSource, function ($item) use ($diffIds) {
+            return in_array($item['product_item_id'], $diffIds);
+        }));
+
+        return compact('canDelete', 'items');
+    }
+
+    private function storeItem(int $orderId, object $item): void
+    {
+        // dd($item);
+
+        $this->orderItemRepository->storeOrUpdate([
+            'order_id' => $orderId,
+            'product_item_id' => $item->product_item_id,
+            'quantity' => $item->quantity,
+            'total_amount' => $item->quantity * $item->product_item['price'],
+        ]);
     }
 
     public function createOrderShipping(
         int $orderId,
         string $deliveryType,
         Model $customerAddress,
-        Model $pickupStation,
+        ?Model $pickupStation,
     ): void {
         $this->orderShippingRepository->storeOrUpdate([
             'order_id' => $orderId,

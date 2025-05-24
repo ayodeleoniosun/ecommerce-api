@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class BaseRepository
 {
@@ -11,13 +12,13 @@ class BaseRepository
         return $model::where($field, $value)->first();
     }
 
-    public function deleteByColumn(string $model, string $field, string $value): void
-    {
-        $model::where($field, $value)->delete();
-    }
-
     public function delete(Model $model): ?bool
     {
         return $model->delete();
+    }
+
+    public function findAllByColumn(string $model, string $field, string $value): Collection
+    {
+        return $model::where($field, $value)->get();
     }
 }

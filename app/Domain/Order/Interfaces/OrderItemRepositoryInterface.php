@@ -8,5 +8,5 @@ interface OrderItemRepositoryInterface
 {
     public function storeOrUpdate(array $data): OrderItem;
 
-    public function deleteItems(int $orderId): void;
+    public function deleteOrderItems(int $orderId, array $productItems): void;
 }
