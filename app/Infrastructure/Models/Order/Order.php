@@ -2,31 +2,45 @@
 
 namespace App\Infrastructure\Models\Order;
 
-use App\Infrastructure\Models\Inventory\Product;
+use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Infrastructure\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @method static create(array $array)
+ * @method static firstOrCreate(array $array, array $array1)
+ */
 class Order extends Model
 {
-    use HasFactory;
+    use HasFactory, UtilitiesTrait;
 
     protected $guarded = ['id'];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->uuid = self::generateUUID();
+            $model->reference = self::generateRandomCharacters();
+        });
+    }
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function product(): BelongsTo
+    public function items(): HasMany
     {
-        return $this->belongsTo(Product::class);
+        return $this->hasMany(OrderItem::class);
     }
 
-    public function payment(): HasOne
+    public function payments(): HasMany
     {
-        return $this->hasOne(OrderPayment::class);
+        return $this->hasMany(OrderPayment::class);
     }
 }

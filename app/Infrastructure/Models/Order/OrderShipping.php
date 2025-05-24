@@ -3,17 +3,20 @@
 namespace App\Infrastructure\Models\Order;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
+use App\Infrastructure\Models\Shipping\Address\City;
+use App\Infrastructure\Models\Shipping\Address\Country;
+use App\Infrastructure\Models\Shipping\Address\State;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @method static updateOrCreate(array $array, array $data)
+ * @method static firstOrCreate(array $array, array $array1)
  */
-class OrderPayment extends Model
+class OrderShipping extends Model
 {
-    use HasFactory, SoftDeletes, UtilitiesTrait;
+    use HasFactory, UtilitiesTrait;
 
     protected $guarded = ['id', 'uuid'];
 
@@ -23,8 +26,22 @@ class OrderPayment extends Model
 
         static::creating(function ($model) {
             $model->uuid = self::generateUUID();
-            $model->reference = self::generateRandomCharacters();
         });
+    }
+
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class);
+    }
+
+    public function state(): BelongsTo
+    {
+        return $this->belongsTo(State::class);
+    }
+
+    public function city(): BelongsTo
+    {
+        return $this->belongsTo(City::class);
     }
 
     public function order(): BelongsTo

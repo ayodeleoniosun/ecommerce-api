@@ -6,6 +6,7 @@ use App\Domain\Auth\Controllers\AuthController;
 use App\Domain\Inventory\Controllers\CategoryController;
 use App\Domain\Inventory\Controllers\ProductController;
 use App\Domain\Order\Controllers\CartController;
+use App\Domain\Order\Controllers\OrderController;
 use App\Domain\Shipping\Controllers\PickupStationController;
 use App\Domain\Shipping\Controllers\ShippingAddressController;
 use App\Domain\Vendor\Onboarding\Controllers\OnboardingController;
@@ -47,6 +48,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         });
 
         Route::prefix('orders')->group(function () {
+            Route::post('/', [OrderController::class, 'store']);
+
             Route::prefix('carts')->group(function () {
                 Route::get('/', [CartController::class, 'index']);
                 Route::post('/', [CartController::class, 'addToCart']);

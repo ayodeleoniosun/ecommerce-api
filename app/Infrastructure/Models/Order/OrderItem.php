@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Models\Order;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
+use App\Infrastructure\Models\Inventory\ProductItem;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * @method static updateOrCreate(array $array, array $data)
  */
-class OrderPayment extends Model
+class OrderItem extends Model
 {
     use HasFactory, SoftDeletes, UtilitiesTrait;
 
@@ -23,12 +24,16 @@ class OrderPayment extends Model
 
         static::creating(function ($model) {
             $model->uuid = self::generateUUID();
-            $model->reference = self::generateRandomCharacters();
         });
     }
 
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
+    }
+
+    public function productItem(): BelongsTo
+    {
+        return $this->belongsTo(ProductItem::class);
     }
 }

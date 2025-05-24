@@ -15,10 +15,15 @@ return new class extends Migration
             $table->id();
             $table->string('uuid')->unique();
             $table->foreignId('order_id')->constrained('orders')->nullOnDelete();
-            $table->text('address');
-            $table->text('state');
-            $table->text('city');
+            $table->foreignId('country_id')->constrained('countries')->nullOnDelete();
+            $table->foreignId('state_id')->constrained('states')->nullOnDelete();
+            $table->foreignId('city_id')->constrained('cities')->nullOnDelete();
             $table->string('delivery_type');
+            $table->text('delivery_address');
+            $table->text('pickup_station_name')->nullable();
+            $table->text('pickup_station_address')->nullable();
+            $table->text('pickup_station_contact_name')->nullable();
+            $table->text('pickup_station_contact_phone_number')->nullable();
             $table->timestamp('estimated_delivery_start_date');
             $table->timestamp('estimated_delivery_end_date');
             $table->text('note')->nullable();
