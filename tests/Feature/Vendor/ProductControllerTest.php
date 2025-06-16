@@ -117,7 +117,7 @@ describe('create or update vendor products', function () {
             ->and($content->data->product->name)->toBe(ucfirst($payload['name']))
             ->and($content->data->product->description)->toBe(ucfirst($payload['description']))
             ->and($content->data->product->category->id)->toBe($this->category->uuid);
-    })->group('test');
+    });
 });
 
 describe('create or update vendor product items', function () {

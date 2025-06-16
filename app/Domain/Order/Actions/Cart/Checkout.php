@@ -105,8 +105,6 @@ class Checkout
 
     private function storeItem(int $orderId, object $item): void
     {
-        // dd($item);
-
         $this->orderItemRepository->storeOrUpdate([
             'order_id' => $orderId,
             'product_item_id' => $item->product_item_id,

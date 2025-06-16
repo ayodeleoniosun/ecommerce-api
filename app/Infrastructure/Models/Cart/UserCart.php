@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Models\Cart;
 
 use App\Infrastructure\Models\User\User;
+use Database\Factories\UserCartFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,6 +18,11 @@ class UserCart extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = ['id'];
+
+    protected static function newFactory(): UserCartFactory
+    {
+        return UserCartFactory::new();
+    }
 
     public function items(): HasMany
     {

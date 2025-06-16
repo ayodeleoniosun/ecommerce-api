@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Models\Cart;
 
 use App\Infrastructure\Models\Inventory\ProductItem;
+use Database\Factories\UserCartItemFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,6 +19,11 @@ class UserCartItem extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = ['id'];
+
+    protected static function newFactory(): UserCartItemFactory
+    {
+        return UserCartItemFactory::new();
+    }
 
     public function productItem(): BelongsTo
     {

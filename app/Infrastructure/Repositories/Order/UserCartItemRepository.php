@@ -26,7 +26,7 @@ class UserCartItemRepository extends BaseRepository implements UserCartItemRepos
         return $cartItems->paginate(50);
     }
 
-    public function storeOrUpdate(AddToCartDto $addToCartDto): \App\Infrastructure\Models\Cart\UserCartItem
+    public function storeOrUpdate(AddToCartDto $addToCartDto): UserCartItem
     {
         return UserCartItem::updateOrCreate(
             ['cart_id' => $addToCartDto->getCartId(), 'product_item_id' => $addToCartDto->getProductItemId()],

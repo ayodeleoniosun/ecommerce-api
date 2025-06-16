@@ -2,16 +2,21 @@
 
 namespace Database\Factories;
 
-use App\Infrastructure\Models\Inventory\Product;
+use App\Application\Shared\Enum\CartStatusEnum;
+use App\Application\Shared\Traits\UtilitiesTrait;
+use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 /**
- * @extends Factory<\App\Infrastructure\Models\Cart\UserCart>
+ * @extends Factory<UserCart>
  */
-class CartFactory extends Factory
+class UserCartFactory extends Factory
 {
+    use UtilitiesTrait;
+
+    protected $model = UserCart::class;
+
     /**
      * Define the model's default state.
      *
@@ -20,10 +25,9 @@ class CartFactory extends Factory
     public function definition(): array
     {
         return [
-            'uuid' => str::uuid(),
+            'uuid' => self::generateUUID(),
             'user_id' => User::factory()->create()->id,
-            'product_id' => Product::factory()->create()->id,
-            'quantity' => 2,
+            'status' => CartStatusEnum::PENDING->value,
         ];
     }
 }

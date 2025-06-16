@@ -9,10 +9,10 @@ class AddToCartDto
     use UtilitiesTrait;
 
     public function __construct(
-        private readonly string $productItemUUID,
+        private string $productItemUUID,
         private readonly int $productItemId,
         private int $quantity,
-        private readonly string $type,
+        private string $type,
         private ?int $userId = null,
         private ?int $cartId = null,
         private ?string $identifier = null,
@@ -84,6 +84,16 @@ class AddToCartDto
     public function getCartId(): ?int
     {
         return $this->cartId;
+    }
+
+    public function setProductItemUUID(string $productItemUUID): void
+    {
+        $this->productItemUUID = $productItemUUID;
+    }
+
+    public function setType(string $type): void
+    {
+        $this->type = $type;
     }
 
     public function setCartId(int $cartId): void
