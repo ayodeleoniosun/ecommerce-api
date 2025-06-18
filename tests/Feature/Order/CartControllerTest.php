@@ -105,7 +105,7 @@ describe('remove cart item', function () {
 
         expect($content->success)->toBeTrue()
             ->and($content->message)->toBe('Item successfully removed from cart');
-    })->group('test');
+    });
 });
 
 describe('get all cart items', function () {
