@@ -4,6 +4,7 @@ namespace App\Infrastructure\Models\Shipping\Address;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Infrastructure\Models\User\User;
+use Database\Factories\CustomerShippingAddressFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,6 +18,11 @@ class CustomerShippingAddress extends Model
     use HasFactory, SoftDeletes, UtilitiesTrait;
 
     protected $guarded = ['id'];
+
+    protected static function newFactory(): CustomerShippingAddressFactory
+    {
+        return CustomerShippingAddressFactory::new();
+    }
 
     public function country(): BelongsTo
     {

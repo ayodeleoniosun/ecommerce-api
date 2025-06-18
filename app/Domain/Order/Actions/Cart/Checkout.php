@@ -10,6 +10,7 @@ use App\Domain\Order\Interfaces\OrderShippingRepositoryInterface;
 use App\Domain\Order\Interfaces\UserCartRepositoryInterface;
 use App\Domain\Shipping\Interfaces\PickupStation\PickupStationRepositoryInterface;
 use App\Domain\Shipping\Interfaces\ShippingAddress\CustomerShippingAddressRepositoryInterface;
+use App\Infrastructure\Models\Order\Order;
 use App\Infrastructure\Models\Order\OrderItem;
 use App\Infrastructure\Models\Shipping\Address\CustomerShippingAddress;
 use App\Infrastructure\Models\Shipping\PickupStation\PickupStation;
@@ -28,7 +29,7 @@ class Checkout
         private readonly OrderPaymentRepositoryInterface $orderPaymentRepository,
     ) {}
 
-    public function execute(CheckoutDto $checkoutDto): void
+    public function execute(CheckoutDto $checkoutDto): Order
     {
         $pickupStation = null;
 
@@ -46,12 +47,16 @@ class Checkout
             $checkoutDto->getCustomerAddressUUID(),
         );
 
-        DB::transaction(function () use ($checkoutDto, $customerAddress, $pickupStation) {
+        $order = null;
+
+        DB::transaction(function () use (&$order, $checkoutDto, $customerAddress, $pickupStation) {
             $order = $this->orderRepository->findOrCreate();
             $this->createOrderItems($order->id);
             $this->createOrderShipping($order->id, $checkoutDto->getDeliveryType(), $customerAddress, $pickupStation);
             $this->createOrderPayment($order->id);
         });
+
+        return $order->load('items', 'shipping', 'payments');
     }
 
     public function createOrderItems(int $orderId): void

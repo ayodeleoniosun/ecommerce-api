@@ -2,160 +2,151 @@
 
 namespace Tests\Unit\Order;
 
-use App\Application\Shared\Enum\CartOperationEnum;
-use App\Application\Shared\Enum\ProductStatusEnum;
-use App\Application\Shared\Exceptions\BadRequestException;
-use App\Application\Shared\Exceptions\ResourceNotFoundException;
-use App\Domain\Order\Actions\Cart\AddToCart;
-use App\Domain\Order\Dtos\AddToCartDto;
-use App\Domain\Order\Interfaces\UserCartItemRepositoryInterface;
+use App\Application\Shared\Enum\DeliveryTypeEnum;
+use App\Application\Shared\Enum\OrderStatusEnum;
+use App\Application\Shared\Enum\PaymentMethodEnum;
+use App\Domain\Order\Actions\Cart\Checkout;
+use App\Domain\Order\Dtos\CheckoutDto;
+use App\Domain\Order\Interfaces\OrderPaymentRepositoryInterface;
+use App\Domain\Order\Interfaces\OrderRepositoryInterface;
+use App\Domain\Order\Interfaces\OrderShippingRepositoryInterface;
 use App\Domain\Order\Interfaces\UserCartRepositoryInterface;
-use App\Domain\Order\Resources\Cart\CartResource;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Cart\UserCartItem;
+use App\Infrastructure\Models\Inventory\Product;
 use App\Infrastructure\Models\Inventory\ProductItem;
+use App\Infrastructure\Models\Order\Order;
+use App\Infrastructure\Models\Order\OrderPayment;
+use App\Infrastructure\Models\Order\OrderShipping;
+use App\Infrastructure\Models\Shipping\Address\CustomerShippingAddress;
+use App\Infrastructure\Models\Shipping\PickupStation\PickupStation;
 use App\Infrastructure\Models\User\User;
-use App\Infrastructure\Repositories\Vendor\Products\ProductItemRepository;
+use App\Infrastructure\Repositories\Order\OrderItemRepository;
+use App\Infrastructure\Repositories\Shipping\PickupStation\PickupStationRepository;
+use App\Infrastructure\Repositories\Shipping\ShippingAddress\CustomerShippingAddressRepository;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Mockery;
 
 beforeEach(function () {
-    $this->productItemRepo = Mockery::mock(ProductItemRepository::class)->makePartial();
+    $this->pickupStationRepo = Mockery::mock(PickupStationRepository::class)->makePartial();
+    $this->customerShippingAddressRepo = Mockery::mock(CustomerShippingAddressRepository::class)->makePartial();
     $this->userCartRepo = Mockery::mock(UserCartRepositoryInterface::class);
-    $this->userCartItemRepo = Mockery::mock(UserCartItemRepositoryInterface::class);
+    $this->orderRepo = Mockery::mock(OrderRepositoryInterface::class);
+    $this->orderItemRepo = Mockery::mock(OrderItemRepository::class)->makePartial();
+    $this->orderShippingRepo = Mockery::mock(OrderShippingRepositoryInterface::class);
+    $this->orderPaymentRepo = Mockery::mock(OrderPaymentRepositoryInterface::class);
 
     $this->user = User::factory()->create();
+
+    $this->customerShippingAddress = CustomerShippingAddress::factory()->create([
+        'user_id' => $this->user->id,
+    ]);
+
+    $this->pickupStation = PickupStation::factory()->create();
+
+    $this->order = Order::factory()->create([
+        'user_id' => $this->user->id,
+    ]);
+
+    $this->orderShipping = OrderShipping::factory()->create([
+        'order_id' => $this->order->id,
+    ]);
+
+    $this->orderPayment = OrderPayment::factory()->create([
+        'order_id' => $this->order->id,
+    ]);
 
     $this->userCart = UserCart::factory()->create([
         'user_id' => $this->user->id,
     ]);
 
-    $this->productItem = ProductItem::factory()->create([
-        'quantity' => 10,
-    ]);
+    $this->product = Product::factory()->create();
 
-    $this->userCartItem = UserCartItem::factory()->create([
-        'cart_id' => $this->userCart->id,
-        'product_item_id' => $this->productItem->id,
-    ]);
+    $this->productItem = ProductItem::factory()
+        ->count(3)
+        ->state(new Sequence(
+            ['product_id' => $this->product->id, 'price' => 10000, 'quantity' => 10],
+            ['product_id' => $this->product->id, 'price' => 20000, 'quantity' => 15],
+            ['product_id' => $this->product->id, 'price' => 30000, 'quantity' => 20],
+        ))->create();
 
-    $this->addCartDto = new AddToCartDto(
-        $this->productItem->uuid,
-        $this->productItem->id,
-        5,
-        CartOperationEnum::INCREMENT->value,
-        $this->user->id
+    $this->userCartItems = UserCartItem::factory()
+        ->count(3)
+        ->state(new Sequence(
+            ['product_item_id' => $this->productItem[0]->id, 'quantity' => 2],
+            ['product_item_id' => $this->productItem[1]->id, 'quantity' => 3],
+            ['product_item_id' => $this->productItem[2]->id, 'quantity' => 5],
+        ))
+        ->create([
+            'cart_id' => $this->userCart->id,
+        ]);
+
+    $this->actingAs($this->user, 'sanctum');
+
+    $this->checkoutDto = new CheckoutDto(
+        $this->customerShippingAddress->uuid,
+        $this->pickupStation->uuid,
+        DeliveryTypeEnum::DOOR_DELIVERY->value,
+        PaymentMethodEnum::CARD->value,
     );
 
-    $this->addToCart = new AddToCart($this->productItemRepo, $this->userCartRepo, $this->userCartItemRepo);
+    $this->checkout = new Checkout(
+        $this->pickupStationRepo,
+        $this->customerShippingAddressRepo,
+        $this->userCartRepo, $this->orderRepo,
+        $this->orderItemRepo,
+        $this->orderShippingRepo,
+        $this->orderPaymentRepo
+    );
 });
 
-it('should throw an exception if product item does not exist', function () {
-    $this->addCartDto->setProductItemUUID('invalid_uuid');
-    $this->addToCart->execute($this->addCartDto);
-})->throws(ResourceNotFoundException::class, 'Product item not found');
-
-it('should throw an exception if product item quantity is lesser than the cart quantity', function () {
-    $this->addCartDto->setQuantity(100);
-    $this->addToCart->execute($this->addCartDto);
-})->throws(BadRequestException::class, 'Insufficient product quantity');
-
-it('should add new items to cart', function () {
+it('should checkout cart items', function () {
     $this->userCartRepo->shouldReceive('findPendingCart')
         ->once()
-        ->with($this->addCartDto->getUserId())
-        ->andReturn($this->userCart);
+        ->with($this->user->id)
+        ->andReturn($this->userCart->load('items.productItem'));
 
-    $this->userCartItemRepo->shouldReceive('findExistingCartItem')
+    $this->orderRepo->shouldReceive('findOrCreate')
         ->once()
-        ->with($this->userCart->id, $this->addCartDto->getProductItemId())
-        ->andReturn(null);
+        ->andReturn($this->order);
 
-    $this->userCartRepo->shouldReceive('findOrCreate')
+    $this->orderShippingRepo->shouldReceive('storeOrUpdate')
         ->once()
-        ->with($this->addCartDto)
-        ->andReturn($this->userCart);
+        ->with([
+            'order_id' => $this->order->id,
+            'country_id' => $this->customerShippingAddress->country_id,
+            'state_id' => $this->customerShippingAddress->state_id,
+            'city_id' => $this->customerShippingAddress->city_id,
+            'delivery_type' => DeliveryTypeEnum::DOOR_DELIVERY->value,
+            'delivery_address' => $this->customerShippingAddress->address,
+            'pickup_station_name' => $this->pickupStation->name,
+            'pickup_station_address' => $this->pickupStation->address,
+            'pickup_station_contact_name' => $this->pickupStation->contact_name,
+            'pickup_station_contact_phone_number' => $this->pickupStation->contact_phone_number,
+            'estimated_delivery_start_date' => now()->addDays(5)->toDateString(),
+            'estimated_delivery_end_date' => now()->addDays(7)->toDateString(),
+        ])
+        ->andReturn($this->orderShipping);
 
-    $this->userCartItemRepo->shouldReceive('storeOrUpdate')
+    $this->orderPaymentRepo->shouldReceive('storeOrUpdate')
         ->once()
-        ->with($this->addCartDto)
-        ->andReturn($this->userCartItem);
+        ->with([
+            'order_id' => $this->order->id,
+            'order_amount' => 1000,
+            'delivery_amount' => 1000,
+            'total_amount' => 1000,
+            'amount_paid' => 1000,
+        ])
+        ->andReturn($this->orderPayment);
 
-    $response = $this->addToCart->execute($this->addCartDto);
+    $response = $this->checkout->execute($this->checkoutDto);
 
-    expect($response)->toBeInstanceOf(CartResource::class)
-        ->and($response->resource->quantity)->toBe($this->addCartDto->getQuantity())
-        ->and($response->resource->productItem->price)->toBe(10000)
-        ->and($response->resource->productItem->quantity)->toBe(5)
-        ->and($response->resource->productItem->status)->toBe(ProductStatusEnum::IN_STOCK->value);
-});
-
-it('should increment existing cart item', function () {
-    $this->userCartRepo->shouldReceive('findPendingCart')
-        ->once()
-        ->with($this->addCartDto->getUserId())
-        ->andReturn($this->userCart);
-
-    $this->userCartItemRepo->shouldReceive('findExistingCartItem')
-        ->once()
-        ->with($this->userCart->id, $this->addCartDto->getProductItemId())
-        ->andReturn($this->userCartItem);
-
-    $this->userCartRepo->shouldReceive('findOrCreate')
-        ->once()
-        ->with($this->addCartDto)
-        ->andReturn($this->userCart);
-
-    $this->userCartItem->quantity = 10;
-    $this->userCartItem->save();
-
-    $this->userCartItemRepo->shouldReceive('storeOrUpdate')
-        ->once()
-        ->with($this->addCartDto)
-        ->andReturn($this->userCartItem);
-
-    $this->productItem->quantity = 5;
-    $this->productItem->save();
-
-    $response = $this->addToCart->execute($this->addCartDto);
-
-    expect($response)->toBeInstanceOf(CartResource::class)
-        ->and($response->resource->quantity)->toBe(10)
-        ->and($response->resource->productItem->price)->toBe(10000)
-        ->and($response->resource->productItem->quantity)->toBe(0)
-        ->and($response->resource->productItem->status)->toBe(ProductStatusEnum::IN_STOCK->value);
-});
-
-it('should decrement existing cart item', function () {
-    $this->addCartDto->setType(CartOperationEnum::DECREMENT->value);
-
-    $this->userCartRepo->shouldReceive('findPendingCart')
-        ->once()
-        ->with($this->addCartDto->getUserId())
-        ->andReturn($this->userCart);
-
-    $this->userCartItemRepo->shouldReceive('findExistingCartItem')
-        ->once()
-        ->with($this->userCart->id, $this->addCartDto->getProductItemId())
-        ->andReturn($this->userCartItem);
-
-    $this->userCartRepo->shouldReceive('findOrCreate')
-        ->once()
-        ->with($this->addCartDto)
-        ->andReturn($this->userCart);
-
-    $this->userCartItem->quantity = 2;
-    $this->userCartItem->save();
-
-    $this->userCartItemRepo->shouldReceive('storeOrUpdate')
-        ->once()
-        ->with($this->addCartDto)
-        ->andReturn($this->userCartItem);
-
-    $response = $this->addToCart->execute($this->addCartDto);
-
-    expect($response)->toBeInstanceOf(CartResource::class)
-        ->and($response->resource->quantity)->toBe(2)
-        ->and($response->resource->productItem->price)->toBe(10000)
-        ->and($response->resource->productItem->quantity)->toBe(5)
-        ->and($response->resource->productItem->status)->toBe(ProductStatusEnum::IN_STOCK->value);
+    expect($response)->toBeInstanceOf(Order::class)
+        ->and($response->reference)->toBe($this->order->reference)
+        ->and($response->user_id)->toBe($this->user->id)
+        ->and($response->items)->toHaveCount(3)
+        ->and($response->items->every(fn ($item) => $item->order_id === $this->order->id))->toBeTrue()
+        ->and($response->items->every(fn ($item) => $item->status === OrderStatusEnum::PENDING->value))->toBeTrue()
+        ->and($response->items->map(fn ($item) => $item->quantity)->all())->toEqual([2, 3, 5])
+        ->and($response->items->map(fn ($item) => $item->total_amount)->all())->toEqual([20000, 60000, 150000]);
 });

@@ -3,15 +3,21 @@
 namespace Database\Factories;
 
 use App\Application\Shared\Enum\PaymentStatusEnum;
+use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Infrastructure\Models\Order\Order;
+use App\Infrastructure\Models\Order\OrderPayment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends Factory<\App\Infrastructure\Models\Order\OrderPayment>
+ * @extends Factory<OrderPayment>
  */
 class OrderPaymentFactory extends Factory
 {
+    use UtilitiesTrait;
+
+    protected $model = OrderPayment::class;
+
     /**
      * Define the model's default state.
      *
@@ -23,10 +29,10 @@ class OrderPaymentFactory extends Factory
             'uuid' => str::uuid(),
             'order_id' => Order::factory()->create()->id,
             'reference' => Str::random(),
-            'amount_paid' => 1000,
-            'order_amount' => 950,
-            'fee' => 25,
-            'vat' => 25,
+            'amount_paid' => 12000,
+            'total_amount' => 12000,
+            'order_amount' => 10000,
+            'delivery_amount' => 2000,
         ];
     }
 
@@ -48,7 +54,7 @@ class OrderPaymentFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'status' => PaymentStatusEnum::SUCCESS->value,
-            'processor' => 'flutterwave',
+            'processor' => 'korapay',
             'processor_reference' => Str::random(),
             'completed_at' => now(),
         ]);

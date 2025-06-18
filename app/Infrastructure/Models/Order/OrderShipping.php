@@ -6,6 +6,7 @@ use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Infrastructure\Models\Shipping\Address\City;
 use App\Infrastructure\Models\Shipping\Address\Country;
 use App\Infrastructure\Models\Shipping\Address\State;
+use Database\Factories\OrderShippingFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -27,6 +28,11 @@ class OrderShipping extends Model
         static::creating(function ($model) {
             $model->uuid = self::generateUUID();
         });
+    }
+
+    protected static function newFactory(): OrderShippingFactory
+    {
+        return OrderShippingFactory::new();
     }
 
     public function country(): BelongsTo

@@ -9,7 +9,7 @@ use App\Infrastructure\Models\Inventory\ProductItem;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<\App\Infrastructure\Models\Inventory\Product>
+ * @extends Factory<ProductItem>
  */
 class ProductItemFactory extends Factory
 {

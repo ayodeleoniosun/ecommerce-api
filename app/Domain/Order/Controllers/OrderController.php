@@ -20,9 +20,9 @@ class OrderController
         $checkoutDto = CheckoutDto::fromRequest($request->validated());
 
         try {
-            $this->checkout->execute($checkoutDto);
+            $response = $this->checkout->execute($checkoutDto);
 
-            return ApiResponse::success('Order created successfully');
+            return ApiResponse::success('Order created successfully', $response);
         } catch (Exception $e) {
             return ApiResponse::error($e->getMessage(), $e->getCode());
         }

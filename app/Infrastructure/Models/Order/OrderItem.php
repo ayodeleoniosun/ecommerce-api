@@ -4,6 +4,7 @@ namespace App\Infrastructure\Models\Order;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Infrastructure\Models\Inventory\ProductItem;
+use Database\Factories\OrderItemFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,6 +19,11 @@ class OrderItem extends Model
     use HasFactory, SoftDeletes, UtilitiesTrait;
 
     protected $guarded = ['id', 'uuid'];
+
+    protected static function newFactory(): OrderItemFactory
+    {
+        return OrderItemFactory::new();
+    }
 
     protected static function boot()
     {

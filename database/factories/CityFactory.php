@@ -3,18 +3,18 @@
 namespace Database\Factories;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Infrastructure\Models\Inventory\ProductImage;
-use App\Infrastructure\Models\Inventory\ProductItem;
+use App\Infrastructure\Models\Shipping\Address\City;
+use App\Infrastructure\Models\Shipping\Address\State;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<ProductImage>
+ * @extends Factory<City>
  */
-class ProductImageFactory extends Factory
+class CityFactory extends Factory
 {
     use UtilitiesTrait;
 
-    protected $model = ProductImage::class;
+    protected $model = City::class;
 
     /**
      * Define the model's default state.
@@ -25,8 +25,8 @@ class ProductImageFactory extends Factory
     {
         return [
             'uuid' => self::generateUUID(),
-            'product_item_id' => ProductItem::factory()->create()->id,
-            'path' => 'vendors/products/image/fake.jpg',
+            'state_id' => State::factory()->create()->id,
+            'name' => 'Ikeja',
         ];
     }
 }

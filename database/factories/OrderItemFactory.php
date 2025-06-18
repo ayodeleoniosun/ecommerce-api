@@ -3,18 +3,19 @@
 namespace Database\Factories;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Infrastructure\Models\Inventory\ProductImage;
 use App\Infrastructure\Models\Inventory\ProductItem;
+use App\Infrastructure\Models\Order\Order;
+use App\Infrastructure\Models\Order\OrderItem;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<ProductImage>
+ * @extends Factory<OrderItem>
  */
-class ProductImageFactory extends Factory
+class OrderItemFactory extends Factory
 {
     use UtilitiesTrait;
 
-    protected $model = ProductImage::class;
+    protected $model = OrderItem::class;
 
     /**
      * Define the model's default state.
@@ -25,8 +26,10 @@ class ProductImageFactory extends Factory
     {
         return [
             'uuid' => self::generateUUID(),
+            'order_id' => Order::factory()->create()->id,
             'product_item_id' => ProductItem::factory()->create()->id,
-            'path' => 'vendors/products/image/fake.jpg',
+            'quantity' => 5,
+            'total_amount' => 20000,
         ];
     }
 }

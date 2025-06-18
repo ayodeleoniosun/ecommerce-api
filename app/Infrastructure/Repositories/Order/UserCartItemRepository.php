@@ -13,8 +13,6 @@ class UserCartItemRepository extends BaseRepository implements UserCartItemRepos
 {
     public function index(Request $request): LengthAwarePaginator
     {
-        $search = $request->input('search') ?? null;
-
         $cartItems = UserCartItem::with(
             'cart',
             'productItem',
