@@ -28,6 +28,7 @@ class UserCartFactory extends Factory
             'uuid' => self::generateUUID(),
             'user_id' => User::factory()->create()->id,
             'status' => CartStatusEnum::PENDING->value,
+            'currency' => 'NGN',
         ];
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Infrastructure\Models\Order;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Infrastructure\Models\Inventory\ProductItem;
+use App\Infrastructure\Models\Cart\UserCartItem;
 use Database\Factories\OrderItemFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -39,8 +39,8 @@ class OrderItem extends Model
         return $this->belongsTo(Order::class);
     }
 
-    public function productItem(): BelongsTo
+    public function cartItem(): BelongsTo
     {
-        return $this->belongsTo(ProductItem::class);
+        return $this->belongsTo(UserCartItem::class);
     }
 }

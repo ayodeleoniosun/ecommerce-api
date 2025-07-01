@@ -46,6 +46,11 @@ class ProductItemRepository extends BaseRepository implements ProductItemReposit
             ->first();
     }
 
+    public function increaseStock(ProductItem $productItem, int $quantity): bool|int
+    {
+        return $productItem->increment('quantity', $quantity);
+    }
+
     public function decreaseStock(ProductItem $productItem, int $quantity): bool|int
     {
         return $productItem->decrement('quantity', $quantity);

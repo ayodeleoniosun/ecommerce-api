@@ -24,6 +24,5 @@ class CreatePickupStationOpeningHour
         $pickupStationOpeningHour = $this->pickupStationOpeningHourRepository->store($createPickupStationOpeningHourDto);
 
         return new PickupStationOpeningHourResource($pickupStationOpeningHour);
-
     }
 }

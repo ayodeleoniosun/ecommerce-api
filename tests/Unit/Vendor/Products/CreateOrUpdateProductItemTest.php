@@ -23,6 +23,7 @@ beforeEach(function () {
         $this->product->id,
         $this->categoryVariationOption->id,
         10000,
+        'NGN',
         20
     );
 
@@ -32,6 +33,7 @@ beforeEach(function () {
         'variation_option_id' => $this->productItemDto->getCategoryVariationOptionId(),
         'price' => $this->productItemDto->getPrice(),
         'quantity' => $this->productItemDto->getQuantity(),
+        'currency' => $this->productItemDto->getCurrency(),
         'status' => ProductStatusEnum::IN_STOCK->value,
     ]);
 

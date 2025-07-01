@@ -2,12 +2,14 @@
 
 namespace App\Domain\Order\Actions\Cart;
 
+use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Order\Dtos\CheckoutDto;
 use App\Domain\Order\Interfaces\OrderItemRepositoryInterface;
 use App\Domain\Order\Interfaces\OrderPaymentRepositoryInterface;
 use App\Domain\Order\Interfaces\OrderRepositoryInterface;
 use App\Domain\Order\Interfaces\OrderShippingRepositoryInterface;
 use App\Domain\Order\Interfaces\UserCartRepositoryInterface;
+use App\Domain\Order\Resources\Order\OrderResource;
 use App\Domain\Shipping\Interfaces\PickupStation\PickupStationRepositoryInterface;
 use App\Domain\Shipping\Interfaces\ShippingAddress\CustomerShippingAddressRepositoryInterface;
 use App\Infrastructure\Models\Order\Order;
@@ -29,7 +31,7 @@ class Checkout
         private readonly OrderPaymentRepositoryInterface $orderPaymentRepository,
     ) {}
 
-    public function execute(CheckoutDto $checkoutDto): Order
+    public function execute(CheckoutDto $checkoutDto): OrderResource
     {
         $pickupStation = null;
 
@@ -50,47 +52,60 @@ class Checkout
         $order = null;
 
         DB::transaction(function () use (&$order, $checkoutDto, $customerAddress, $pickupStation) {
-            $order = $this->orderRepository->findOrCreate();
-            $this->createOrderItems($order->id);
+            $order = $this->createOrder(auth()->user()->id);
+
+            $this->createOrderItems($order);
+
             $this->createOrderShipping($order->id, $checkoutDto->getDeliveryType(), $customerAddress, $pickupStation);
-            $this->createOrderPayment($order->id);
+
+            $this->createOrderPayment($order);
         });
 
-        return $order->load('items', 'shipping', 'payments');
+        $record = $order->load('items', 'shipping', 'payments');
+
+        return new OrderResource($record);
     }
 
-    public function createOrderItems(int $orderId): void
+    private function createOrder(int $userId): Order
     {
-        $cart = $this->userCartRepository->findPendingCart(auth()->user()->id);
-        $cartItems = $cart->items->toArray();
+        $cart = $this->userCartRepository->findPendingCart($userId);
+
+        throw_if(! $cart, ResourceNotFoundException::class, 'No existing cart for user');
+
+        return $this->orderRepository->findOrCreate($userId, $cart);
+    }
+
+    private function createOrderItems(Order $order): void
+    {
+        $cartItems = $order->cart->items;
 
         $currentOrderItems = $this->orderItemRepository->findAllByColumn(
             OrderItem::class,
             'order_id',
-            $orderId,
+            $order->id,
         )->toArray();
 
-        $difference = $this->differentiateCartItems($currentOrderItems, $cartItems);
+        $difference = $this->differentiateCartItems($currentOrderItems, $cartItems->toArray());
 
         if (empty($difference)) {
-            $cart->items->each(fn ($item) => $this->storeItem($orderId, $item));
+            $cartItems->each(fn ($item) => $this->storeItem($order->id, $item));
 
             return;
         }
 
         if ($difference['canDelete']) {
             $productItemIds = array_column($difference['items'], 'product_item_id');
-            $this->orderItemRepository->deleteOrderItems($orderId, $productItemIds);
+            $this->orderItemRepository->deleteOrderItems($order->id, $productItemIds);
 
             return;
         }
 
         foreach ($difference['items'] as $item) {
-            $this->storeItem($orderId, (object) $item);
+            $this->storeItem($order->id, (object) $item);
         }
     }
 
-    public function differentiateCartItems(array $currentOrderItems, array $newCartItems): array
+    private function differentiateCartItems(array $currentOrderItems, array $newCartItems): array
     {
         $orderItemsId = array_column($currentOrderItems, 'product_item_id');
         $cartItemsId = array_column($newCartItems, 'product_item_id');
@@ -111,14 +126,13 @@ class Checkout
     private function storeItem(int $orderId, object $item): void
     {
         $this->orderItemRepository->storeOrUpdate([
+            'cart_item_id' => $item->id,
             'order_id' => $orderId,
-            'product_item_id' => $item->product_item_id,
-            'quantity' => $item->quantity,
             'total_amount' => $item->quantity * $item->product_item['price'],
         ]);
     }
 
-    public function createOrderShipping(
+    private function createOrderShipping(
         int $orderId,
         string $deliveryType,
         Model $customerAddress,
@@ -140,14 +154,27 @@ class Checkout
         ]);
     }
 
-    public function createOrderPayment($orderId): void
+    private function createOrderPayment(Order $order): void
     {
+        $totalOrderAmount = $this->calculateTotalOrderAmount($order->id);
+
         $this->orderPaymentRepository->storeOrUpdate([
-            'order_id' => $orderId,
-            'order_amount' => 1000,
+            'order_id' => $order->id,
+            'order_amount' => $totalOrderAmount,
+            'currency' => $order->currency,
             'delivery_amount' => 1000,
-            'total_amount' => 1000,
-            'amount_paid' => 1000,
+            'amount_charged' => $totalOrderAmount,
         ]);
+    }
+
+    private function calculateTotalOrderAmount(int $orderId): int
+    {
+        $orderItems = $this->orderItemRepository->findAllByColumn(
+            OrderItem::class,
+            'order_id',
+            $orderId,
+        );
+
+        return $orderItems->pluck('total_amount')->sum();
     }
 }

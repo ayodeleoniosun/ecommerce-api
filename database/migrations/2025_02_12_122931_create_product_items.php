@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('products')->nullOnDelete();
             $table->foreignId('variation_option_id')->constrained('category_variation_options')->nullOnDelete();
             $table->string('uuid')->unique();
+            $table->string('currency', 3);
             $table->decimal('price', total: 10);
             $table->integer('quantity');
             $table->string('sku');

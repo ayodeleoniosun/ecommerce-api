@@ -49,6 +49,7 @@ describe('add item to cart', function () {
             'product_item_id' => $this->productItem->uuid,
             'merged_product_item_id' => $this->productItem->id,
             'quantity' => 10,
+            'currency' => 'NGN',
             'type' => 'invalid_type',
         ];
 
@@ -65,6 +66,7 @@ describe('add item to cart', function () {
             'product_item_id' => $this->productItem->uuid,
             'merged_product_item_id' => $this->productItem->id,
             'quantity' => 7,
+            'currency' => 'NGN',
             'type' => CartOperationEnum::INCREMENT->value,
         ];
 

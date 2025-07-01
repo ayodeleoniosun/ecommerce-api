@@ -10,6 +10,7 @@ use App\Domain\Order\Interfaces\UserCartItemRepositoryInterface;
 use App\Domain\Order\Interfaces\UserCartRepositoryInterface;
 use App\Domain\Order\Resources\Cart\CartResource;
 use App\Domain\Vendor\Products\Interfaces\ProductItemRepositoryInterface;
+use App\Infrastructure\Models\Cart\UserCartItem;
 use App\Infrastructure\Models\Inventory\ProductItem;
 use Illuminate\Support\Facades\DB;
 
@@ -31,51 +32,103 @@ class AddToCart
 
         throw_if(! $productItem, ResourceNotFoundException::class, 'Product item not found');
 
-        return DB::transaction(function () use ($productItem, $addToCartDto) {
-            $lockedItem = $this->productItemRepository->lockItem($productItem->id);
+        $cartItem = null;
+
+        DB::transaction(function () use ($productItem, $addToCartDto, &$cartItem) {
+            $lockedProductItem = $this->productItemRepository->lockItem($productItem->id);
 
             $cartQuantity = $addToCartDto->getQuantity();
 
             throw_if(
-                $cartQuantity > $lockedItem->quantity,
+                $cartQuantity > $lockedProductItem->quantity,
                 BadRequestException::class,
                 'Insufficient product quantity',
             );
 
-            $updatedQuantity = $this->updateQuantity($addToCartDto);
-
-            $addToCartDto->setQuantity($updatedQuantity);
+            $this->updateQuantity($addToCartDto);
 
             $cart = $this->userCartRepository->findOrCreate($addToCartDto);
 
             $addToCartDto->setCartId($cart->id);
 
+            $existingCartItem = $this->userCartItemRepository->findExistingCartItem(
+                $addToCartDto->getCartId(),
+                $addToCartDto->getProductItemId(),
+            );
+
+            $this->handleStockQuantity($cartQuantity, $existingCartItem, $lockedProductItem, $addToCartDto);
+
             $cartItem = $this->userCartItemRepository->storeOrUpdate($addToCartDto);
 
-            $this->productItemRepository->decreaseStock($lockedItem, $cartQuantity);
-
-            return new CartResource($cartItem->load('productItem', 'productItem.product', 'productItem.variationOption',
-                'cart'));
+            if ($cartItem->quantity === 0) {
+                $this->removeCartItem($cartItem);
+            }
         });
+
+        $cartItemRecord = $cartItem->load(
+            'productItem',
+            'productItem.product',
+            'productItem.variationOption',
+            'cart',
+        );
+
+        return new CartResource($cartItemRecord);
     }
 
-    public function updateQuantity(AddToCartDto $addToCartDto): int
+    private function updateQuantity(AddToCartDto $addToCartDto): void
     {
         $existingCart = $this->userCartRepository->findPendingCart($addToCartDto->getUserId());
 
         $existingCartItem = $this->userCartItemRepository->findExistingCartItem($existingCart?->id,
             $addToCartDto->getProductItemId());
 
+        $quantity = $addToCartDto->getQuantity();
+
         if ($existingCartItem) {
             if ($addToCartDto->getType() === CartOperationEnum::INCREMENT->value) {
-                return $existingCartItem->quantity + $addToCartDto->getQuantity();
+                $quantity = $existingCartItem->quantity + $addToCartDto->getQuantity();
             }
 
             if ($addToCartDto->getType() === CartOperationEnum::DECREMENT->value) {
-                return $existingCartItem->quantity - $addToCartDto->getQuantity();
+                $quantity = $existingCartItem->quantity - $addToCartDto->getQuantity();
             }
         }
 
-        return $addToCartDto->getQuantity();
+        $addToCartDto->setQuantity($quantity);
+    }
+
+    /**
+     * @throws BadRequestException
+     */
+    private function handleStockQuantity(
+        int $cartQuantity,
+        ?UserCartItem $cartItem,
+        ProductItem $productItem,
+        AddToCartDto $addToCartDto,
+    ): void {
+        if ($addToCartDto->getType() === CartOperationEnum::INCREMENT->value) {
+            $this->productItemRepository->decreaseStock($productItem, $cartQuantity);
+
+            return;
+        }
+
+        if (! $cartItem) {
+            throw new BadRequestException('You cannot decrement a non-existing cart item.');
+        }
+
+        if ($cartQuantity > $cartItem?->quantity) {
+            throw new BadRequestException('Cart item quantity is lesser than the quantity to be decremented');
+        }
+
+        $this->productItemRepository->increaseStock($productItem, $cartQuantity);
+    }
+
+    private function removeCartItem(UserCartItem $cartItem): void
+    {
+        $cartItem->refresh();
+
+        if ($cartItem->quantity === 0) {
+            $cartItem->delete();
+        }
     }
 }

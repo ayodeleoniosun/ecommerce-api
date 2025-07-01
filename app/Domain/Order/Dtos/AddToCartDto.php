@@ -11,6 +11,7 @@ class AddToCartDto
     public function __construct(
         private string $productItemUUID,
         private readonly int $productItemId,
+        private readonly string $currency,
         private int $quantity,
         private string $type,
         private ?int $userId = null,
@@ -23,6 +24,7 @@ class AddToCartDto
         return new self(
             productItemUUID: $payload['product_item_id'],
             productItemId: $payload['merged_product_item_id'],
+            currency: $payload['currency'],
             quantity: $payload['quantity'],
             type: $payload['type'],
             userId: $payload['user_id'] ?? null,
@@ -35,25 +37,45 @@ class AddToCartDto
         return array_merge([
             'uuid' => self::generateUUID(),
         ], auth()->user()
-            ? ['user_id' => $this->userId]
+            ? ['user_id' => $this->getUserId(), 'currency' => $this->getCurrency()]
             : ['identifier' => $this->identifier],
         );
+    }
+
+    public function getUserId(): ?int
+    {
+        return $this->userId;
+    }
+
+    public function getCurrency(): string
+    {
+        return $this->currency;
     }
 
     public function toCartItemArray(): array
     {
         return [
             'uuid' => self::generateUUID(),
-            'product_item_id' => $this->productItemId,
+            'product_item_id' => $this->getProductItemId(),
             'quantity' => $this->getQuantity(),
-            'cart_id' => $this->cartId,
+            'cart_id' => $this->getCartId(),
             'reserved_until' => now()->addMinutes(20),
         ];
+    }
+
+    public function getProductItemId(): int
+    {
+        return $this->productItemId;
     }
 
     public function getQuantity(): int
     {
         return $this->quantity;
+    }
+
+    public function getCartId(): ?int
+    {
+        return $this->cartId;
     }
 
     public function getType(): string
@@ -66,24 +88,9 @@ class AddToCartDto
         return $this->productItemUUID;
     }
 
-    public function getProductItemId(): int
-    {
-        return $this->productItemId;
-    }
-
     public function getIdentifier(): ?string
     {
         return $this->identifier;
-    }
-
-    public function getUserId(): ?int
-    {
-        return $this->userId;
-    }
-
-    public function getCartId(): ?int
-    {
-        return $this->cartId;
     }
 
     public function setProductItemUUID(string $productItemUUID): void

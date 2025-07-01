@@ -16,6 +16,8 @@ return new class extends Migration
             $table->id();
             $table->string('uuid')->unique();
             $table->string('reference')->unique();
+            $table->string('currency', 3);
+            $table->foreignId('cart_id')->constrained('user_carts')->nullOnDelete();
             $table->foreignId('user_id')->constrained('users')->nullOnDelete();
             $table->string('status')->default(OrderStatusEnum::PENDING->value);
             $table->timestamps();

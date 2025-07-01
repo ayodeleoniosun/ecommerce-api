@@ -178,6 +178,7 @@ describe('create or update vendor product items', function () {
                 'name' => 'product name',
             ])->uuid,
             'variation_option_id' => CategoryVariationOption::factory()->create()->uuid,
+            'currency' => 'NGN',
             'price' => 3000,
             'quantity' => 10,
         ];
@@ -201,6 +202,7 @@ describe('create or update vendor product items', function () {
                 'vendor_id' => $this->user->id,
                 'name' => 'product name',
             ])->uuid,
+            'currency' => 'NGN',
             'product_item_id' => 'invalid_product_item_uuid',
             'variation_option_id' => CategoryVariationOption::factory()->create()->uuid,
             'price' => 3000,
@@ -216,7 +218,7 @@ describe('create or update vendor product items', function () {
             ->and($content->message)->toBe('The selected product item id is invalid.');
     });
 
-    it('should update an existing product', function () {
+    it('should update an existing product item', function () {
         $product = Product::factory()->create([
             'vendor_id' => $this->user->id,
             'name' => 'product name',
@@ -227,6 +229,7 @@ describe('create or update vendor product items', function () {
             'product_item_id' => ProductItem::factory()->create([
                 'product_id' => $product->id,
             ])->uuid,
+            'currency' => 'NGN',
             'variation_option_id' => CategoryVariationOption::factory()->create()->uuid,
             'price' => 3000,
             'quantity' => 10,

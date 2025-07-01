@@ -17,6 +17,5 @@ class GetPickupStations
         $pickupStations = $this->pickupStationRepository->index($request);
 
         return new PickupStationResourceCollection($pickupStations);
-
     }
 }

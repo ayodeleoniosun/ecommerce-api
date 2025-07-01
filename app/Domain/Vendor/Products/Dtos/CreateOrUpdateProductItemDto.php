@@ -14,6 +14,7 @@ class CreateOrUpdateProductItemDto
         private readonly int $productId,
         private readonly int $categoryVariationOptionId,
         private readonly int $price,
+        private readonly string $currency,
         private readonly int $quantity,
         private readonly ?int $productItemId = null,
     ) {}
@@ -26,6 +27,7 @@ class CreateOrUpdateProductItemDto
             productId: $payload['merged_product_id'],
             categoryVariationOptionId: $payload['merged_variation_option_id'],
             price: $payload['price'],
+            currency: $payload['currency'],
             quantity: $payload['quantity'],
             productItemId: $payload['merged_product_item_id'] ?? null,
         );
@@ -36,6 +38,7 @@ class CreateOrUpdateProductItemDto
         return [
             'product_id' => $this->productId,
             'variation_option_id' => $this->categoryVariationOptionId,
+            'currency' => $this->currency,
             'price' => $this->price,
             'quantity' => $this->quantity,
         ];
@@ -49,6 +52,11 @@ class CreateOrUpdateProductItemDto
     public function getQuantity(): int
     {
         return $this->quantity;
+    }
+
+    public function getCurrency(): string
+    {
+        return $this->currency;
     }
 
     public function getProductId(): int

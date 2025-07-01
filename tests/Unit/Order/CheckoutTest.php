@@ -3,7 +3,6 @@
 namespace Tests\Unit\Order;
 
 use App\Application\Shared\Enum\DeliveryTypeEnum;
-use App\Application\Shared\Enum\OrderStatusEnum;
 use App\Application\Shared\Enum\PaymentMethodEnum;
 use App\Domain\Order\Actions\Cart\Checkout;
 use App\Domain\Order\Dtos\CheckoutDto;
@@ -11,11 +10,13 @@ use App\Domain\Order\Interfaces\OrderPaymentRepositoryInterface;
 use App\Domain\Order\Interfaces\OrderRepositoryInterface;
 use App\Domain\Order\Interfaces\OrderShippingRepositoryInterface;
 use App\Domain\Order\Interfaces\UserCartRepositoryInterface;
+use App\Domain\Order\Resources\Order\OrderResource;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Cart\UserCartItem;
 use App\Infrastructure\Models\Inventory\Product;
 use App\Infrastructure\Models\Inventory\ProductItem;
 use App\Infrastructure\Models\Order\Order;
+use App\Infrastructure\Models\Order\OrderItem;
 use App\Infrastructure\Models\Order\OrderPayment;
 use App\Infrastructure\Models\Order\OrderShipping;
 use App\Infrastructure\Models\Shipping\Address\CustomerShippingAddress;
@@ -30,9 +31,9 @@ use Mockery;
 beforeEach(function () {
     $this->pickupStationRepo = Mockery::mock(PickupStationRepository::class)->makePartial();
     $this->customerShippingAddressRepo = Mockery::mock(CustomerShippingAddressRepository::class)->makePartial();
+    $this->orderItemRepo = Mockery::mock(OrderItemRepository::class)->makePartial();
     $this->userCartRepo = Mockery::mock(UserCartRepositoryInterface::class);
     $this->orderRepo = Mockery::mock(OrderRepositoryInterface::class);
-    $this->orderItemRepo = Mockery::mock(OrderItemRepository::class)->makePartial();
     $this->orderShippingRepo = Mockery::mock(OrderShippingRepositoryInterface::class);
     $this->orderPaymentRepo = Mockery::mock(OrderPaymentRepositoryInterface::class);
 
@@ -44,19 +45,12 @@ beforeEach(function () {
 
     $this->pickupStation = PickupStation::factory()->create();
 
-    $this->order = Order::factory()->create([
+    $this->cart = UserCart::factory()->create([
         'user_id' => $this->user->id,
     ]);
 
-    $this->orderShipping = OrderShipping::factory()->create([
-        'order_id' => $this->order->id,
-    ]);
-
-    $this->orderPayment = OrderPayment::factory()->create([
-        'order_id' => $this->order->id,
-    ]);
-
-    $this->userCart = UserCart::factory()->create([
+    $this->order = Order::factory()->create([
+        'cart_id' => $this->cart->id,
         'user_id' => $this->user->id,
     ]);
 
@@ -78,8 +72,26 @@ beforeEach(function () {
             ['product_item_id' => $this->productItem[2]->id, 'quantity' => 5],
         ))
         ->create([
-            'cart_id' => $this->userCart->id,
+            'cart_id' => $this->cart->id,
         ]);
+
+    $this->orderItems = OrderItem::factory()
+        ->count(3)
+        ->state(new Sequence(
+            ['cart_item_id' => $this->userCartItems[0]->id, 'total_amount' => 20000],
+            ['cart_item_id' => $this->userCartItems[1]->id, 'total_amount' => 60000],
+            ['cart_item_id' => $this->userCartItems[2]->id, 'total_amount' => 150000],
+        ))->create([
+            'order_id' => $this->order->id,
+        ]);
+
+    $this->orderShipping = OrderShipping::factory()->create([
+        'order_id' => $this->order->id,
+    ]);
+
+    $this->orderPayment = OrderPayment::factory()->create([
+        'order_id' => $this->order->id,
+    ]);
 
     $this->actingAs($this->user, 'sanctum');
 
@@ -93,7 +105,8 @@ beforeEach(function () {
     $this->checkout = new Checkout(
         $this->pickupStationRepo,
         $this->customerShippingAddressRepo,
-        $this->userCartRepo, $this->orderRepo,
+        $this->userCartRepo,
+        $this->orderRepo,
         $this->orderItemRepo,
         $this->orderShippingRepo,
         $this->orderPaymentRepo
@@ -104,11 +117,11 @@ it('should checkout cart items', function () {
     $this->userCartRepo->shouldReceive('findPendingCart')
         ->once()
         ->with($this->user->id)
-        ->andReturn($this->userCart->load('items.productItem'));
+        ->andReturn($this->cart);
 
     $this->orderRepo->shouldReceive('findOrCreate')
         ->once()
-        ->andReturn($this->order);
+        ->andReturn($this->order->load('cart.items.productItem'));
 
     $this->orderShippingRepo->shouldReceive('storeOrUpdate')
         ->once()
@@ -132,21 +145,21 @@ it('should checkout cart items', function () {
         ->once()
         ->with([
             'order_id' => $this->order->id,
-            'order_amount' => 1000,
+            'order_amount' => 230000,
+            'currency' => 'NGN',
             'delivery_amount' => 1000,
-            'total_amount' => 1000,
-            'amount_paid' => 1000,
+            'amount_charged' => 230000,
         ])
         ->andReturn($this->orderPayment);
 
     $response = $this->checkout->execute($this->checkoutDto);
 
-    expect($response)->toBeInstanceOf(Order::class)
+    expect($response)->toBeInstanceOf(OrderResource::class)
         ->and($response->reference)->toBe($this->order->reference)
+        ->and($response->currency)->toBe($this->order->currency)
+        ->and($response->cart_id)->toBe($this->cart->id)
         ->and($response->user_id)->toBe($this->user->id)
         ->and($response->items)->toHaveCount(3)
         ->and($response->items->every(fn ($item) => $item->order_id === $this->order->id))->toBeTrue()
-        ->and($response->items->every(fn ($item) => $item->status === OrderStatusEnum::PENDING->value))->toBeTrue()
-        ->and($response->items->map(fn ($item) => $item->quantity)->all())->toEqual([2, 3, 5])
         ->and($response->items->map(fn ($item) => $item->total_amount)->all())->toEqual([20000, 60000, 150000]);
 });

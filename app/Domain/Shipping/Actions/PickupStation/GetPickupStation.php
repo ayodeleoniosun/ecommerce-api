@@ -26,6 +26,5 @@ class GetPickupStation
         $pickupStation->load('country', 'state', 'city', 'openingHours');
 
         return new PickupStationResource($pickupStation);
-
     }
 }

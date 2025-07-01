@@ -44,6 +44,7 @@ class StoreOrUpdateProductItemRequest extends FormRequest
             'merged_product_item_id' => ['sometimes', 'integer'],
             'merged_variation_option_id' => ['required', 'integer'],
             'price' => ['required', 'integer'],
+            'currency' => ['required', 'string'],
             'quantity' => ['required', 'integer'],
         ];
     }

@@ -2,7 +2,6 @@
 
 namespace App\Infrastructure\Repositories\Order;
 
-use App\Application\Shared\Enum\OrderStatusEnum;
 use App\Domain\Order\Interfaces\OrderItemRepositoryInterface;
 use App\Infrastructure\Models\Order\OrderItem;
 use App\Infrastructure\Repositories\BaseRepository;
@@ -14,8 +13,8 @@ class OrderItemRepository extends BaseRepository implements OrderItemRepositoryI
         return OrderItem::updateOrCreate(
             [
                 'order_id' => $data['order_id'],
-                'product_item_id' => $data['product_item_id'],
-                'status' => OrderStatusEnum::PENDING->value,
+                'cart_item_id' => $data['cart_item_id'],
+                'total_amount' => $data['total_amount'],
             ],
             $data,
         );
@@ -24,7 +23,7 @@ class OrderItemRepository extends BaseRepository implements OrderItemRepositoryI
     public function deleteOrderItems(int $orderId, array $productItems): void
     {
         OrderItem::where('order_id', $orderId)
-            ->whereIn('product_item_id', $productItems)
+            ->whereIn('cart_item_id', $productItems)
             ->delete();
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Models\Order;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
+use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\User\User;
 use Database\Factories\OrderFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -39,6 +40,11 @@ class Order extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function cart(): BelongsTo
+    {
+        return $this->belongsTo(UserCart::class);
     }
 
     public function shipping(): HasOne

@@ -27,6 +27,5 @@ class GetCategoryVariationOptions
         $options = $this->categoryVariationOptionRepository->index($request, $categoryVariation->id);
 
         return CategoryVariationOptionResource::collection($options);
-
     }
 }

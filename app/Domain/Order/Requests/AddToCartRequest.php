@@ -32,6 +32,7 @@ class AddToCartRequest extends FormRequest
             'product_item_id' => ['required', 'string', 'exists:product_items,uuid'],
             'merged_product_item_id' => ['required', 'integer'],
             'quantity' => ['required', 'integer', 'min:1'],
+            'currency' => ['required', 'string', 'max:3'],
             'type' => ['required', new Enum(CartOperationEnum::class)],
         ];
     }

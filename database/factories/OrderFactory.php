@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Application\Shared\Enum\OrderStatusEnum;
 use App\Application\Shared\Traits\UtilitiesTrait;
+use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Order\Order;
 use App\Infrastructure\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -28,6 +29,8 @@ class OrderFactory extends Factory
         return [
             'uuid' => self::generateUUID(),
             'reference' => Str::random(),
+            'currency' => 'NGN',
+            'cart_id' => UserCart::factory()->create()->id,
             'user_id' => User::factory()->create()->id,
         ];
     }

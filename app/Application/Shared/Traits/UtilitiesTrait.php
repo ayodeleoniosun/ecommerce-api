@@ -21,9 +21,9 @@ trait UtilitiesTrait
         return substr(str_shuffle(str_repeat($alphanumeric, 5)), 0, 10);
     }
 
-    public static function parseDate($date): string
+    public static function parseDateOnly($date): string
     {
-        return Carbon::parse($date)->format('F jS, Y h:i:s');
+        return Carbon::parse($date)->format('F jS, Y');
     }
 
     public static function parseTime($time): string

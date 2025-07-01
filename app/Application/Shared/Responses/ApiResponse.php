@@ -25,8 +25,8 @@ class ApiResponse
     }
 
     public static function error(
-        string $message = 'Error',
-        int $code = Response::HTTP_BAD_REQUEST,
+        string $message,
+        int $code,
         $errors = [],
     ): JsonResponse {
         $response = [
@@ -38,6 +38,8 @@ class ApiResponse
             $response['errors'] = $errors;
         }
 
-        return response()->json($response, $code);
+        $statusCode = array_key_exists($code, Response::$statusTexts) ? $code : Response::HTTP_BAD_REQUEST;
+
+        return response()->json($response, $statusCode);
     }
 }

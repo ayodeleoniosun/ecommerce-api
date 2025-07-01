@@ -100,17 +100,10 @@ describe('checkout cart items', function () {
         $content = json_decode($response->getContent());
         $response->assertStatus(Response::HTTP_OK);
 
-        $items = collect($content->data->items);
-        $payments = collect($content->data->payments);
-
         expect($content->success)->toBeTrue()
             ->and($content->message)->toBe('Order created successfully')
-            ->and($content->data->items)->toHaveCount(3)
-            ->and($items->every(fn ($item) => $item->status === OrderStatusEnum::PENDING->value))->toBeTrue()
-            ->and($items->map(fn ($item) => $item->quantity)->all())->toEqual([2, 3, 5])
-            ->and($items->map(fn ($item) => $item->total_amount)->all())->toEqual([20000, 60000, 150000])
-            ->and($content->data->shipping->order_id)->toBe($content->data->id)
-            ->and($content->data->shipping->delivery_type)->toBe(DeliveryTypeEnum::DOOR_DELIVERY->value)
-            ->and($payments->every(fn ($payment) => $payment->order_id === $content->data->id))->toBeTrue();
+            ->and($content->data->delivery_type)->toBe(DeliveryTypeEnum::DOOR_DELIVERY->value)
+            ->and($content->data->amount)->toBe(230000)
+            ->and($content->data->status)->toBe(OrderStatusEnum::PENDING->value);
     });
 });

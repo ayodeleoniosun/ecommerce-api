@@ -29,6 +29,7 @@ class ProductItemFactory extends Factory
             'product_id' => Product::factory()->create()->id,
             'variation_option_id' => CategoryVariationOption::factory()->create()->id,
             'price' => 10000,
+            'currency' => 'NGN',
             'sku' => self::generateRandomCharacters(),
             'quantity' => 10,
         ];

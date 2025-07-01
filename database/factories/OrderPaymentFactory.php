@@ -29,9 +29,9 @@ class OrderPaymentFactory extends Factory
             'uuid' => str::uuid(),
             'order_id' => Order::factory()->create()->id,
             'reference' => Str::random(),
-            'amount_paid' => 12000,
-            'total_amount' => 12000,
+            'amount_charged' => 12000,
             'order_amount' => 10000,
+            'currency' => 'NGN',
             'delivery_amount' => 2000,
         ];
     }
