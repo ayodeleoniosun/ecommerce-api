@@ -18,13 +18,20 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
         );
     }
 
+    public function findPendingOrder(int $userId): ?Order
+    {
+        return Order::with('cart.items.productItem')
+            ->where('user_id', $userId)
+            ->where('status', OrderStatusEnum::PENDING->value)
+            ->first();
+    }
+
     public function findOrCreate(int $userId, UserCart $cart): Order
     {
-        $order = Order::firstOrCreate(
-            ['user_id' => $userId, 'cart_id' => $cart->id, 'status' => OrderStatusEnum::PENDING->value],
-            ['user_id' => $userId, 'cart_id' => $cart->id, 'currency' => $cart->currency],
-        );
-
-        return $order->load('cart.items.productItem');
+        return Order::with('cart.items.productItem')
+            ->firstOrCreate(
+                ['user_id' => $userId, 'cart_id' => $cart->id, 'status' => OrderStatusEnum::PENDING->value],
+                ['user_id' => $userId, 'cart_id' => $cart->id, 'currency' => $cart->currency],
+            );
     }
 }

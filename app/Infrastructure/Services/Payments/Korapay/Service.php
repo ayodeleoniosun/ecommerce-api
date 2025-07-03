@@ -49,6 +49,7 @@ class Service extends BaseService implements PaymentGatewayServiceInterface
 
         return [
             'status' => $status,
+            'amount_charged' => $response->data->amount_charged,
             'fee' => $response->data->fee,
             'vat' => $response->data->vat,
             'auth_model' => $response->data->auth_model,

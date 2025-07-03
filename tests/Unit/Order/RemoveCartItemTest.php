@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Order;
 
+use App\Application\Shared\Enum\CartStatusEnum;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Order\Actions\Cart\RemoveCartItem;
 use App\Infrastructure\Models\Cart\UserCart;
@@ -38,6 +39,13 @@ beforeEach(function () {
 
 it('should throw an exception if cart item does not exist', function () {
     $this->deleteCartItem->execute('invalid_uuid');
+})->throws(ResourceNotFoundException::class, 'Item not found in cart');
+
+it('should throw an exception if cart item has already been checked out', function () {
+    $this->userCartItem->status = CartStatusEnum::CHECKED_OUT->value;
+    $this->userCartItem->save();
+
+    $this->deleteCartItem->execute($this->userCartItem->uuid);
 })->throws(ResourceNotFoundException::class, 'Item not found in cart');
 
 it('should delete an existing cart item', function () {

@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Repositories\Order;
 
+use App\Application\Shared\Enum\CartStatusEnum;
 use App\Domain\Order\Dtos\AddToCartDto;
 use App\Domain\Order\Interfaces\UserCartItemRepositoryInterface;
 use App\Infrastructure\Models\Cart\UserCartItem;
@@ -19,7 +20,8 @@ class UserCartItemRepository extends BaseRepository implements UserCartItemRepos
             'productItem.product',
             'productItem.variationOption',
             'productItem.firstImage',
-        )->latest();
+        )->where('status', CartStatusEnum::PENDING->value)
+            ->latest();
 
         return $cartItems->paginate(50);
     }

@@ -57,8 +57,8 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-    public function payments(): HasMany
+    public function payment(): HasOne
     {
-        return $this->hasMany(OrderPayment::class);
+        return $this->hasOne(OrderPayment::class)->latest();
     }
 }

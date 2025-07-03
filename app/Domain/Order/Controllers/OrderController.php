@@ -31,12 +31,6 @@ class OrderController
         try {
             $response = $this->checkout->execute($checkoutDto);
 
-            if ($response->status === PaymentStatusEnum::FAILED->value) {
-                $failureReason = $response->payments->last()->narration;
-
-                return ApiResponse::error('Payment failed due to '.$failureReason, 400);
-            }
-
             return ApiResponse::success('Order created successfully', $response);
         } catch (Exception $e) {
             return ApiResponse::error($e->getMessage(), $e->getCode());
@@ -50,7 +44,7 @@ class OrderController
         try {
             $transactionResponse = $this->initiateOrderPayment->execute($checkoutPaymentDto);
 
-            $response = $this->completeOrderPayment->execute($checkoutPaymentDto->getOrderId(), $transactionResponse);
+            $response = $this->completeOrderPayment->execute($transactionResponse);
 
             if ($response->status === PaymentStatusEnum::SUCCESS->value) {
                 $this->completeCart->execute($response->status);
@@ -58,7 +52,7 @@ class OrderController
                 return ApiResponse::success('Payment successfully made', $response);
             }
 
-            $failureReason = $response->payments->last()->narration;
+            $failureReason = $response->payment->narration;
 
             return ApiResponse::error('Payment failed due to '.$failureReason, 400);
         } catch (Exception $e) {

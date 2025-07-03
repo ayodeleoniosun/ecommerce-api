@@ -2,7 +2,12 @@
 
 namespace App\Domain\Payment\Actions;
 
+use App\Application\Shared\Enum\OrderStatusEnum;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
+use App\Application\Shared\Traits\UtilitiesTrait;
+use App\Domain\Order\Actions\Cart\BaseOrder;
+use App\Domain\Order\Interfaces\OrderItemRepositoryInterface;
+use App\Domain\Order\Interfaces\OrderPaymentRepositoryInterface;
 use App\Domain\Order\Interfaces\OrderRepositoryInterface;
 use App\Domain\Payment\Constants\PaymentCategoryEnum;
 use App\Domain\Payment\Constants\PaymentTypeEnum;
@@ -13,29 +18,33 @@ use App\Domain\Payment\Dtos\GatewayFilterData;
 use App\Domain\Payment\Dtos\InitiateOrderPaymentDto;
 use App\Domain\Payment\Interfaces\GatewayRepositoryInterface;
 use App\Domain\Payment\Interfaces\GatewayTypeRepositoryInterface;
-use App\Infrastructure\Models\Order\Order;
 use App\Infrastructure\Models\Payment\Gateway;
 use App\Infrastructure\Services\Payments\PaymentGatewayStrategy;
 use Illuminate\Database\Eloquent\Model;
 
-class InitiateOrderPaymentAction
+class InitiateOrderPaymentAction extends BaseOrder
 {
+    use UtilitiesTrait;
+
     public function __construct(
         private readonly OrderRepositoryInterface $orderRepository,
         private readonly PaymentGatewayStrategy $gatewayStrategy,
         private readonly GatewayRepositoryInterface $gatewayRepository,
         private readonly GatewayTypeRepositoryInterface $gatewayTypeRepository,
-    ) {}
+        protected OrderItemRepositoryInterface $orderItemRepository,
+        protected OrderPaymentRepositoryInterface $orderPaymentRepository,
+    ) {
+        parent::__construct($orderItemRepository, $orderPaymentRepository);
+    }
 
+    /**
+     * @throws ResourceNotFoundException
+     */
     public function execute(CheckoutPaymentDto $checkoutPaymentDto): array
     {
-        $order = $this->orderRepository->findByColumn(
-            Order::class,
-            'id',
-            $checkoutPaymentDto->getOrderId(),
-        );
+        $order = $this->orderRepository->findPendingOrder(auth()->user()->id);
 
-        throw_if(! $order, ResourceNotFoundException::class, 'Order request invalid');
+        throw_if(! $order, ResourceNotFoundException::class, 'No order is in progress');
 
         $orderPaymentDto = $this->buildOrderPaymentDto($order, $checkoutPaymentDto);
         $gatewaySlug = $this->getGatewaySlug($orderPaymentDto->getCurrency());
@@ -46,7 +55,12 @@ class InitiateOrderPaymentAction
 
     private function buildOrderPaymentDto(Model $order, CheckoutPaymentDto $checkoutPaymentDto): InitiateOrderPaymentDto
     {
-        $orderPayment = $order->payments->last();
+        $orderPayment = $order->payment;
+
+        if (! $orderPayment || $orderPayment?->status === OrderStatusEnum::FAILED->value) {
+            $orderPayment = $this->createOrderPayment($order);
+        }
+
         $card = $checkoutPaymentDto->getCardData();
         $user = auth()->user();
 

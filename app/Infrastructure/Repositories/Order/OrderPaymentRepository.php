@@ -11,7 +11,7 @@ class OrderPaymentRepository extends BaseRepository implements OrderPaymentRepos
     public function storeOrUpdate(array $data): OrderPayment
     {
         return OrderPayment::updateOrCreate(
-            ['order_id' => $data['order_id']],
+            ['order_id' => $data['order_id'], 'status' => $data['status']],
             $data,
         );
     }

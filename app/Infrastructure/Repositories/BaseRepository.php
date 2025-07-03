@@ -21,8 +21,8 @@ class BaseRepository
         return $model::where($field, $value);
     }
 
-    public function updateByColumn(Model $model, string $field, string $value): bool
+    public function updateByColumns(Model $model, array $data): bool
     {
-        return $model->update([$field => $value]);
+        return $model->update($data);
     }
 }

@@ -25,10 +25,9 @@ class CompleteCartAction
         $cartStatus = $status === OrderStatusEnum::SUCCESS->value ? CartStatusEnum::CHECKED_OUT->value : $cart->status;
 
         DB::transaction(function () use ($cart, $cartStatus) {
-            $this->userCartRepository->updateByColumn(
+            $this->userCartRepository->updateByColumns(
                 $cart,
-                'status',
-                $cartStatus,
+                ['status' => $cartStatus],
             );
 
             $this->userCartItemRepository->completeCartItems($cart->id, $cartStatus);

@@ -23,7 +23,7 @@ class OrderResource extends JsonResource
             'id' => $this->uuid,
             'status' => $this->status,
             'failure_reason' => $this->when($this->status === PaymentStatusEnum::FAILED->value,
-                $this->payments->last()->narration),
+                $this->payment->narration),
             'currency' => $this->currency,
             'reference' => $this->reference,
             'amount' => $this->getAmount($this->status),
@@ -40,9 +40,9 @@ class OrderResource extends JsonResource
     private function getAmount(string $status): int
     {
         if (in_array($status, self::completedTransactionStatuses())) {
-            return $this->payments->last()->amount_charged;
+            return $this->payment->amount_charged;
         }
 
-        return $this->payments->last()->order_amount;
+        return $this->payment->order_amount;
     }
 }

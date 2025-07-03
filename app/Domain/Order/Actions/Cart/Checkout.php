@@ -20,7 +20,7 @@ use App\Infrastructure\Models\Shipping\PickupStation\PickupStation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class Checkout
+class Checkout extends BaseOrder
 {
     use UtilitiesTrait;
 
@@ -29,10 +29,12 @@ class Checkout
         private readonly CustomerShippingAddressRepositoryInterface $customerShippingAddressRepository,
         private readonly UserCartRepositoryInterface $userCartRepository,
         private readonly OrderRepositoryInterface $orderRepository,
-        private readonly OrderItemRepositoryInterface $orderItemRepository,
         private readonly OrderShippingRepositoryInterface $orderShippingRepository,
-        private readonly OrderPaymentRepositoryInterface $orderPaymentRepository,
-    ) {}
+        protected OrderItemRepositoryInterface $orderItemRepository,
+        protected OrderPaymentRepositoryInterface $orderPaymentRepository,
+    ) {
+        parent::__construct($orderItemRepository, $orderPaymentRepository);
+    }
 
     public function execute(CheckoutDto $checkoutDto): OrderResource
     {
@@ -61,7 +63,7 @@ class Checkout
             $this->createOrderPayment($order);
         });
 
-        $record = $order->load('items', 'shipping', 'payments');
+        $record = $order->load('items', 'shipping', 'payment');
 
         return new OrderResource($record);
     }
@@ -152,28 +154,5 @@ class Checkout
             'estimated_delivery_start_date' => now()->addDays(7)->toDateString(),
             'estimated_delivery_end_date' => now()->addDays(9)->toDateString(),
         ]);
-    }
-
-    private function createOrderPayment(Order $order): void
-    {
-        $totalOrderAmount = $this->calculateTotalOrderAmount($order->id);
-
-        $this->orderPaymentRepository->storeOrUpdate([
-            'order_id' => $order->id,
-            'order_amount' => $totalOrderAmount,
-            'currency' => $order->currency,
-            'delivery_amount' => 1000,
-        ]);
-    }
-
-    private function calculateTotalOrderAmount(int $orderId): int
-    {
-        $orderItems = $this->orderItemRepository->findAllByColumn(
-            OrderItem::class,
-            'order_id',
-            $orderId,
-        )->get();
-
-        return $orderItems->pluck('total_amount')->sum();
     }
 }

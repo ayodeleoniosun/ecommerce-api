@@ -9,5 +9,7 @@ interface OrderRepositoryInterface
 {
     public function findOrCreate(int $userId, UserCart $cart): Order;
 
+    public function findPendingOrder(int $userId): ?Order;
+
     public function storeOrUpdate(array $data): Order;
 }
