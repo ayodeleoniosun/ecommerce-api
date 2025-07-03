@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             RolesAndPermissionsSeeder::class,
             CountryStateAndCitySeeder::class,
+            GatewaySeeder::class,
         ]);
     }
 }

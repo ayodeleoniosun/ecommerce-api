@@ -3,6 +3,7 @@
 namespace App\Domain\Order\Actions\Cart;
 
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
+use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Domain\Order\Dtos\CheckoutDto;
 use App\Domain\Order\Interfaces\OrderItemRepositoryInterface;
 use App\Domain\Order\Interfaces\OrderPaymentRepositoryInterface;
@@ -10,10 +11,12 @@ use App\Domain\Order\Interfaces\OrderRepositoryInterface;
 use App\Domain\Order\Interfaces\OrderShippingRepositoryInterface;
 use App\Domain\Order\Interfaces\UserCartRepositoryInterface;
 use App\Domain\Order\Resources\Order\OrderResource;
+use App\Domain\Payment\Actions\InitiateOrderPaymentAction;
 use App\Domain\Shipping\Interfaces\PickupStation\PickupStationRepositoryInterface;
 use App\Domain\Shipping\Interfaces\ShippingAddress\CustomerShippingAddressRepositoryInterface;
 use App\Infrastructure\Models\Order\Order;
 use App\Infrastructure\Models\Order\OrderItem;
+use App\Infrastructure\Models\Order\OrderPayment;
 use App\Infrastructure\Models\Shipping\Address\CustomerShippingAddress;
 use App\Infrastructure\Models\Shipping\PickupStation\PickupStation;
 use Illuminate\Database\Eloquent\Model;
@@ -21,6 +24,8 @@ use Illuminate\Support\Facades\DB;
 
 class Checkout
 {
+    use UtilitiesTrait;
+
     public function __construct(
         private readonly PickupStationRepositoryInterface $pickupStationRepository,
         private readonly CustomerShippingAddressRepositoryInterface $customerShippingAddressRepository,
@@ -29,6 +34,7 @@ class Checkout
         private readonly OrderItemRepositoryInterface $orderItemRepository,
         private readonly OrderShippingRepositoryInterface $orderShippingRepository,
         private readonly OrderPaymentRepositoryInterface $orderPaymentRepository,
+        private readonly InitiateOrderPaymentAction $initiatePaymentAction,
     ) {}
 
     public function execute(CheckoutDto $checkoutDto): OrderResource
@@ -53,13 +59,18 @@ class Checkout
 
         DB::transaction(function () use (&$order, $checkoutDto, $customerAddress, $pickupStation) {
             $order = $this->createOrder(auth()->user()->id);
-
             $this->createOrderItems($order);
-
             $this->createOrderShipping($order->id, $checkoutDto->getDeliveryType(), $customerAddress, $pickupStation);
-
             $this->createOrderPayment($order);
         });
+
+        $orderPayment = $order->payments->last();
+
+        $transactionResponse = $this->initiatePaymentAction->execute($orderPayment);
+
+        $this->completeOrderPayment($orderPayment, $transactionResponse);
+
+        $order->refresh();
 
         $record = $order->load('items', 'shipping', 'payments');
 
@@ -163,7 +174,6 @@ class Checkout
             'order_amount' => $totalOrderAmount,
             'currency' => $order->currency,
             'delivery_amount' => 1000,
-            'amount_charged' => $totalOrderAmount,
         ]);
     }
 
@@ -176,5 +186,29 @@ class Checkout
         );
 
         return $orderItems->pluck('total_amount')->sum();
+    }
+
+    private function completeOrderPayment(OrderPayment $orderPayment, array $transactionResponse): void
+    {
+        DB::transaction(function () use ($orderPayment, $transactionResponse) {
+            $amountCharged = $orderPayment->order_amount + $orderPayment->delivery_amount + $transactionResponse['fee'] + $transactionResponse['vat'];
+
+            $this->orderPaymentRepository->storeOrUpdate([
+                'order_id' => $orderPayment->order_id,
+                'status' => $transactionResponse['status'],
+                'fee' => $transactionResponse['fee'],
+                'vat' => $transactionResponse['vat'],
+                'amount_charged' => $amountCharged,
+                'gateway' => $transactionResponse['gateway'],
+                'gateway_reference' => $transactionResponse['gateway_reference'],
+                'narration' => $transactionResponse['gateway_response_message'],
+                'completed_at' => now()->toDateTimeString(),
+            ]);
+
+            $this->orderRepository->storeOrUpdate([
+                'id' => $orderPayment->order->id,
+                'status' => $transactionResponse['status'],
+            ]);
+        });
     }
 }

@@ -3,7 +3,6 @@
 namespace Tests\Unit\Order;
 
 use App\Application\Shared\Enum\DeliveryTypeEnum;
-use App\Application\Shared\Enum\PaymentMethodEnum;
 use App\Domain\Order\Actions\Cart\Checkout;
 use App\Domain\Order\Dtos\CheckoutDto;
 use App\Domain\Order\Interfaces\OrderPaymentRepositoryInterface;
@@ -11,6 +10,8 @@ use App\Domain\Order\Interfaces\OrderRepositoryInterface;
 use App\Domain\Order\Interfaces\OrderShippingRepositoryInterface;
 use App\Domain\Order\Interfaces\UserCartRepositoryInterface;
 use App\Domain\Order\Resources\Order\OrderResource;
+use App\Domain\Payment\Constants\Currencies;
+use App\Domain\Payment\Constants\PaymentTypeEnum;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Cart\UserCartItem;
 use App\Infrastructure\Models\Inventory\Product;
@@ -99,7 +100,7 @@ beforeEach(function () {
         $this->customerShippingAddress->uuid,
         $this->pickupStation->uuid,
         DeliveryTypeEnum::DOOR_DELIVERY->value,
-        PaymentMethodEnum::CARD->value,
+        PaymentTypeEnum::CARD->value,
     );
 
     $this->checkout = new Checkout(
@@ -146,7 +147,7 @@ it('should checkout cart items', function () {
         ->with([
             'order_id' => $this->order->id,
             'order_amount' => 230000,
-            'currency' => 'NGN',
+            'currency' => Currencies::NGN->value,
             'delivery_amount' => 1000,
             'amount_charged' => 230000,
         ])

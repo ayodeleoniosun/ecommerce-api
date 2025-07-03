@@ -2,8 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Application\Shared\Enum\PaymentStatusEnum;
 use App\Application\Shared\Traits\UtilitiesTrait;
+use App\Domain\Payment\Constants\Currencies;
+use App\Domain\Payment\Constants\PaymentStatusEnum;
 use App\Infrastructure\Models\Order\Order;
 use App\Infrastructure\Models\Order\OrderPayment;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -31,7 +32,7 @@ class OrderPaymentFactory extends Factory
             'reference' => Str::random(),
             'amount_charged' => 12000,
             'order_amount' => 10000,
-            'currency' => 'NGN',
+            'currency' => Currencies::NGN->value,
             'delivery_amount' => 2000,
         ];
     }
@@ -54,8 +55,8 @@ class OrderPaymentFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'status' => PaymentStatusEnum::SUCCESS->value,
-            'processor' => 'korapay',
-            'processor_reference' => Str::random(),
+            'gateway' => 'korapay',
+            'gateway_reference' => Str::random(),
             'completed_at' => now(),
         ]);
     }

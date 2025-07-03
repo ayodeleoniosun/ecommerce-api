@@ -10,6 +10,14 @@ use App\Infrastructure\Repositories\BaseRepository;
 
 class OrderRepository extends BaseRepository implements OrderRepositoryInterface
 {
+    public function storeOrUpdate(array $data): Order
+    {
+        return Order::updateOrCreate(
+            ['id' => $data['id']],
+            $data,
+        );
+    }
+
     public function findOrCreate(int $userId, UserCart $cart): Order
     {
         $order = Order::firstOrCreate(

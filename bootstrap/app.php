@@ -8,6 +8,7 @@ use App\Domain\Order\Commands\RestoreAbandonedCartQuantity;
 use App\Infrastructure\Providers\InventoryServiceProvider;
 use App\Infrastructure\Providers\OnboardingServiceProvider;
 use App\Infrastructure\Providers\OrderServiceProvider;
+use App\Infrastructure\Providers\PaymentGatewayServiceProvider;
 use App\Infrastructure\Providers\ShippingServiceProvider;
 use App\Infrastructure\Providers\UserServiceProvider;
 use Illuminate\Foundation\Application;
@@ -39,6 +40,7 @@ return Application::configure(basePath: dirname(__DIR__))
         InventoryServiceProvider::class,
         OrderServiceProvider::class,
         ShippingServiceProvider::class,
+        PaymentGatewayServiceProvider::class,
     ]))
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->report(function (ResourceNotFoundException $e) {

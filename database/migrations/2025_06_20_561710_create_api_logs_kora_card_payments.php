@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('uuid');
             $table->foreignId('transaction_id')->constrained('transaction_kora_card_payments')->nullOnDelete();
-            $table->json('charge_response');
-            $table->json('verify_response');
-            $table->json('webhook_request');
+            $table->json('charge_response')->nullable();
+            $table->json('verify_response')->nullable();
+            $table->json('webhook_request')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customer_shipping_addresses');
+        Schema::dropIfExists('api_logs_kora_card_payments');
     }
 };

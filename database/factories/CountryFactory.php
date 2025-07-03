@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
+use App\Domain\Payment\Constants\Currencies;
 use App\Infrastructure\Models\Shipping\Address\Country;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -27,7 +28,7 @@ class CountryFactory extends Factory
             'name' => fake()->country(),
             'code' => fake()->countryCode(),
             'phone_code' => '234',
-            'currency_code' => 'NGN',
+            'currency_code' => Currencies::NGN->value,
             'currency' => 'Nigerian Naira',
             'currency_symbol' => '₦',
         ];

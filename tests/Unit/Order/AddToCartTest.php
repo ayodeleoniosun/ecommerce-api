@@ -11,6 +11,7 @@ use App\Domain\Order\Dtos\AddToCartDto;
 use App\Domain\Order\Interfaces\UserCartItemRepositoryInterface;
 use App\Domain\Order\Interfaces\UserCartRepositoryInterface;
 use App\Domain\Order\Resources\Cart\CartResource;
+use App\Domain\Payment\Constants\Currencies;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Cart\UserCartItem;
 use App\Infrastructure\Models\Inventory\ProductItem;
@@ -41,7 +42,7 @@ beforeEach(function () {
     $this->addCartDto = new AddToCartDto(
         $this->productItem->uuid,
         $this->productItem->id,
-        'NGN',
+        Currencies::NGN->value,
         5,
         CartOperationEnum::INCREMENT->value,
         $this->user->id

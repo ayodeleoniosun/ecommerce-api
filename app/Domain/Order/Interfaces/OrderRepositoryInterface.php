@@ -8,4 +8,6 @@ use App\Infrastructure\Models\Order\Order;
 interface OrderRepositoryInterface
 {
     public function findOrCreate(int $userId, UserCart $cart): Order;
+
+    public function storeOrUpdate(array $data): Order;
 }

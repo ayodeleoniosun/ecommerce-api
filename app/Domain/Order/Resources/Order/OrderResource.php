@@ -4,6 +4,7 @@ namespace App\Domain\Order\Resources\Order;
 
 use App\Application\Shared\Enum\DeliveryTypeEnum;
 use App\Application\Shared\Traits\UtilitiesTrait;
+use App\Domain\Payment\Constants\PaymentStatusEnum;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -20,9 +21,13 @@ class OrderResource extends JsonResource
     {
         return [
             'id' => $this->uuid,
+            'status' => $this->status,
+            'failure_reason' => $this->when($this->status === PaymentStatusEnum::FAILED->value,
+                $this->payments->last()->narration),
+            'user_id' => $this->user_id,
             'currency' => $this->currency,
             'reference' => $this->reference,
-            'amount' => $this->payments->first()->order_amount,
+            'amount' => $this->payments->last()->amount_charged,
             'delivery_type' => $this->shipping->delivery_type,
             'delivery_address' => $this->when($this->shipping->delivery_type === DeliveryTypeEnum::DOOR_DELIVERY->value,
                 $this->shipping->delivery_address),
@@ -30,7 +35,6 @@ class OrderResource extends JsonResource
                 $this->shipping->pickup_station_name),
             'estimated_delivery_start_date' => $this->parseDateOnly($this->shipping->estimated_delivery_start_date),
             'estimated_delivery_end_date' => $this->parseDateOnly($this->shipping->estimated_delivery_end_date),
-            'status' => $this->status,
         ];
     }
 }

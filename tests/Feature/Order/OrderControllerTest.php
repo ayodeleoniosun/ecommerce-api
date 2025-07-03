@@ -4,8 +4,8 @@ namespace Tests\Feature\Order;
 
 use App\Application\Shared\Enum\DeliveryTypeEnum;
 use App\Application\Shared\Enum\OrderStatusEnum;
-use App\Application\Shared\Enum\PaymentMethodEnum;
 use App\Application\Shared\Enum\UserStatusEnum;
+use App\Domain\Payment\Constants\PaymentTypeEnum;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Cart\UserCartItem;
 use App\Infrastructure\Models\Inventory\Product;
@@ -36,7 +36,7 @@ describe('checkout cart items', function () {
             'customer_address_id' => 'invalid_uuid',
             'pickup_station_id' => 'invalid_uuid',
             'delivery_type' => DeliveryTypeEnum::DOOR_DELIVERY->value,
-            'payment_method' => PaymentMethodEnum::CARD->value,
+            'payment_method' => PaymentTypeEnum::CARD->value,
         ];
 
         $response = $this->postJson('/api/customers/orders', $payload);
@@ -52,7 +52,7 @@ describe('checkout cart items', function () {
             'customer_address_id' => $this->customerShippingAddress->uuid,
             'pickup_station_id' => 'invalid_uuid',
             'delivery_type' => DeliveryTypeEnum::DOOR_DELIVERY->value,
-            'payment_method' => PaymentMethodEnum::CARD->value,
+            'payment_method' => PaymentTypeEnum::CARD->value,
         ];
 
         $response = $this->postJson('/api/customers/orders', $payload);
@@ -93,7 +93,7 @@ describe('checkout cart items', function () {
             'customer_address_id' => $this->customerShippingAddress->uuid,
             'pickup_station_id' => $this->pickupStation->uuid,
             'delivery_type' => DeliveryTypeEnum::DOOR_DELIVERY->value,
-            'payment_method' => PaymentMethodEnum::CARD->value,
+            'payment_method' => PaymentTypeEnum::CARD->value,
         ];
 
         $response = $this->postJson('/api/customers/orders', $payload);

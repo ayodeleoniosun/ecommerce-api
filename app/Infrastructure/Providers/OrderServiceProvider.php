@@ -2,16 +2,12 @@
 
 namespace App\Infrastructure\Providers;
 
-use App\Domain\Order\Interfaces\GuestCartItemRepositoryInterface;
-use App\Domain\Order\Interfaces\GuestCartRepositoryInterface;
 use App\Domain\Order\Interfaces\OrderItemRepositoryInterface;
 use App\Domain\Order\Interfaces\OrderPaymentRepositoryInterface;
 use App\Domain\Order\Interfaces\OrderRepositoryInterface;
 use App\Domain\Order\Interfaces\OrderShippingRepositoryInterface;
 use App\Domain\Order\Interfaces\UserCartItemRepositoryInterface;
 use App\Domain\Order\Interfaces\UserCartRepositoryInterface;
-use App\Infrastructure\Repositories\Order\GuestCartItemRepository;
-use App\Infrastructure\Repositories\Order\GuestCartRepository;
 use App\Infrastructure\Repositories\Order\OrderItemRepository;
 use App\Infrastructure\Repositories\Order\OrderPaymentRepository;
 use App\Infrastructure\Repositories\Order\OrderRepository;
@@ -28,8 +24,6 @@ class OrderServiceProvider extends ServiceProvider
     public function register(): void
     {
         /* Cart */
-        $this->app->bind(GuestCartRepositoryInterface::class, GuestCartRepository::class);
-        $this->app->bind(GuestCartItemRepositoryInterface::class, GuestCartItemRepository::class);
         $this->app->bind(UserCartRepositoryInterface::class, UserCartRepository::class);
         $this->app->bind(UserCartItemRepositoryInterface::class, UserCartItemRepository::class);
 

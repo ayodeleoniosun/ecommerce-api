@@ -3,9 +3,9 @@
 namespace App\Domain\Order\Requests;
 
 use App\Application\Shared\Enum\DeliveryTypeEnum;
-use App\Application\Shared\Enum\PaymentMethodEnum;
 use App\Application\Shared\Responses\ApiResponse;
 use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
+use App\Domain\Payment\Constants\PaymentTypeEnum;
 use App\Infrastructure\Models\Shipping\Address\CustomerShippingAddress;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -36,7 +36,7 @@ class CheckoutRequest extends FormRequest
             'customer_address_id' => ['required', 'string', 'exists:customer_shipping_addresses,uuid'],
             'pickup_station_id' => ['sometimes', 'string', 'exists:pickup_stations,uuid'],
             'delivery_type' => ['required', new Enum(DeliveryTypeEnum::class)],
-            'payment_method' => ['required', new Enum(PaymentMethodEnum::class)],
+            'payment_method' => ['required', new Enum(PaymentTypeEnum::class)],
         ];
     }
 

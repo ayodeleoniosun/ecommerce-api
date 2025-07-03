@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Application\Shared\Enum\CartStatusEnum;
 use App\Application\Shared\Traits\UtilitiesTrait;
+use App\Domain\Payment\Constants\Currencies;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -28,7 +29,7 @@ class UserCartFactory extends Factory
             'uuid' => self::generateUUID(),
             'user_id' => User::factory()->create()->id,
             'status' => CartStatusEnum::PENDING->value,
-            'currency' => 'NGN',
+            'currency' => Currencies::NGN->value,
         ];
     }
 }

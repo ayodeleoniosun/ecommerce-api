@@ -4,6 +4,7 @@ namespace Tests\Feature\Vendor;
 
 use App\Application\Shared\Enum\ProductStatusEnum;
 use App\Application\Shared\Enum\UserStatusEnum;
+use App\Domain\Payment\Constants\Currencies;
 use App\Infrastructure\Models\Inventory\Category;
 use App\Infrastructure\Models\Inventory\CategoryVariationOption;
 use App\Infrastructure\Models\Inventory\Product;
@@ -178,7 +179,7 @@ describe('create or update vendor product items', function () {
                 'name' => 'product name',
             ])->uuid,
             'variation_option_id' => CategoryVariationOption::factory()->create()->uuid,
-            'currency' => 'NGN',
+            'currency' => Currencies::NGN->value,
             'price' => 3000,
             'quantity' => 10,
         ];
@@ -202,7 +203,7 @@ describe('create or update vendor product items', function () {
                 'vendor_id' => $this->user->id,
                 'name' => 'product name',
             ])->uuid,
-            'currency' => 'NGN',
+            'currency' => Currencies::NGN->value,
             'product_item_id' => 'invalid_product_item_uuid',
             'variation_option_id' => CategoryVariationOption::factory()->create()->uuid,
             'price' => 3000,
@@ -229,7 +230,7 @@ describe('create or update vendor product items', function () {
             'product_item_id' => ProductItem::factory()->create([
                 'product_id' => $product->id,
             ])->uuid,
-            'currency' => 'NGN',
+            'currency' => Currencies::NGN->value,
             'variation_option_id' => CategoryVariationOption::factory()->create()->uuid,
             'price' => 3000,
             'quantity' => 10,

@@ -3,6 +3,7 @@
 namespace Tests\Unit\Vendor\Products;
 
 use App\Application\Shared\Enum\ProductStatusEnum;
+use App\Domain\Payment\Constants\Currencies;
 use App\Domain\Vendor\Products\Actions\CreateOrUpdateProductItem;
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductItemDto;
 use App\Domain\Vendor\Products\Resource\ProductItemResource;
@@ -23,7 +24,7 @@ beforeEach(function () {
         $this->product->id,
         $this->categoryVariationOption->id,
         10000,
-        'NGN',
+        Currencies::NGN->value,
         20
     );
 

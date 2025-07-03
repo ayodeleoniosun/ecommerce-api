@@ -14,11 +14,13 @@ trait UtilitiesTrait
         return str_replace('-', '', $uuid);
     }
 
-    public static function generateRandomCharacters(): string
+    public static function generateRandomCharacters(string $prefix = '', int $length = 16): string
     {
         $alphanumeric = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-        return substr(str_shuffle(str_repeat($alphanumeric, 5)), 0, 10);
+        $randomCharacters = substr(str_shuffle(str_repeat($alphanumeric, 5)), 0, $length);
+
+        return $prefix.$randomCharacters;
     }
 
     public static function parseDateOnly($date): string

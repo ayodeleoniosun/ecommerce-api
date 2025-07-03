@@ -9,9 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-/**
- * @method static updateOrCreate(array $array, array $data)
- */
 class OrderPayment extends Model
 {
     use HasFactory, SoftDeletes, UtilitiesTrait;
