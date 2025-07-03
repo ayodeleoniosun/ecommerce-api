@@ -49,9 +49,4 @@ class CheckoutDto
     {
         return $this->deliveryType;
     }
-
-    public function getPaymentMethod(): string
-    {
-        return $this->paymentMethod;
-    }
 }

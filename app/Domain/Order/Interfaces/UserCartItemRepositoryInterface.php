@@ -13,5 +13,7 @@ interface UserCartItemRepositoryInterface
 
     public function storeOrUpdate(AddToCartDto $addToCartDto): UserCartItem;
 
+    public function completeCartItems(int $cartId, string $status): bool;
+
     public function findExistingCartItem(?int $cartId, int $productItemId): ?UserCartItem;
 }

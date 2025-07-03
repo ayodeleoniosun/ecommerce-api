@@ -2,7 +2,6 @@
 
 namespace App\Infrastructure\Services\Payments\Korapay;
 
-use App\Domain\Order\Interfaces\OrderPaymentRepositoryInterface;
 use App\Domain\Payment\Dtos\InitiateOrderPaymentDto;
 use App\Domain\Payment\Interfaces\ApiLogsTransactionRepositoryInterface;
 use App\Domain\Payment\Interfaces\CardTransactionRepositoryInterface;
@@ -19,9 +18,7 @@ class Service extends BaseService implements PaymentGatewayServiceInterface
         public readonly Charge $charge,
         public readonly CardTransactionRepositoryInterface $cardTransactionRepository,
         public readonly ApiLogsTransactionRepositoryInterface $apiLogsTransactionRepository,
-        public readonly OrderPaymentRepositoryInterface $orderPaymentRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws ConnectionException
@@ -54,6 +51,7 @@ class Service extends BaseService implements PaymentGatewayServiceInterface
             'status' => $status,
             'fee' => $response->data->fee,
             'vat' => $response->data->vat,
+            'auth_model' => $response->data->auth_model,
             'gateway' => 'korapay',
             'gateway_reference' => $response->data->transaction_reference,
             'gateway_response_message' => $response->data->response_message,
@@ -75,6 +73,6 @@ class Service extends BaseService implements PaymentGatewayServiceInterface
 
     public function verify(string $reference): array
     {
-        return []
+        return [];
     }
 }

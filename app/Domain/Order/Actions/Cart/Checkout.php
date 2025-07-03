@@ -11,12 +11,10 @@ use App\Domain\Order\Interfaces\OrderRepositoryInterface;
 use App\Domain\Order\Interfaces\OrderShippingRepositoryInterface;
 use App\Domain\Order\Interfaces\UserCartRepositoryInterface;
 use App\Domain\Order\Resources\Order\OrderResource;
-use App\Domain\Payment\Actions\InitiateOrderPaymentAction;
 use App\Domain\Shipping\Interfaces\PickupStation\PickupStationRepositoryInterface;
 use App\Domain\Shipping\Interfaces\ShippingAddress\CustomerShippingAddressRepositoryInterface;
 use App\Infrastructure\Models\Order\Order;
 use App\Infrastructure\Models\Order\OrderItem;
-use App\Infrastructure\Models\Order\OrderPayment;
 use App\Infrastructure\Models\Shipping\Address\CustomerShippingAddress;
 use App\Infrastructure\Models\Shipping\PickupStation\PickupStation;
 use Illuminate\Database\Eloquent\Model;
@@ -34,7 +32,6 @@ class Checkout
         private readonly OrderItemRepositoryInterface $orderItemRepository,
         private readonly OrderShippingRepositoryInterface $orderShippingRepository,
         private readonly OrderPaymentRepositoryInterface $orderPaymentRepository,
-        private readonly InitiateOrderPaymentAction $initiatePaymentAction,
     ) {}
 
     public function execute(CheckoutDto $checkoutDto): OrderResource
@@ -64,14 +61,6 @@ class Checkout
             $this->createOrderPayment($order);
         });
 
-        $orderPayment = $order->payments->last();
-
-        $transactionResponse = $this->initiatePaymentAction->execute($orderPayment);
-
-        $this->completeOrderPayment($orderPayment, $transactionResponse);
-
-        $order->refresh();
-
         $record = $order->load('items', 'shipping', 'payments');
 
         return new OrderResource($record);
@@ -81,7 +70,7 @@ class Checkout
     {
         $cart = $this->userCartRepository->findPendingCart($userId);
 
-        throw_if(! $cart, ResourceNotFoundException::class, 'No existing cart for user');
+        throw_if(! $cart, ResourceNotFoundException::class, 'You do not have any existing cart');
 
         return $this->orderRepository->findOrCreate($userId, $cart);
     }
@@ -94,7 +83,7 @@ class Checkout
             OrderItem::class,
             'order_id',
             $order->id,
-        )->toArray();
+        )->get()->toArray();
 
         $difference = $this->differentiateCartItems($currentOrderItems, $cartItems->toArray());
 
@@ -160,8 +149,8 @@ class Checkout
             'pickup_station_address' => $pickupStation?->address,
             'pickup_station_contact_name' => $pickupStation?->contact_name,
             'pickup_station_contact_phone_number' => $pickupStation?->contact_phone_number,
-            'estimated_delivery_start_date' => now()->addDays(5)->toDateString(),
-            'estimated_delivery_end_date' => now()->addDays(7)->toDateString(),
+            'estimated_delivery_start_date' => now()->addDays(7)->toDateString(),
+            'estimated_delivery_end_date' => now()->addDays(9)->toDateString(),
         ]);
     }
 
@@ -183,32 +172,8 @@ class Checkout
             OrderItem::class,
             'order_id',
             $orderId,
-        );
+        )->get();
 
         return $orderItems->pluck('total_amount')->sum();
-    }
-
-    private function completeOrderPayment(OrderPayment $orderPayment, array $transactionResponse): void
-    {
-        DB::transaction(function () use ($orderPayment, $transactionResponse) {
-            $amountCharged = $orderPayment->order_amount + $orderPayment->delivery_amount + $transactionResponse['fee'] + $transactionResponse['vat'];
-
-            $this->orderPaymentRepository->storeOrUpdate([
-                'order_id' => $orderPayment->order_id,
-                'status' => $transactionResponse['status'],
-                'fee' => $transactionResponse['fee'],
-                'vat' => $transactionResponse['vat'],
-                'amount_charged' => $amountCharged,
-                'gateway' => $transactionResponse['gateway'],
-                'gateway_reference' => $transactionResponse['gateway_reference'],
-                'narration' => $transactionResponse['gateway_response_message'],
-                'completed_at' => now()->toDateTimeString(),
-            ]);
-
-            $this->orderRepository->storeOrUpdate([
-                'id' => $orderPayment->order->id,
-                'status' => $transactionResponse['status'],
-            ]);
-        });
     }
 }

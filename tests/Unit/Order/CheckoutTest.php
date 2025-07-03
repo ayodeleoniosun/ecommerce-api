@@ -10,7 +10,6 @@ use App\Domain\Order\Interfaces\OrderRepositoryInterface;
 use App\Domain\Order\Interfaces\OrderShippingRepositoryInterface;
 use App\Domain\Order\Interfaces\UserCartRepositoryInterface;
 use App\Domain\Order\Resources\Order\OrderResource;
-use App\Domain\Payment\Constants\Currencies;
 use App\Domain\Payment\Constants\PaymentTypeEnum;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Cart\UserCartItem;
@@ -137,8 +136,8 @@ it('should checkout cart items', function () {
             'pickup_station_address' => $this->pickupStation->address,
             'pickup_station_contact_name' => $this->pickupStation->contact_name,
             'pickup_station_contact_phone_number' => $this->pickupStation->contact_phone_number,
-            'estimated_delivery_start_date' => now()->addDays(5)->toDateString(),
-            'estimated_delivery_end_date' => now()->addDays(7)->toDateString(),
+            'estimated_delivery_start_date' => now()->addDays(7)->toDateString(),
+            'estimated_delivery_end_date' => now()->addDays(9)->toDateString(),
         ])
         ->andReturn($this->orderShipping);
 
@@ -147,9 +146,8 @@ it('should checkout cart items', function () {
         ->with([
             'order_id' => $this->order->id,
             'order_amount' => 230000,
-            'currency' => Currencies::NGN->value,
+            'currency' => $this->order->currency,
             'delivery_amount' => 1000,
-            'amount_charged' => 230000,
         ])
         ->andReturn($this->orderPayment);
 

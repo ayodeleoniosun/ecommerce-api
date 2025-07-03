@@ -49,6 +49,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
         Route::prefix('orders')->group(function () {
             Route::post('/', [OrderController::class, 'store']);
+            Route::post('/pay', [OrderController::class, 'pay']);
         });
 
         Route::prefix('carts')->group(function () {

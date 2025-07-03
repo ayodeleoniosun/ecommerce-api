@@ -25,4 +25,12 @@ class UserCartRepository extends BaseRepository implements UserCartRepositoryInt
             ->where('status', CartStatusEnum::PENDING->value)
             ->first();
     }
+
+    public function storeOrUpdate(array $data): ?UserCart
+    {
+        return UserCart::updateOrCreate(
+            ['id' => $data['id']],
+            $data,
+        );
+    }
 }

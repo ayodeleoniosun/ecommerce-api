@@ -32,6 +32,15 @@ class UserCartItemRepository extends BaseRepository implements UserCartItemRepos
         );
     }
 
+    public function completeCartItems(int $cartId, string $status): bool
+    {
+        return self::findAllByColumn(
+            UserCartItem::class,
+            'cart_id',
+            $cartId,
+        )->update(compact('status'));
+    }
+
     public function findExistingCartItem(?int $cartId, int $productItemId): ?UserCartItem
     {
         return UserCartItem::query()

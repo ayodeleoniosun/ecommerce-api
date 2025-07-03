@@ -24,10 +24,9 @@ class OrderResource extends JsonResource
             'status' => $this->status,
             'failure_reason' => $this->when($this->status === PaymentStatusEnum::FAILED->value,
                 $this->payments->last()->narration),
-            'user_id' => $this->user_id,
             'currency' => $this->currency,
             'reference' => $this->reference,
-            'amount' => $this->payments->last()->amount_charged,
+            'amount' => $this->getAmount($this->status),
             'delivery_type' => $this->shipping->delivery_type,
             'delivery_address' => $this->when($this->shipping->delivery_type === DeliveryTypeEnum::DOOR_DELIVERY->value,
                 $this->shipping->delivery_address),
@@ -36,5 +35,14 @@ class OrderResource extends JsonResource
             'estimated_delivery_start_date' => $this->parseDateOnly($this->shipping->estimated_delivery_start_date),
             'estimated_delivery_end_date' => $this->parseDateOnly($this->shipping->estimated_delivery_end_date),
         ];
+    }
+
+    private function getAmount(string $status): int
+    {
+        if (in_array($status, self::completedTransactionStatuses())) {
+            return $this->payments->last()->amount_charged;
+        }
+
+        return $this->payments->last()->order_amount;
     }
 }

@@ -2,51 +2,68 @@
 
 namespace App\Domain\Payment\Actions;
 
+use App\Application\Shared\Exceptions\ResourceNotFoundException;
+use App\Domain\Order\Interfaces\OrderRepositoryInterface;
 use App\Domain\Payment\Constants\PaymentCategoryEnum;
 use App\Domain\Payment\Constants\PaymentTypeEnum;
 use App\Domain\Payment\Dtos\CardData;
+use App\Domain\Payment\Dtos\CheckoutPaymentDto;
 use App\Domain\Payment\Dtos\CustomerData;
 use App\Domain\Payment\Dtos\GatewayFilterData;
 use App\Domain\Payment\Dtos\InitiateOrderPaymentDto;
 use App\Domain\Payment\Interfaces\GatewayRepositoryInterface;
 use App\Domain\Payment\Interfaces\GatewayTypeRepositoryInterface;
-use App\Infrastructure\Models\Order\OrderPayment;
+use App\Infrastructure\Models\Order\Order;
 use App\Infrastructure\Models\Payment\Gateway;
 use App\Infrastructure\Services\Payments\PaymentGatewayStrategy;
+use Illuminate\Database\Eloquent\Model;
 
 class InitiateOrderPaymentAction
 {
     public function __construct(
+        private readonly OrderRepositoryInterface $orderRepository,
         private readonly PaymentGatewayStrategy $gatewayStrategy,
         private readonly GatewayRepositoryInterface $gatewayRepository,
         private readonly GatewayTypeRepositoryInterface $gatewayTypeRepository,
     ) {}
 
-    public function execute(OrderPayment $orderPayment): array
+    public function execute(CheckoutPaymentDto $checkoutPaymentDto): array
     {
-        $orderPaymentDto = $this->buildOrderPaymentDto($orderPayment);
+        $order = $this->orderRepository->findByColumn(
+            Order::class,
+            'id',
+            $checkoutPaymentDto->getOrderId(),
+        );
+
+        throw_if(! $order, ResourceNotFoundException::class, 'Order request invalid');
+
+        $orderPaymentDto = $this->buildOrderPaymentDto($order, $checkoutPaymentDto);
         $gatewaySlug = $this->getGatewaySlug($orderPaymentDto->getCurrency());
         $gatewayInstance = $this->gatewayStrategy->getGatewayInstance($gatewaySlug);
 
         return $gatewayInstance->initialize($orderPaymentDto);
     }
 
-    private function buildOrderPaymentDto(OrderPayment $orderPayment): InitiateOrderPaymentDto
+    private function buildOrderPaymentDto(Model $order, CheckoutPaymentDto $checkoutPaymentDto): InitiateOrderPaymentDto
     {
+        $orderPayment = $order->payments->last();
+        $card = $checkoutPaymentDto->getCardData();
+        $user = auth()->user();
+
         $initiatePaymentDto = new InitiateOrderPaymentDto(
-            amount: 1200,
+            amount: $orderPayment->order_amount,
             currency: $orderPayment->order->currency,
             card: new CardData(
-                name: 'Test card name',
-                number: '5188513618552975',
-                cvv: '123',
-                expiryMonth: '09',
-                expiryYear: '30',
-                pin: '1234',
+                name: $card['name'],
+                number: $card['number'],
+                cvv: $card['cvv'],
+                expiryMonth: $card['expiry_month'],
+                expiryYear: $card['expiry_year'],
+                pin: $card['pin'],
             ),
             customer: new CustomerData(
-                email: 'testemail@gmail.com',
-                name: 'Test name'
+                email: $user->email,
+                name: $user->fullname,
             ),
             redirectUrl: 'https://webhook.site/b3eb9e61-9c77-402f-ba5e-019966c8a982',
         );

@@ -2,6 +2,7 @@
 
 namespace App\Application\Shared\Traits;
 
+use App\Domain\Payment\Constants\PaymentStatusEnum;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
@@ -33,12 +34,8 @@ trait UtilitiesTrait
         return Carbon::parse($time)->format('h:i A');
     }
 
-    public static function filterColumn(): array
+    public static function completedTransactionStatuses(): array
     {
-        return [
-            'date' => 'created_at',
-            'price' => 'price',
-            'quantity' => 'quantity',
-        ];
+        return [PaymentStatusEnum::FAILED->value, PaymentStatusEnum::SUCCESS->value];
     }
 }

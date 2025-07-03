@@ -33,7 +33,7 @@ class Order extends Model
 
         static::creating(function ($model) {
             $model->uuid = self::generateUUID();
-            $model->reference = self::generateRandomCharacters();
+            $model->reference = self::generateRandomCharacters('ORDER-');
         });
     }
 
