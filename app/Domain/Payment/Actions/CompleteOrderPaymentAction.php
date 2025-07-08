@@ -7,6 +7,7 @@ use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Order\Interfaces\OrderPaymentRepositoryInterface;
 use App\Domain\Order\Interfaces\OrderRepositoryInterface;
 use App\Domain\Order\Resources\Order\OrderResource;
+use App\Domain\Payment\Dtos\PaymentResponseDto;
 use Illuminate\Support\Facades\DB;
 
 class CompleteOrderPaymentAction
@@ -16,7 +17,7 @@ class CompleteOrderPaymentAction
         private readonly OrderPaymentRepositoryInterface $orderPaymentRepository,
     ) {}
 
-    public function execute(array $transactionResponse): OrderResource
+    public function execute(PaymentResponseDto $transactionResponse): OrderResource
     {
         $order = $this->orderRepository->findPendingOrder(auth()->user()->id);
 
@@ -24,28 +25,28 @@ class CompleteOrderPaymentAction
 
         DB::transaction(function () use (&$order, $transactionResponse) {
             $orderPayment = $order->payment;
-
-            $amountCharged = $orderPayment->order_amount + $orderPayment->delivery_amount + $transactionResponse['fee'] + $transactionResponse['vat'];
+            $amountCharged = $orderPayment->order_amount + $orderPayment->delivery_amount + $transactionResponse->getFee() + $transactionResponse->getVat();
+            $status = $transactionResponse->getStatus();
 
             $this->orderPaymentRepository->updateByColumns(
                 $orderPayment,
                 [
                     'order_id' => $order->id,
-                    'status' => $transactionResponse['status'],
-                    'fee' => $transactionResponse['fee'],
-                    'vat' => $transactionResponse['vat'],
+                    'status' => $status,
+                    'fee' => $transactionResponse->getFee(),
+                    'vat' => $transactionResponse->getVat(),
                     'amount_charged' => $amountCharged,
-                    'gateway' => $transactionResponse['gateway'],
-                    'gateway_reference' => $transactionResponse['gateway_reference'],
-                    'narration' => $transactionResponse['gateway_response_message'],
+                    'gateway' => $transactionResponse->getGateway(),
+                    'gateway_reference' => $transactionResponse->getReference(),
+                    'narration' => $transactionResponse->getResponseMessage(),
                     'completed_at' => now()->toDateTimeString(),
                 ],
             );
 
-            if ($transactionResponse['status'] === OrderStatusEnum::SUCCESS->value) {
+            if ($status === OrderStatusEnum::SUCCESS->value) {
                 $order = $this->orderRepository->storeOrUpdate([
                     'id' => $order->id,
-                    'status' => $transactionResponse['status'],
+                    'status' => $status,
                 ]);
             }
         });

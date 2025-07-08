@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Order\Actions\Cart;
+namespace App\Domain\Order\Actions;
 
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Application\Shared\Traits\UtilitiesTrait;

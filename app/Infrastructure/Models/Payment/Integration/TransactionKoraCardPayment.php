@@ -22,7 +22,7 @@ class TransactionKoraCardPayment extends Model
         });
     }
 
-    public function apiLogs(): HasOne
+    public function apiLog(): HasOne
     {
         return $this->hasOne(ApiLogsKoraCardPayment::class, 'transaction_id');
     }

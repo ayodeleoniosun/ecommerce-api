@@ -4,7 +4,7 @@ namespace Tests\Unit\Order;
 
 use App\Application\Shared\Enum\CartStatusEnum;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
-use App\Domain\Order\Actions\Cart\RemoveCartItem;
+use App\Domain\Order\Actions\RemoveCartItem;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Cart\UserCartItem;
 use App\Infrastructure\Models\Inventory\Product;

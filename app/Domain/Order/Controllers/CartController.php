@@ -3,9 +3,9 @@
 namespace App\Domain\Order\Controllers;
 
 use App\Application\Shared\Responses\ApiResponse;
-use App\Domain\Order\Actions\Cart\AddToCart;
-use App\Domain\Order\Actions\Cart\GetCartItems;
-use App\Domain\Order\Actions\Cart\RemoveCartItem;
+use App\Domain\Order\Actions\AddToCart;
+use App\Domain\Order\Actions\GetCartItems;
+use App\Domain\Order\Actions\RemoveCartItem;
 use App\Domain\Order\Dtos\AddToCartDto;
 use App\Domain\Order\Requests\AddToCartRequest;
 use Exception;

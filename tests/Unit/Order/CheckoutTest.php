@@ -3,7 +3,7 @@
 namespace Tests\Unit\Order;
 
 use App\Application\Shared\Enum\DeliveryTypeEnum;
-use App\Domain\Order\Actions\Cart\Checkout;
+use App\Domain\Order\Actions\Checkout;
 use App\Domain\Order\Dtos\CheckoutDto;
 use App\Domain\Order\Interfaces\OrderPaymentRepositoryInterface;
 use App\Domain\Order\Interfaces\OrderRepositoryInterface;

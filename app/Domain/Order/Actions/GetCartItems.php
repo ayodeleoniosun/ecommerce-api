@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Order\Actions\Cart;
+namespace App\Domain\Order\Actions;
 
 use App\Domain\Order\Interfaces\UserCartItemRepositoryInterface;
 use App\Domain\Order\Resources\Cart\CartResource;

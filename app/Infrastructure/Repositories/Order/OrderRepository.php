@@ -28,10 +28,9 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
 
     public function findOrCreate(int $userId, UserCart $cart): Order
     {
-        return Order::with('cart.items.productItem')
-            ->firstOrCreate(
-                ['user_id' => $userId, 'cart_id' => $cart->id, 'status' => OrderStatusEnum::PENDING->value],
-                ['user_id' => $userId, 'cart_id' => $cart->id, 'currency' => $cart->currency],
-            );
+        return Order::firstOrCreate(
+            ['user_id' => $userId, 'cart_id' => $cart->id, 'status' => OrderStatusEnum::PENDING->value],
+            ['user_id' => $userId, 'cart_id' => $cart->id, 'currency' => $cart->currency],
+        )->load('cart.items.productItem');
     }
 }

@@ -3,8 +3,8 @@
 namespace App\Domain\Order\Controllers;
 
 use App\Application\Shared\Responses\ApiResponse;
-use App\Domain\Order\Actions\Cart\Checkout;
-use App\Domain\Order\Actions\Cart\CompleteCartAction;
+use App\Domain\Order\Actions\Checkout;
+use App\Domain\Order\Actions\CompleteCartAction;
 use App\Domain\Order\Dtos\CheckoutDto;
 use App\Domain\Order\Requests\CheckoutRequest;
 use App\Domain\Payment\Actions\CompleteOrderPaymentAction;

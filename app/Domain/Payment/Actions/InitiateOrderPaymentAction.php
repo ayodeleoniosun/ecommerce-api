@@ -3,9 +3,10 @@
 namespace App\Domain\Payment\Actions;
 
 use App\Application\Shared\Enum\OrderStatusEnum;
+use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Domain\Order\Actions\Cart\BaseOrder;
+use App\Domain\Order\Actions\BaseOrder;
 use App\Domain\Order\Interfaces\OrderItemRepositoryInterface;
 use App\Domain\Order\Interfaces\OrderPaymentRepositoryInterface;
 use App\Domain\Order\Interfaces\OrderRepositoryInterface;
@@ -16,10 +17,12 @@ use App\Domain\Payment\Dtos\CheckoutPaymentDto;
 use App\Domain\Payment\Dtos\CustomerData;
 use App\Domain\Payment\Dtos\GatewayFilterData;
 use App\Domain\Payment\Dtos\InitiateOrderPaymentDto;
+use App\Domain\Payment\Dtos\PaymentResponseDto;
+use App\Domain\Payment\Interfaces\CardTransactionRepositoryInterface;
 use App\Domain\Payment\Interfaces\GatewayRepositoryInterface;
 use App\Domain\Payment\Interfaces\GatewayTypeRepositoryInterface;
 use App\Infrastructure\Models\Payment\Gateway;
-use App\Infrastructure\Services\Payments\PaymentGatewayStrategy;
+use App\Infrastructure\Services\Payments\PaymentGateway;
 use Illuminate\Database\Eloquent\Model;
 
 class InitiateOrderPaymentAction extends BaseOrder
@@ -28,7 +31,7 @@ class InitiateOrderPaymentAction extends BaseOrder
 
     public function __construct(
         private readonly OrderRepositoryInterface $orderRepository,
-        private readonly PaymentGatewayStrategy $gatewayStrategy,
+        private readonly CardTransactionRepositoryInterface $cardTransactionRepository,
         private readonly GatewayRepositoryInterface $gatewayRepository,
         private readonly GatewayTypeRepositoryInterface $gatewayTypeRepository,
         protected OrderItemRepositoryInterface $orderItemRepository,
@@ -39,18 +42,19 @@ class InitiateOrderPaymentAction extends BaseOrder
 
     /**
      * @throws ResourceNotFoundException
+     * @throws BadRequestException
      */
-    public function execute(CheckoutPaymentDto $checkoutPaymentDto): array
+    public function execute(CheckoutPaymentDto $checkoutPaymentDto): PaymentResponseDto
     {
         $order = $this->orderRepository->findPendingOrder(auth()->user()->id);
 
         throw_if(! $order, ResourceNotFoundException::class, 'No order is in progress');
 
         $orderPaymentDto = $this->buildOrderPaymentDto($order, $checkoutPaymentDto);
-        $gatewaySlug = $this->getGatewaySlug($orderPaymentDto->getCurrency());
-        $gatewayInstance = $this->gatewayStrategy->getGatewayInstance($gatewaySlug);
+        $gateway = $this->getGateway($orderPaymentDto->getCurrency());
+        $paymentGateway = PaymentGateway::make($gateway, $this->cardTransactionRepository);
 
-        return $gatewayInstance->initialize($orderPaymentDto);
+        return $paymentGateway->initiate($orderPaymentDto);
     }
 
     private function buildOrderPaymentDto(Model $order, CheckoutPaymentDto $checkoutPaymentDto): InitiateOrderPaymentDto
@@ -87,7 +91,7 @@ class InitiateOrderPaymentAction extends BaseOrder
         return $initiatePaymentDto;
     }
 
-    private function getGatewaySlug(string $currency): string
+    private function getGateway(string $currency): string
     {
         $gatewayFilterData = new GatewayFilterData(
             type: PaymentTypeEnum::CARD->value,

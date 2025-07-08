@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Order;
 
-use App\Domain\Order\Actions\Cart\GetCartItems;
+use App\Domain\Order\Actions\GetCartItems;
 use App\Domain\Order\Interfaces\UserCartItemRepositoryInterface;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Cart\UserCartItem;

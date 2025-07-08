@@ -35,6 +35,16 @@ class InitiateOrderPaymentDto
         ];
     }
 
+    public function toTransactionArray(): array
+    {
+        return [
+            'amount' => $this->amount,
+            'reference' => $this->reference,
+            'currency' => $this->currency,
+            'order_payment_id' => $this->paymentId,
+        ];
+    }
+
     public function getAmount(): int
     {
         return $this->amount;

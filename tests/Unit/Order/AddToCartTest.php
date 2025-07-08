@@ -6,7 +6,7 @@ use App\Application\Shared\Enum\CartOperationEnum;
 use App\Application\Shared\Enum\ProductStatusEnum;
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
-use App\Domain\Order\Actions\Cart\AddToCart;
+use App\Domain\Order\Actions\AddToCart;
 use App\Domain\Order\Dtos\AddToCartDto;
 use App\Domain\Order\Interfaces\UserCartItemRepositoryInterface;
 use App\Domain\Order\Interfaces\UserCartRepositoryInterface;
