@@ -18,11 +18,12 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
         );
     }
 
-    public function findPendingOrder(int $userId): ?Order
+    public function findPendingOrder(int $userId, bool $lockForUpdate = false): ?Order
     {
         return Order::with('cart.items.productItem')
             ->where('user_id', $userId)
             ->where('status', OrderStatusEnum::PENDING->value)
+            ->when($lockForUpdate, fn ($query) => $query->lockForUpdate())
             ->first();
     }
 

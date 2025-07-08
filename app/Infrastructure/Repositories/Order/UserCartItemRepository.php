@@ -40,7 +40,8 @@ class UserCartItemRepository extends BaseRepository implements UserCartItemRepos
             UserCartItem::class,
             'cart_id',
             $cartId,
-        )->update(compact('status'));
+        )->lockForUpdate()
+            ->update(compact('status'));
     }
 
     public function findExistingCartItem(?int $cartId, int $productItemId): ?UserCartItem

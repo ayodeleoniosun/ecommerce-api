@@ -18,11 +18,12 @@ class UserCartRepository extends BaseRepository implements UserCartRepositoryInt
         );
     }
 
-    public function findPendingCart(int $userId): ?UserCart
+    public function findPendingCart(int $userId, bool $lockForUpdate = false): ?UserCart
     {
         return UserCart::with('items', 'items.productItem')
             ->where('user_id', $userId)
             ->where('status', CartStatusEnum::PENDING->value)
+            ->when($lockForUpdate, fn ($query) => $query->lockForUpdate())
             ->first();
     }
 

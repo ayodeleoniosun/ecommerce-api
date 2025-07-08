@@ -4,7 +4,6 @@ namespace App\Domain\Order\Controllers;
 
 use App\Application\Shared\Responses\ApiResponse;
 use App\Domain\Order\Actions\Checkout;
-use App\Domain\Order\Actions\CompleteCartAction;
 use App\Domain\Order\Dtos\CheckoutDto;
 use App\Domain\Order\Requests\CheckoutRequest;
 use App\Domain\Payment\Actions\CompleteOrderPaymentAction;
@@ -21,7 +20,6 @@ class OrderController
         private readonly Checkout $checkout,
         private readonly InitiateOrderPaymentAction $initiateOrderPayment,
         private readonly CompleteOrderPaymentAction $completeOrderPayment,
-        private readonly CompleteCartAction $completeCart,
     ) {}
 
     public function store(CheckoutRequest $request): JsonResponse
@@ -47,12 +45,10 @@ class OrderController
             $response = $this->completeOrderPayment->execute($transactionResponse);
 
             if ($response->status === PaymentStatusEnum::SUCCESS->value) {
-                $this->completeCart->execute($response->status);
-
-                return ApiResponse::success('Payment successfully made', $response);
+                return ApiResponse::success('Order successfully completed', $response);
             }
 
-            $failureReason = $response->payment->narration;
+            $failureReason = $transactionResponse->getResponseMessage();
 
             return ApiResponse::error('Payment failed due to '.$failureReason, 400);
         } catch (Exception $e) {

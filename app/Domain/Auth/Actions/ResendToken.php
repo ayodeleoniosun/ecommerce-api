@@ -2,11 +2,11 @@
 
 namespace App\Domain\Auth\Actions;
 
-use App\Application\Events\Auth\VerificationMailResentEvent;
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface;
+use App\Domain\Auth\Notifications\RegistrationCompletedNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
@@ -33,6 +33,6 @@ class ResendToken
 
         $verification->user = $user;
 
-        VerificationMailResentEvent::dispatch($verification);
+        $user->notify(new RegistrationCompletedNotification($user));
     }
 }

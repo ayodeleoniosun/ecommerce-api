@@ -9,7 +9,7 @@ interface UserCartRepositoryInterface
 {
     public function findOrCreate(AddToCartDto $addToCartDto): UserCart;
 
-    public function findPendingCart(int $userId): ?UserCart;
+    public function findPendingCart(int $userId, bool $lockForUpdate = false): ?UserCart;
 
     public function storeOrUpdate(array $data): ?UserCart;
 }

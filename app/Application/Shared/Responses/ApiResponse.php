@@ -26,7 +26,7 @@ class ApiResponse
 
     public static function error(
         string $message,
-        int $code,
+        int $code = 400,
         $errors = [],
     ): JsonResponse {
         $response = [
