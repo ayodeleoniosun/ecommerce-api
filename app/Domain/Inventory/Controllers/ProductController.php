@@ -3,8 +3,8 @@
 namespace App\Domain\Inventory\Controllers;
 
 use App\Application\Shared\Responses\ApiResponse;
-use App\Domain\Inventory\Actions\Products\GetAllProducts;
-use App\Domain\Inventory\Actions\Products\ViewProduct;
+use App\Domain\Inventory\Actions\Products\GetAllProductsAction;
+use App\Domain\Inventory\Actions\Products\ViewProductAction;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -12,8 +12,8 @@ use Illuminate\Http\Request;
 class ProductController
 {
     public function __construct(
-        private readonly GetAllProducts $getProducts,
-        private readonly ViewProduct $viewProduct,
+        private readonly GetAllProductsAction $getProducts,
+        private readonly ViewProductAction $viewProduct,
     ) {}
 
     public function index(Request $request): JsonResponse

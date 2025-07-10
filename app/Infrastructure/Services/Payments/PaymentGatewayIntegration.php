@@ -17,7 +17,7 @@ abstract class PaymentGatewayIntegration
 
     public string $secretKey;
 
-    public ?string $encryptionKey;
+    public string $encryptionKey;
 
     public function __construct()
     {

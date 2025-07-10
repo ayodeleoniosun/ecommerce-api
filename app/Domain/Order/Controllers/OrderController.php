@@ -3,11 +3,11 @@
 namespace App\Domain\Order\Controllers;
 
 use App\Application\Shared\Responses\ApiResponse;
-use App\Domain\Order\Actions\Checkout;
+use App\Domain\Order\Actions\CheckoutAction;
 use App\Domain\Order\Dtos\CheckoutDto;
 use App\Domain\Order\Requests\CheckoutRequest;
 use App\Domain\Payment\Actions\CompleteOrderPaymentAction;
-use App\Domain\Payment\Actions\InitiateOrderPaymentAction;
+use App\Domain\Payment\Actions\InitiateOrderActionPaymentAction;
 use App\Domain\Payment\Constants\PaymentStatusEnum;
 use App\Domain\Payment\Dtos\CheckoutPaymentDto;
 use App\Domain\Payment\Requests\CheckoutPaymentRequest;
@@ -17,8 +17,8 @@ use Illuminate\Http\JsonResponse;
 class OrderController
 {
     public function __construct(
-        private readonly Checkout $checkout,
-        private readonly InitiateOrderPaymentAction $initiateOrderPayment,
+        private readonly CheckoutAction $checkout,
+        private readonly InitiateOrderActionPaymentAction $initiateOrderPayment,
         private readonly CompleteOrderPaymentAction $completeOrderPayment,
     ) {}
 

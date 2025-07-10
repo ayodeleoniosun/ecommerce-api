@@ -8,8 +8,8 @@ use App\Domain\Payment\Dtos\InitiateOrderPaymentDto;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
 use App\Domain\Payment\Interfaces\CardTransactionRepositoryInterface;
 use App\Domain\Payment\Interfaces\PaymentGatewayIntegrationInterface;
-use App\Infrastructure\Models\Payment\Integration\ApiLogsKoraCardPayment;
-use App\Infrastructure\Models\Payment\Integration\TransactionKoraCardPayment;
+use App\Infrastructure\Models\Payment\Integration\Korapay\ApiLogsKoraCardPayment;
+use App\Infrastructure\Models\Payment\Integration\Korapay\TransactionKoraCardPayment;
 use App\Infrastructure\Services\Payments\PaymentGatewayIntegration;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\DB;
@@ -97,7 +97,7 @@ class KorapayIntegration extends PaymentGatewayIntegration implements PaymentGat
 
         return $this->request(
             method: 'POST',
-            path: '/v1/charges/card',
+            path: '/charges/card',
             payload: [
                 'charge_data' => $chargeData,
             ],

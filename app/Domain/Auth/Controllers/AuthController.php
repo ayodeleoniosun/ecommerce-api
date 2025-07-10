@@ -3,12 +3,12 @@
 namespace App\Domain\Auth\Controllers;
 
 use App\Application\Shared\Responses\ApiResponse;
-use App\Domain\Auth\Actions\InitiateForgotPassword;
-use App\Domain\Auth\Actions\LoginUser;
-use App\Domain\Auth\Actions\RegisterUser;
-use App\Domain\Auth\Actions\ResendToken;
-use App\Domain\Auth\Actions\ResetPassword;
-use App\Domain\Auth\Actions\VerifyToken;
+use App\Domain\Auth\Actions\InitiateForgotPasswordAction;
+use App\Domain\Auth\Actions\LoginUserAction;
+use App\Domain\Auth\Actions\RegisterUserAction;
+use App\Domain\Auth\Actions\ResendTokenAction;
+use App\Domain\Auth\Actions\ResetPasswordAction;
+use App\Domain\Auth\Actions\VerifyTokenAction;
 use App\Domain\Auth\Dtos\CreateUserDto;
 use App\Domain\Auth\Requests\ForgotPasswordRequest;
 use App\Domain\Auth\Requests\LoginRequest;
@@ -24,12 +24,12 @@ use Illuminate\Support\Facades\Password;
 class AuthController
 {
     public function __construct(
-        private readonly RegisterUser $registerUser,
-        private readonly VerifyToken $verifyToken,
-        private readonly ResendToken $resendToken,
-        private readonly LoginUser $loginUser,
-        private readonly InitiateForgotPassword $forgotPassword,
-        private readonly ResetPassword $resetPassword,
+        private readonly RegisterUserAction $registerUser,
+        private readonly VerifyTokenAction $verifyToken,
+        private readonly ResendTokenAction $resendToken,
+        private readonly LoginUserAction $loginUser,
+        private readonly InitiateForgotPasswordAction $forgotPassword,
+        private readonly ResetPasswordAction $resetPassword,
     ) {}
 
     public function register(RegisterRequest $request): JsonResponse

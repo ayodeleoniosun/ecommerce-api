@@ -16,4 +16,14 @@ class CustomerData
             'name' => $data->name ?? null,
         ];
     }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
 }

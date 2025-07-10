@@ -3,10 +3,10 @@
 namespace App\Domain\Admin\Controllers;
 
 use App\Application\Shared\Responses\ApiResponse;
-use App\Domain\Admin\Actions\Category\CreateCategoryVariationOptions;
-use App\Domain\Admin\Actions\Category\CreateCategoryVariations;
-use App\Domain\Admin\Actions\Category\DeleteCategoryVariationOptions;
-use App\Domain\Admin\Actions\Category\DeleteCategoryVariations;
+use App\Domain\Admin\Actions\Category\CreateCategoryVariationOptionsAction;
+use App\Domain\Admin\Actions\Category\CreateCategoryVariationsAction;
+use App\Domain\Admin\Actions\Category\DeleteCategoryVariationOptionsAction;
+use App\Domain\Admin\Actions\Category\DeleteCategoryVariationsAction;
 use App\Domain\Admin\Dtos\Inventory\CreateCategoryVariationDto;
 use App\Domain\Admin\Dtos\Inventory\CreateCategoryVariationOptionDto;
 use App\Domain\Admin\Requests\Category\CategoryVariationOptionRequest;
@@ -18,10 +18,10 @@ use Illuminate\Http\Response;
 class CategoryController
 {
     public function __construct(
-        private readonly CreateCategoryVariations $createCategoryVariations,
-        private readonly CreateCategoryVariationOptions $createCategoryVariationOptions,
-        private readonly DeleteCategoryVariations $deleteCategoryVariations,
-        private readonly DeleteCategoryVariationOptions $deleteCategoryVariationOptions,
+        private readonly CreateCategoryVariationsAction $createCategoryVariations,
+        private readonly CreateCategoryVariationOptionsAction $createCategoryVariationOptions,
+        private readonly DeleteCategoryVariationsAction $deleteCategoryVariations,
+        private readonly DeleteCategoryVariationOptionsAction $deleteCategoryVariationOptions,
     ) {}
 
     public function storeCategoryVariations(CategoryVariationRequest $request): JsonResponse

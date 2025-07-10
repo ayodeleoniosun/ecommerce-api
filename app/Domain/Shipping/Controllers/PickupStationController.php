@@ -3,10 +3,10 @@
 namespace App\Domain\Shipping\Controllers;
 
 use App\Application\Shared\Responses\ApiResponse;
-use App\Domain\Shipping\Actions\PickupStation\CreatePickupStation;
-use App\Domain\Shipping\Actions\PickupStation\CreatePickupStationOpeningHour;
-use App\Domain\Shipping\Actions\PickupStation\GetPickupStation;
-use App\Domain\Shipping\Actions\PickupStation\GetPickupStations;
+use App\Domain\Shipping\Actions\PickupStation\CreatePickupStationAction;
+use App\Domain\Shipping\Actions\PickupStation\CreatePickupStationOpeningHourAction;
+use App\Domain\Shipping\Actions\PickupStation\GetPickupStationAction;
+use App\Domain\Shipping\Actions\PickupStation\GetPickupStationsAction;
 use App\Domain\Shipping\Dtos\PickupStation\CreatePickupStationDto;
 use App\Domain\Shipping\Dtos\PickupStation\CreatePickupStationOpeningHourDto;
 use App\Domain\Shipping\Requests\PickupStation\CreatePickupStationOpeningHourRequest;
@@ -19,10 +19,10 @@ use Illuminate\Http\Response;
 class PickupStationController
 {
     public function __construct(
-        private readonly GetPickupStations $pickupStations,
-        private readonly GetPickupStation $pickupStation,
-        private readonly CreatePickupStation $createPickupStation,
-        private readonly CreatePickupStationOpeningHour $createPickupStationOpeningHour,
+        private readonly GetPickupStationsAction $pickupStations,
+        private readonly GetPickupStationAction $pickupStation,
+        private readonly CreatePickupStationAction $createPickupStation,
+        private readonly CreatePickupStationOpeningHourAction $createPickupStationOpeningHour,
     ) {}
 
     public function index(Request $request): JsonResponse

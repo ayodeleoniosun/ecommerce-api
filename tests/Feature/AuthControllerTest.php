@@ -2,15 +2,16 @@
 
 namespace Tests\Feature;
 
-use App\Application\Events\Auth\VerificationMailResentEvent;
 use App\Application\Shared\Enum\UserStatusEnum;
 use App\Application\Shared\Enum\UserTypeEnum;
+use App\Domain\Auth\Notifications\RegistrationCompletedNotification;
 use App\Infrastructure\Models\User\PasswordResetToken;
 use App\Infrastructure\Models\User\User;
 use App\Infrastructure\Models\User\UserVerification;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Notification;
 
 describe('user registration', function () {
     it('should return an error if a required field is empty', function () {
@@ -333,7 +334,7 @@ describe('resend token', function () {
     });
 
     it('should resend token to user', function () {
-        Event::fake();
+        Notification::fake();
 
         $user = User::factory()->create();
 
@@ -353,9 +354,7 @@ describe('resend token', function () {
         expect($content->success)->toBeTrue()
             ->and($content->message)->toBe('Verification link resent successfully');
 
-        Event::assertDispatched(VerificationMailResentEvent::class, function ($event) use ($user) {
-            return $event->verification->user->id === $user->id;
-        });
+        Notification::assertSentTo($user, RegistrationCompletedNotification::class);
     });
 });
 

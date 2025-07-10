@@ -36,4 +36,34 @@ class CardData
             'pin' => $data->pin,
         ];
     }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getNumber(): string
+    {
+        return $this->number;
+    }
+
+    public function getCvv(): string
+    {
+        return $this->cvv;
+    }
+
+    public function getExpiryMonth(): string
+    {
+        return $this->expiryMonth;
+    }
+
+    public function getExpiryYear(): string
+    {
+        return $this->expiryYear;
+    }
+
+    public function getPin(): string
+    {
+        return $this->pin;
+    }
 }

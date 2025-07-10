@@ -3,9 +3,9 @@
 namespace App\Domain\Inventory\Controllers;
 
 use App\Application\Shared\Responses\ApiResponse;
-use App\Domain\Inventory\Actions\Category\GetCategoryVariationOptions;
-use App\Domain\Inventory\Actions\Category\GetCategoryVariations;
-use App\Domain\Inventory\Actions\Category\GetProductCategories;
+use App\Domain\Inventory\Actions\Category\GetCategoryVariationOptionsAction;
+use App\Domain\Inventory\Actions\Category\GetCategoryVariationsAction;
+use App\Domain\Inventory\Actions\Category\GetProductCategoriesAction;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -13,9 +13,9 @@ use Illuminate\Http\Request;
 class CategoryController
 {
     public function __construct(
-        private readonly GetProductCategories $productCategories,
-        private readonly GetCategoryVariations $categoryVariations,
-        private readonly GetCategoryVariationOptions $variationOptions,
+        private readonly GetProductCategoriesAction $productCategories,
+        private readonly GetCategoryVariationsAction $categoryVariations,
+        private readonly GetCategoryVariationOptionsAction $variationOptions,
     ) {}
 
     public function index(Request $request): JsonResponse

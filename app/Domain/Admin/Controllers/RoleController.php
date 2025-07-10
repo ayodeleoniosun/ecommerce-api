@@ -3,12 +3,12 @@
 namespace App\Domain\Admin\Controllers;
 
 use App\Application\Shared\Responses\ApiResponse;
-use App\Domain\Admin\Actions\RolesAndPermissions\AssignPermissionsToUser;
-use App\Domain\Admin\Actions\RolesAndPermissions\AssignRolesToUser;
-use App\Domain\Admin\Actions\RolesAndPermissions\GetAllPermissions;
-use App\Domain\Admin\Actions\RolesAndPermissions\GetAllRoles;
-use App\Domain\Admin\Actions\RolesAndPermissions\RevokePermissionFromUser;
-use App\Domain\Admin\Actions\RolesAndPermissions\RevokeRoleFromUser;
+use App\Domain\Admin\Actions\RolesAndPermissions\AssignPermissionsToUserAction;
+use App\Domain\Admin\Actions\RolesAndPermissions\AssignRolesToUserAction;
+use App\Domain\Admin\Actions\RolesAndPermissions\GetAllPermissionsAction;
+use App\Domain\Admin\Actions\RolesAndPermissions\GetAllRolesAction;
+use App\Domain\Admin\Actions\RolesAndPermissions\RevokePermissionFromUserAction;
+use App\Domain\Admin\Actions\RolesAndPermissions\RevokeRoleFromUserAction;
 use App\Domain\Admin\Requests\RolesAndPermissions\AssignPermissionsToUserRequest;
 use App\Domain\Admin\Requests\RolesAndPermissions\AssignRolesToUserRequest;
 use App\Domain\Admin\Requests\RolesAndPermissions\RevokePermissionFromUserRequest;
@@ -21,12 +21,12 @@ use Illuminate\Routing\Controller;
 class RoleController extends Controller
 {
     public function __construct(
-        private readonly GetAllRoles $getAllRoles,
-        private readonly GetAllPermissions $getAllPermissions,
-        private readonly AssignRolesToUser $assignRolesToUser,
-        private readonly RevokeRoleFromUser $revokeRole,
-        private readonly AssignPermissionsToUser $assignPermissionsToUser,
-        private readonly RevokePermissionFromUser $revokePermissionFromUser,
+        private readonly GetAllRolesAction $getAllRoles,
+        private readonly GetAllPermissionsAction $getAllPermissions,
+        private readonly AssignRolesToUserAction $assignRolesToUser,
+        private readonly RevokeRoleFromUserAction $revokeRole,
+        private readonly AssignPermissionsToUserAction $assignPermissionsToUser,
+        private readonly RevokePermissionFromUserAction $revokePermissionFromUser,
     ) {
         //        if (!auth()->user()->hasRole(RoleEnum::SUPER_ADMIN)) {
         //            return ApiResponse::error('You do not have the permission to assign roles to users',

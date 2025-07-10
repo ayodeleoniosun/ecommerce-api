@@ -3,11 +3,11 @@
 namespace App\Domain\Vendor\Onboarding\Controllers;
 
 use App\Application\Shared\Responses\ApiResponse;
-use App\Domain\Vendor\Onboarding\Actions\CreateVendorBusinessInformation;
-use App\Domain\Vendor\Onboarding\Actions\CreateVendorContactInformation;
-use App\Domain\Vendor\Onboarding\Actions\CreateVendorLegalInformation;
-use App\Domain\Vendor\Onboarding\Actions\CreateVendorPaymentInformation;
-use App\Domain\Vendor\Onboarding\Actions\GetVendorSetupStatus;
+use App\Domain\Vendor\Onboarding\Actions\CreateVendorBusinessInformationAction;
+use App\Domain\Vendor\Onboarding\Actions\CreateVendorContactInformationAction;
+use App\Domain\Vendor\Onboarding\Actions\CreateVendorLegalInformationAction;
+use App\Domain\Vendor\Onboarding\Actions\CreateVendorPaymentInformationAction;
+use App\Domain\Vendor\Onboarding\Actions\GetVendorSetupStatusAction;
 use App\Domain\Vendor\Onboarding\Dtos\CreateVendorBusinessInformationDto;
 use App\Domain\Vendor\Onboarding\Dtos\CreateVendorContactInformationDto;
 use App\Domain\Vendor\Onboarding\Dtos\CreateVendorLegalInformationDto;
@@ -23,11 +23,11 @@ use Illuminate\Http\Request;
 class OnboardingController
 {
     public function __construct(
-        private readonly CreateVendorContactInformation $createVendorContactInformation,
-        private readonly CreateVendorBusinessInformation $createVendorBusinessInformation,
-        private readonly CreateVendorLegalInformation $createVendorLegalInformation,
-        private readonly CreateVendorPaymentInformation $createVendorPaymentInformation,
-        private readonly GetVendorSetupStatus $setupStatus,
+        private readonly CreateVendorContactInformationAction $createVendorContactInformation,
+        private readonly CreateVendorBusinessInformationAction $createVendorBusinessInformation,
+        private readonly CreateVendorLegalInformationAction $createVendorLegalInformation,
+        private readonly CreateVendorPaymentInformationAction $createVendorPaymentInformation,
+        private readonly GetVendorSetupStatusAction $setupStatus,
     ) {}
 
     public function status(Request $request): JsonResponse

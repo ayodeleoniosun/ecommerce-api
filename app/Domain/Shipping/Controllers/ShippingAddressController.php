@@ -3,8 +3,8 @@
 namespace App\Domain\Shipping\Controllers;
 
 use App\Application\Shared\Responses\ApiResponse;
-use App\Domain\Shipping\Actions\ShippingAddress\CreateCustomerShippingAddress;
-use App\Domain\Shipping\Actions\ShippingAddress\GetCustomerShippingAddresses;
+use App\Domain\Shipping\Actions\ShippingAddress\CreateCustomerShippingAddressAction;
+use App\Domain\Shipping\Actions\ShippingAddress\GetCustomerShippingAddressesAction;
 use App\Domain\Shipping\Dtos\ShippingAddress\CreateCustomerShippingAddressDto;
 use App\Domain\Shipping\Requests\ShippingAddress\CreateCustomerShippingAddressRequest;
 use Exception;
@@ -15,8 +15,8 @@ use Illuminate\Http\Response;
 class ShippingAddressController
 {
     public function __construct(
-        private readonly GetCustomerShippingAddresses $shippingAddresses,
-        private readonly CreateCustomerShippingAddress $createCustomerShippingAddress,
+        private readonly GetCustomerShippingAddressesAction $shippingAddresses,
+        private readonly CreateCustomerShippingAddressAction $createCustomerShippingAddress,
     ) {}
 
     public function index(Request $request): JsonResponse

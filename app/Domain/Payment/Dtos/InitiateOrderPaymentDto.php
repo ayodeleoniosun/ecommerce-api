@@ -55,6 +55,16 @@ class InitiateOrderPaymentDto
         return $this->currency;
     }
 
+    public function getCard(): CardData
+    {
+        return $this->card;
+    }
+
+    public function getCustomer(): CustomerData
+    {
+        return $this->customer;
+    }
+
     public function setPaymentId(int $paymentId): void
     {
         $this->paymentId = $paymentId;

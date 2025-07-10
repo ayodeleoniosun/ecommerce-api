@@ -3,14 +3,14 @@
 namespace App\Domain\Vendor\Products\Controllers;
 
 use App\Application\Shared\Responses\ApiResponse;
-use App\Domain\Vendor\Products\Actions\CreateOrUpdateProduct;
-use App\Domain\Vendor\Products\Actions\CreateOrUpdateProductItem;
-use App\Domain\Vendor\Products\Actions\DeleteVendorProduct;
-use App\Domain\Vendor\Products\Actions\DeleteVendorProductImage;
-use App\Domain\Vendor\Products\Actions\DeleteVendorProductItem;
-use App\Domain\Vendor\Products\Actions\GetVendorProducts;
-use App\Domain\Vendor\Products\Actions\UploadProductItemImage;
-use App\Domain\Vendor\Products\Actions\ViewVendorProduct;
+use App\Domain\Vendor\Products\Actions\CreateOrUpdateProductAction;
+use App\Domain\Vendor\Products\Actions\CreateOrUpdateProductItemAction;
+use App\Domain\Vendor\Products\Actions\DeleteVendorProductAction;
+use App\Domain\Vendor\Products\Actions\DeleteVendorProductImageAction;
+use App\Domain\Vendor\Products\Actions\DeleteVendorProductItemAction;
+use App\Domain\Vendor\Products\Actions\GetVendorProductsAction;
+use App\Domain\Vendor\Products\Actions\UploadProductItemImageAction;
+use App\Domain\Vendor\Products\Actions\ViewVendorProductAction;
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductDto;
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductItemDto;
 use App\Domain\Vendor\Products\Dtos\UploadProductItemImageDto;
@@ -25,14 +25,14 @@ use Illuminate\Http\Response;
 class ProductController
 {
     public function __construct(
-        private readonly GetVendorProducts $vendorProducts,
-        private readonly ViewVendorProduct $vendorProduct,
-        private readonly CreateOrUpdateProduct $createOrUpdateProduct,
-        private readonly CreateOrUpdateProductItem $createOrUpdateProductItem,
-        private readonly UploadProductItemImage $uploadProductItemImage,
-        private readonly DeleteVendorProductImage $deleteVendorProductImage,
-        private readonly DeleteVendorProductItem $deleteVendorProductItem,
-        private readonly DeleteVendorProduct $deleteVendorProduct,
+        private readonly GetVendorProductsAction $vendorProducts,
+        private readonly ViewVendorProductAction $vendorProduct,
+        private readonly CreateOrUpdateProductAction $createOrUpdateProduct,
+        private readonly CreateOrUpdateProductItemAction $createOrUpdateProductItem,
+        private readonly UploadProductItemImageAction $uploadProductItemImage,
+        private readonly DeleteVendorProductImageAction $deleteVendorProductImage,
+        private readonly DeleteVendorProductItemAction $deleteVendorProductItem,
+        private readonly DeleteVendorProductAction $deleteVendorProduct,
     ) {}
 
     public function index(Request $request): JsonResponse
