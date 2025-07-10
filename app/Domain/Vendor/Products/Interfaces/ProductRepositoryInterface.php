@@ -12,7 +12,7 @@ interface ProductRepositoryInterface
 {
     public function index(Request $request): LengthAwarePaginator;
 
-    public function view(Model $product): ?Product;
+    public function view(Model $product): Product;
 
     public function storeOrUpdate(CreateOrUpdateProductDto $createOrUpdateProductDto): Product;
 

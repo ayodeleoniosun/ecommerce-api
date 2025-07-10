@@ -9,6 +9,7 @@ use App\Infrastructure\Models\Inventory\Category;
 use App\Infrastructure\Models\Inventory\Product;
 use App\Infrastructure\Repositories\BaseRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 class ProductRepository extends BaseRepository implements ProductRepositoryInterface
@@ -88,7 +89,7 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
             ->first();
     }
 
-    public function view(Product $product): Product
+    public function view(Model $product): Product
     {
         return $product->load(['items', 'category', 'items.images', 'items.variationOption']);
     }
