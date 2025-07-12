@@ -4,7 +4,7 @@ namespace App\Domain\Payment\Dtos;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
 
-class CheckoutPaymentDto
+class OrderPaymentDto extends InitiateOrderPaymentDto
 {
     use UtilitiesTrait;
 

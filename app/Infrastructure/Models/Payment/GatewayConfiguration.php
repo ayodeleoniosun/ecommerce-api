@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Models\Payment;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
+use Database\Factories\GatewayConfigurationFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,6 +21,11 @@ class GatewayConfiguration extends Model
         static::creating(function ($model) {
             $model->uuid = self::generateUUID();
         });
+    }
+
+    protected static function newFactory(): GatewayConfigurationFactory
+    {
+        return GatewayConfigurationFactory::new();
     }
 
     public function gateway(): BelongsTo

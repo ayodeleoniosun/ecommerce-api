@@ -7,10 +7,10 @@ use App\Domain\Order\Actions\CheckoutAction;
 use App\Domain\Order\Dtos\CheckoutDto;
 use App\Domain\Order\Requests\CheckoutRequest;
 use App\Domain\Payment\Actions\CompleteOrderPaymentAction;
-use App\Domain\Payment\Actions\InitiateOrderActionPaymentAction;
+use App\Domain\Payment\Actions\InitiateOrderPaymentAction;
 use App\Domain\Payment\Constants\PaymentStatusEnum;
-use App\Domain\Payment\Dtos\CheckoutPaymentDto;
-use App\Domain\Payment\Requests\CheckoutPaymentRequest;
+use App\Domain\Payment\Dtos\OrderPaymentDto;
+use App\Domain\Payment\Requests\OrderPaymentRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
 
@@ -18,7 +18,7 @@ class OrderController
 {
     public function __construct(
         private readonly CheckoutAction $checkout,
-        private readonly InitiateOrderActionPaymentAction $initiateOrderPayment,
+        private readonly InitiateOrderPaymentAction $initiateOrderPayment,
         private readonly CompleteOrderPaymentAction $completeOrderPayment,
     ) {}
 
@@ -35,12 +35,12 @@ class OrderController
         }
     }
 
-    public function pay(CheckoutPaymentRequest $request): JsonResponse
+    public function pay(OrderPaymentRequest $request): JsonResponse
     {
-        $checkoutPaymentDto = CheckoutPaymentDto::fromArray($request->validated());
+        $orderPaymentDto = OrderPaymentDto::fromArray($request->validated());
 
         try {
-            $transactionResponse = $this->initiateOrderPayment->execute($checkoutPaymentDto);
+            $transactionResponse = $this->initiateOrderPayment->execute($orderPaymentDto);
 
             $response = $this->completeOrderPayment->execute($transactionResponse);
 

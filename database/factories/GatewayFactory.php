@@ -3,17 +3,17 @@
 namespace Database\Factories;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Infrastructure\Models\Inventory\Category;
+use App\Infrastructure\Models\Payment\Gateway;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Category>
+ * @extends Factory<Gateway>
  */
-class CategoryFactory extends Factory
+class GatewayFactory extends Factory
 {
     use UtilitiesTrait;
 
-    protected $model = Category::class;
+    protected $model = Gateway::class;
 
     /**
      * Define the model's default state.
@@ -24,8 +24,8 @@ class CategoryFactory extends Factory
     {
         return [
             'uuid' => self::generateUUID(),
-            'name' => fake()->name,
-            'slug' => fake()->name,
+            'slug' => 'korapay',
+            'name' => 'Korapay',
         ];
     }
 }

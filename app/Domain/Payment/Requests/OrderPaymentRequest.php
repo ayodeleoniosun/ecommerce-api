@@ -6,7 +6,7 @@ use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CheckoutPaymentRequest extends FormRequest
+class OrderPaymentRequest extends FormRequest
 {
     use OverrideDefaultValidationMethodTrait;
 

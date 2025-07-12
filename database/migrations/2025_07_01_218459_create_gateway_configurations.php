@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('category');
             $table->string('currency');
             $table->foreignId('gateway_id')->constrained('gateways')->nullOnDelete();
-            $table->string('enabled')->default(true);
             $table->json('settings');
             $table->timestamps();
             $table->softDeletes();

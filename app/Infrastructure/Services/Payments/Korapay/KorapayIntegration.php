@@ -71,7 +71,11 @@ class KorapayIntegration extends PaymentGatewayIntegration implements PaymentGat
 
     private function createTransaction(InitiateOrderPaymentDto $paymentDto): TransactionKoraCardPayment
     {
-        $paymentDto->setReference(self::generateRandomCharacters(GatewayPrefixReference::KORAPAY->value));
+        if (! $paymentDto->getReference()) {
+            $paymentDto->setReference(self::generateRandomCharacters(GatewayPrefixReference::KORAPAY->value));
+
+            // $paymentDto->setReference('KPY-12345-ref');
+        }
 
         return DB::transaction(function () use ($paymentDto) {
             $transaction = $this->cardTransactionRepository->create(
@@ -91,7 +95,7 @@ class KorapayIntegration extends PaymentGatewayIntegration implements PaymentGat
     /**
      * @throws ConnectionException
      */
-    private function initializeCharge(InitiateOrderPaymentDto $paymentDto): array
+    public function initializeCharge(InitiateOrderPaymentDto $paymentDto): array
     {
         $chargeData = $this->encryptCardData($paymentDto->toJson(), $this->encryptionKey);
 

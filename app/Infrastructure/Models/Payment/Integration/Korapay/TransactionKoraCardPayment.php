@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Models\Payment\Integration\Korapay;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
+use Database\Factories\TransactionKoraCardPaymentFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -20,6 +21,11 @@ class TransactionKoraCardPayment extends Model
         static::creating(function ($model) {
             $model->uuid = self::generateUUID();
         });
+    }
+
+    protected static function newFactory(): TransactionKoraCardPaymentFactory
+    {
+        return TransactionKoraCardPaymentFactory::new();
     }
 
     public function apiLog(): HasOne

@@ -3,17 +3,18 @@
 namespace Database\Factories;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Infrastructure\Models\Inventory\Category;
+use App\Infrastructure\Models\Payment\Integration\Korapay\ApiLogsKoraCardPayment;
+use App\Infrastructure\Models\Payment\Integration\Korapay\TransactionKoraCardPayment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Category>
+ * @extends Factory<ApiLogsKoraCardPayment>
  */
-class CategoryFactory extends Factory
+class ApiLogKoraCardPaymentFactory extends Factory
 {
     use UtilitiesTrait;
 
-    protected $model = Category::class;
+    protected $model = ApiLogsKoraCardPayment::class;
 
     /**
      * Define the model's default state.
@@ -24,8 +25,7 @@ class CategoryFactory extends Factory
     {
         return [
             'uuid' => self::generateUUID(),
-            'name' => fake()->name,
-            'slug' => fake()->name,
+            'transaction_id' => TransactionKoraCardPayment::factory()->create()->id,
         ];
     }
 }

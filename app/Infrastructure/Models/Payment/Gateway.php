@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Models\Payment;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
+use Database\Factories\GatewayFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -20,6 +21,11 @@ class Gateway extends Model
         static::creating(function ($model) {
             $model->uuid = self::generateUUID();
         });
+    }
+
+    protected static function newFactory(): GatewayFactory
+    {
+        return GatewayFactory::new();
     }
 
     public function primaryGatewayType(): HasMany

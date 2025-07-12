@@ -13,10 +13,10 @@ use App\Domain\Order\Interfaces\OrderRepositoryInterface;
 use App\Domain\Payment\Constants\PaymentCategoryEnum;
 use App\Domain\Payment\Constants\PaymentTypeEnum;
 use App\Domain\Payment\Dtos\CardData;
-use App\Domain\Payment\Dtos\CheckoutPaymentDto;
 use App\Domain\Payment\Dtos\CustomerData;
 use App\Domain\Payment\Dtos\GatewayFilterData;
 use App\Domain\Payment\Dtos\InitiateOrderPaymentDto;
+use App\Domain\Payment\Dtos\OrderPaymentDto;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
 use App\Domain\Payment\Interfaces\CardTransactionRepositoryInterface;
 use App\Domain\Payment\Interfaces\GatewayRepositoryInterface;
@@ -25,7 +25,7 @@ use App\Infrastructure\Models\Payment\Gateway;
 use App\Infrastructure\Services\Payments\PaymentGateway;
 use Illuminate\Database\Eloquent\Model;
 
-class InitiateOrderActionPaymentAction extends BaseOrderAction
+class InitiateOrderPaymentAction extends BaseOrderAction
 {
     use UtilitiesTrait;
 
@@ -44,20 +44,22 @@ class InitiateOrderActionPaymentAction extends BaseOrderAction
      * @throws ResourceNotFoundException
      * @throws BadRequestException
      */
-    public function execute(CheckoutPaymentDto $checkoutPaymentDto): PaymentResponseDto
+    public function execute(OrderPaymentDto $orderPaymentDto): PaymentResponseDto
     {
         $order = $this->orderRepository->findPendingOrder(auth()->user()->id);
 
         throw_if(! $order, ResourceNotFoundException::class, 'No order is in progress');
 
-        $orderPaymentDto = $this->buildOrderPaymentDto($order, $checkoutPaymentDto);
-        $gateway = $this->getGateway($orderPaymentDto->getCurrency());
+        $buildOrderPaymentDto = $this->buildOrderPaymentDto($order, $orderPaymentDto->getCardData());
+
+        $gateway = $this->getGateway($buildOrderPaymentDto->getCurrency());
+
         $paymentGateway = PaymentGateway::make($gateway, $this->cardTransactionRepository);
 
-        return $paymentGateway->initiate($orderPaymentDto);
+        return $paymentGateway->initiate($buildOrderPaymentDto);
     }
 
-    private function buildOrderPaymentDto(Model $order, CheckoutPaymentDto $checkoutPaymentDto): InitiateOrderPaymentDto
+    private function buildOrderPaymentDto(Model $order, array $card): InitiateOrderPaymentDto
     {
         $orderPayment = $order->payment;
 
@@ -65,7 +67,6 @@ class InitiateOrderActionPaymentAction extends BaseOrderAction
             $orderPayment = $this->createOrderPayment($order);
         }
 
-        $card = $checkoutPaymentDto->getCardData();
         $user = auth()->user();
 
         $initiatePaymentDto = new InitiateOrderPaymentDto(

@@ -272,7 +272,7 @@ describe('verify token', function () {
 
     it('should verify token', function () {
         $verification = UserVerification::factory()->create([
-            'expires_at' => now(),
+            'expires_at' => now()->addHour(),
         ]);
 
         $payload = [
