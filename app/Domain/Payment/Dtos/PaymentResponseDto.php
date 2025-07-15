@@ -42,6 +42,11 @@ class PaymentResponseDto
         return $this->errorType;
     }
 
+    public function getRedirectionUrl(): ?string
+    {
+        return $this->redirectionUrl;
+    }
+
     public function getFee(): ?int
     {
         return $this->fee;

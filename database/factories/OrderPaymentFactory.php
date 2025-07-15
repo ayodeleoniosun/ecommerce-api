@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Domain\Payment\Constants\Currencies;
 use App\Domain\Payment\Constants\PaymentStatusEnum;
+use App\Domain\Payment\Constants\PaymentTypeEnum;
 use App\Infrastructure\Models\Order\Order;
 use App\Infrastructure\Models\Order\OrderPayment;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -32,6 +33,7 @@ class OrderPaymentFactory extends Factory
             'reference' => Str::random(),
             'amount_charged' => 12000,
             'order_amount' => 10000,
+            'payment_method' => PaymentTypeEnum::CARD->value,
             'currency' => Currencies::NGN->value,
             'delivery_amount' => 2000,
         ];

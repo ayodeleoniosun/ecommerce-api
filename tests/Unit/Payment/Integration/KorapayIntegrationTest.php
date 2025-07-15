@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Payment\Integration;
 
+use App\Domain\Payment\Constants\AuthModelEnum;
 use App\Domain\Payment\Constants\Currencies;
 use App\Domain\Payment\Constants\PaymentStatusEnum;
 use App\Domain\Payment\Dtos\CardData;
@@ -43,10 +44,8 @@ beforeEach(function () {
     $this->cardTransaction = TransactionKoraCardPayment::factory()->create([
         'order_payment_id' => $this->orderPayment->id,
     ]);
-});
 
-it('should initialize charge successfully and mock endpoint response', function () {
-    $paymentDto = new InitiateOrderPaymentDto(
+    $this->paymentDto = new InitiateOrderPaymentDto(
         amount: 1000,
         currency: Currencies::NGN->value,
         card: new CardData(
@@ -66,15 +65,17 @@ it('should initialize charge successfully and mock endpoint response', function 
         paymentId: $this->orderPayment->id,
     );
 
-    $cardTransactionMock = Mockery::mock(TransactionKoraCardPayment::class)->makePartial();
-    $cardTransactionMock->id = 1;
+    $this->cardTransactionMock = Mockery::mock(TransactionKoraCardPayment::class)->makePartial();
+    $this->cardTransactionMock->id = 1;
 
-    $apiLogCardTransactionMock = Mockery::mock(ApiLogsKoraCardPayment::class)->makePartial();
-    $apiLogCardTransactionMock->id = 1;
+    $this->apiLogCardTransactionMock = Mockery::mock(ApiLogsKoraCardPayment::class)->makePartial();
+    $this->apiLogCardTransactionMock->id = 1;
 
-    $cardTransactionMock->apiLog = $apiLogCardTransactionMock;
+    $this->cardTransactionMock->apiLog = $this->apiLogCardTransactionMock;
+});
 
-    $cardTransactionMock->shouldReceive('load')
+it('should initialize charge successfully using PIN auth model', function () {
+    $this->cardTransactionMock->shouldReceive('load')
         ->once()
         ->with('apiLog')
         ->andReturnSelf();
@@ -83,41 +84,41 @@ it('should initialize charge successfully and mock endpoint response', function 
         ->once()
         ->with(
             TransactionKoraCardPayment::class,
-            $paymentDto->toTransactionArray(),
-        )->andReturn($cardTransactionMock);
+            $this->paymentDto->toTransactionArray(),
+        )->andReturn($this->cardTransactionMock);
 
     $this->cardTransactionRepo->shouldReceive('create')
         ->once()
         ->with(
             ApiLogsKoraCardPayment::class,
-            ['transaction_id' => $cardTransactionMock->id],
-        )->andReturn($apiLogCardTransactionMock);
+            ['transaction_id' => $this->cardTransactionMock->id],
+        )->andReturn($this->apiLogCardTransactionMock);
 
     $this->cardTransactionRepo->shouldReceive('update')
         ->once()
         ->with(
             TransactionKoraCardPayment::class,
             Mockery::type('array'),
-        )->andReturn($cardTransactionMock);
+        )->andReturn($this->cardTransactionMock);
 
     $this->cardTransactionRepo->shouldReceive('update')
         ->once()
         ->with(
             ApiLogsKoraCardPayment::class,
             Mockery::type('array'),
-        )->andReturn($apiLogCardTransactionMock);
+        )->andReturn($this->apiLogCardTransactionMock);
 
     $this->korapayIntegration->shouldReceive('initializeCharge')
         ->once()
-        ->with($paymentDto)
+        ->with($this->paymentDto)
         ->andReturn([
             'status' => true,
             'message' => 'Card charged successfully',
             'data' => [
                 'amount' => 490000,
                 'amount_charged' => 490000,
-                'auth_model' => 'PIN',
-                'currency' => 'NGN',
+                'auth_model' => AuthModelEnum::PIN->value,
+                'currency' => Currencies::NGN,
                 'fee' => 0,
                 'vat' => 0,
                 'response_message' => 'Card charged successfully',
@@ -127,11 +128,132 @@ it('should initialize charge successfully and mock endpoint response', function 
             ],
         ]);
 
-    $response = $this->korapayIntegration->initiate($paymentDto);
+    $response = $this->korapayIntegration->initiate($this->paymentDto);
 
     expect($response)->toBeInstanceOf(PaymentResponseDto::class)
+        ->and($response->getStatus())->toBe(PaymentStatusEnum::SUCCESS->value)
+        ->and($response->getAuthModel())->toBe(AuthModelEnum::PIN->value)
         ->and($response->getAmountCharged())->toBe(490000)
         ->and($response->getFee())->toBe(0)
-        ->and($response->getVat())->toBe(0)
-        ->and($response->getStatus())->toBe(PaymentStatusEnum::SUCCESS->value);
+        ->and($response->getErrorType())->toBeNull()
+        ->and($response->getRedirectionUrl())->toBeNull()
+        ->and($response->getVat())->toBe(0);
+});
+
+it('should initialize charge successfully using OTP auth model', function () {
+    $this->orderPayment->auth_model = AuthModelEnum::OTP->value;
+    $this->orderPayment->save();
+
+    $this->cardTransactionMock->shouldReceive('load')
+        ->once()
+        ->with('apiLog')
+        ->andReturnSelf();
+
+    $this->cardTransactionRepo->shouldReceive('create')
+        ->once()
+        ->with(
+            TransactionKoraCardPayment::class,
+            $this->paymentDto->toTransactionArray(),
+        )->andReturn($this->cardTransactionMock);
+
+    $this->cardTransactionRepo->shouldReceive('create')
+        ->once()
+        ->with(
+            ApiLogsKoraCardPayment::class,
+            ['transaction_id' => $this->cardTransactionMock->id],
+        )->andReturn($this->apiLogCardTransactionMock);
+
+    $this->cardTransactionRepo->shouldReceive('update')
+        ->once()
+        ->with(
+            TransactionKoraCardPayment::class,
+            Mockery::type('array'),
+        )->andReturn($this->cardTransactionMock);
+
+    $this->korapayIntegration->shouldReceive('initializeCharge')
+        ->once()
+        ->with($this->paymentDto)
+        ->andReturn([
+            'status' => true,
+            'message' => 'Card charged successfully',
+            'data' => [
+                'amount' => 490000,
+                'amount_charged' => 490000,
+                'auth_model' => AuthModelEnum::OTP->value,
+                'currency' => Currencies::NGN,
+                'fee' => 0,
+                'vat' => 0,
+                'response_message' => 'Card charged successfully',
+                'payment_reference' => 'KPY-12345-ref',
+                'status' => 'success',
+                'transaction_reference' => 'KPY-1234-ref',
+            ],
+        ]);
+
+    $response = $this->korapayIntegration->initiate($this->paymentDto);
+
+    expect($response)->toBeInstanceOf(PaymentResponseDto::class)
+        ->and($response->getStatus())->toBe(PaymentStatusEnum::SUCCESS->value)
+        ->and($response->getAuthModel())->toBe(AuthModelEnum::OTP->value)
+        ->and($response->getErrorType())->toBeNull()
+        ->and($response->getRedirectionUrl())->toBeNull();
+});
+
+it('should initialize charge successfully using AVS auth model', function () {
+    $this->orderPayment->auth_model = AuthModelEnum::AVS->value;
+    $this->orderPayment->save();
+
+    $this->cardTransactionMock->shouldReceive('load')
+        ->once()
+        ->with('apiLog')
+        ->andReturnSelf();
+
+    $this->cardTransactionRepo->shouldReceive('create')
+        ->once()
+        ->with(
+            TransactionKoraCardPayment::class,
+            $this->paymentDto->toTransactionArray(),
+        )->andReturn($this->cardTransactionMock);
+
+    $this->cardTransactionRepo->shouldReceive('create')
+        ->once()
+        ->with(
+            ApiLogsKoraCardPayment::class,
+            ['transaction_id' => $this->cardTransactionMock->id],
+        )->andReturn($this->apiLogCardTransactionMock);
+
+    $this->cardTransactionRepo->shouldReceive('update')
+        ->once()
+        ->with(
+            TransactionKoraCardPayment::class,
+            Mockery::type('array'),
+        )->andReturn($this->cardTransactionMock);
+
+    $this->korapayIntegration->shouldReceive('initializeCharge')
+        ->once()
+        ->with($this->paymentDto)
+        ->andReturn([
+            'status' => true,
+            'message' => 'Card charged successfully',
+            'data' => [
+                'amount' => 490000,
+                'amount_charged' => 490000,
+                'auth_model' => AuthModelEnum::AVS->value,
+                'currency' => Currencies::NGN,
+                'fee' => 0,
+                'vat' => 0,
+                'response_message' => 'Card charged successfully',
+                'payment_reference' => 'KPY-12345-ref',
+                'status' => 'success',
+                'transaction_reference' => 'KPY-1234-ref',
+            ],
+        ]);
+
+    $response = $this->korapayIntegration->initiate($this->paymentDto);
+
+    expect($response)->toBeInstanceOf(PaymentResponseDto::class)
+        ->and($response->getStatus())->toBe(PaymentStatusEnum::SUCCESS->value)
+        ->and($response->getAuthModel())->toBe(AuthModelEnum::AVS->value)
+        ->and($response->getErrorType())->toBeNull()
+        ->and($response->getRedirectionUrl())->toBeNull();
 });

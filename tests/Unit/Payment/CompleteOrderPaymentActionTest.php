@@ -45,14 +45,14 @@ beforeEach(function () {
     ]);
 
     $this->paymentResponseDto = new PaymentResponseDto(
-        amountCharged: 10000,
-        fee: 100,
-        vat: 10,
         status: PaymentStatusEnum::SUCCESS->value,
         authModel: 'PIN',
         gateway: 'korapay',
         reference: 'KPY-12345',
         responseMessage: 'Payment successful',
+        amountCharged: 10000,
+        fee: 100,
+        vat: 10,
     );
 
     $this->completeOrderPayment = new CompleteOrderPaymentAction(
