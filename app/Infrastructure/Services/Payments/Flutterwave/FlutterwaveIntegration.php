@@ -5,6 +5,7 @@ namespace App\Infrastructure\Services\Payments\Flutterwave;
 use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Domain\Payment\Constants\GatewayPrefixReference;
 use App\Domain\Payment\Dtos\InitiateOrderPaymentDto;
+use App\Domain\Payment\Dtos\PaymentAuthorizationDto;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
 use App\Domain\Payment\Interfaces\CardTransactionRepositoryInterface;
 use App\Domain\Payment\Interfaces\PaymentGatewayIntegrationInterface;
@@ -44,7 +45,7 @@ class FlutterwaveIntegration extends PaymentGatewayIntegration implements Paymen
                     'transaction_id' => $transaction->id,
                     'status' => $status,
                     'gateway_response' => $response['data']['response_message'],
-                    'gateway_transaction_id' => $response['data']['transaction_reference'],
+                    'gateway_transaction_reference' => $response['data']['transaction_reference'],
                 ],
             );
 
@@ -58,14 +59,14 @@ class FlutterwaveIntegration extends PaymentGatewayIntegration implements Paymen
         });
 
         return new PaymentResponseDto(
-            amountCharged: $response['data']['amount_charged'],
-            fee: $response['data']['fee'],
-            vat: $response['data']['vat'],
             status: $status,
             authModel: $response['data']['auth_model'],
             gateway: $this->gateway,
             reference: $response['data']['transaction_reference'],
-            responseMessage: $response['data']['response_message']
+            responseMessage: $response['data']['response_message'],
+            amountCharged: $response['data']['amount_charged'],
+            fee: $response['data']['fee'],
+            vat: $response['data']['vat']
         );
     }
 
@@ -123,5 +124,10 @@ class FlutterwaveIntegration extends PaymentGatewayIntegration implements Paymen
     public function verify(string $reference): array
     {
         // TODO: Implement verify() method.
+    }
+
+    public function authorize(PaymentAuthorizationDto $paymentAuthorizationDto): PaymentResponseDto
+    {
+        // TODO: Implement authorize() method.
     }
 }

@@ -72,7 +72,7 @@ class CheckoutAction extends BaseOrderAction
     {
         $cart = $this->userCartRepository->findPendingCart($userId);
 
-        throw_if(! $cart, ResourceNotFoundException::class, 'You do not have any existing cart');
+        throw_if(! $cart, ResourceNotFoundException::class, 'You do not have any item in your cart');
 
         return $this->orderRepository->findOrCreate($userId, $cart);
     }

@@ -25,8 +25,9 @@ class CompleteOrderPaymentAction
     public function execute(PaymentResponseDto $transactionResponse): OrderResource
     {
         $order = null;
+        $status = $transactionResponse->getStatus();
 
-        DB::transaction(function () use (&$order, $transactionResponse) {
+        DB::transaction(function () use (&$order, $transactionResponse, $status) {
             $order = $this->orderRepository->findPendingOrder(auth()->user()->id, lockForUpdate: true);
 
             if (! $order) {
@@ -37,7 +38,6 @@ class CompleteOrderPaymentAction
 
             $orderPayment = $order->payment;
             $amountCharged = $orderPayment->order_amount + $orderPayment->delivery_amount + $transactionResponse->getFee() + $transactionResponse->getVat();
-            $status = $transactionResponse->getStatus();
 
             $this->orderPaymentRepository->updateColumns(
                 $orderPayment,
@@ -59,22 +59,47 @@ class CompleteOrderPaymentAction
                     'id' => $order->id,
                     'status' => $status,
                 ]);
+
+                $cartStatus = CartStatusEnum::CHECKED_OUT->value;
+
+                $this->userCartRepository->updateColumns(
+                    $cart,
+                    ['status' => $cartStatus],
+                );
+
+                $this->userCartItemRepository->completeCartItems($cart->id, $cartStatus);
             }
-
-            $cartStatus = $status === OrderStatusEnum::SUCCESS->value ? CartStatusEnum::CHECKED_OUT->value : $cart->status;
-
-            $this->userCartRepository->updateColumns(
-                $cart,
-                ['status' => $cartStatus],
-            );
-
-            $this->userCartItemRepository->completeCartItems($cart->id, $cartStatus);
         });
 
-        $order->user->notify(new OrderCompletedNotification($order));
+        if ($status === OrderStatusEnum::SUCCESS->value) {
+            $order->user->notify(new OrderCompletedNotification($order));
+        }
 
         $record = $order->load('items', 'shipping', 'payment');
 
         return new OrderResource($record);
+    }
+
+    public function updateOrderPayment(PaymentResponseDto $transactionResponse): void
+    {
+        DB::transaction(function () use ($transactionResponse) {
+            $order = $this->orderRepository->findPendingOrder(auth()->user()->id, lockForUpdate: true);
+
+            if (! $order) {
+                return;
+            }
+
+            $orderPayment = $order->payment;
+
+            $this->orderPaymentRepository->updateColumns(
+                $orderPayment,
+                [
+                    'status' => $transactionResponse->getStatus(),
+                    'gateway' => $transactionResponse->getGateway(),
+                    'gateway_reference' => $transactionResponse->getReference(),
+                    'narration' => $transactionResponse->getResponseMessage(),
+                ],
+            );
+        });
     }
 }

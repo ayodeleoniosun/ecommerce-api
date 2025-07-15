@@ -23,6 +23,7 @@ return new class extends Migration
             $table->decimal('amount_charged', total: 10)->nullable();
             $table->string('status')->default(PaymentStatusEnum::PENDING->value);
             $table->string('payment_method')->nullable();
+            $table->string('auth_model')->nullable();
             $table->text('narration')->nullable();
             $table->string('gateway')->nullable();
             $table->string('gateway_reference')->nullable();

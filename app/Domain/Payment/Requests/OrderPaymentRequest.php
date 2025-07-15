@@ -3,8 +3,10 @@
 namespace App\Domain\Payment\Requests;
 
 use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
+use App\Domain\Payment\Constants\PaymentTypeEnum;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class OrderPaymentRequest extends FormRequest
 {
@@ -26,7 +28,14 @@ class OrderPaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'card' => ['sometimes'],
+            'payment_method' => ['required', new Enum(PaymentTypeEnum::class)],
+            'card' => ['required', 'array'],
+            'card.name' => ['required', 'string'],
+            'card.number' => ['required', 'string'],
+            'card.cvv' => ['required', 'string'],
+            'card.expiry_month' => ['required', 'string'],
+            'card.expiry_year' => ['required', 'string'],
+            'card.pin' => ['required', 'string'],
         ];
     }
 }

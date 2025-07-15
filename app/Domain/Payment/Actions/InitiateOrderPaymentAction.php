@@ -48,15 +48,38 @@ class InitiateOrderPaymentAction extends BaseOrderAction
     {
         $order = $this->orderRepository->findPendingOrder(auth()->user()->id);
 
-        throw_if(! $order, ResourceNotFoundException::class, 'No order is in progress');
+        throw_if(! $order, ResourceNotFoundException::class, 'You are yet to checkout');
 
-        $buildOrderPaymentDto = $this->buildOrderPaymentDto($order, $orderPaymentDto->getCardData());
+        $gateway = $this->getGateway($order->currency);
 
-        $gateway = $this->getGateway($buildOrderPaymentDto->getCurrency());
+        $initiateOrderPaymentDto = $this->buildOrderPaymentDto($order, $orderPaymentDto->getCardData());
+
+        $this->orderPaymentRepository->updateColumns($order->payment, [
+            'payment_method' => $orderPaymentDto->getPaymentMethod(),
+        ]);
 
         $paymentGateway = PaymentGateway::make($gateway, $this->cardTransactionRepository);
 
-        return $paymentGateway->initiate($buildOrderPaymentDto);
+        return $paymentGateway->initiate($initiateOrderPaymentDto);
+    }
+
+    private function getGateway(string $currency): string
+    {
+        $gatewayFilterData = new GatewayFilterData(
+            type: PaymentTypeEnum::CARD->value,
+            category: PaymentCategoryEnum::COLLECTION->value,
+            currency: $currency
+        );
+
+        $gatewayType = $this->gatewayTypeRepository->findGatewayType($gatewayFilterData);
+
+        $gateway = $this->gatewayRepository->findByColumn(
+            Gateway::class,
+            'id',
+            $gatewayType->primary_gateway_id,
+        );
+
+        return $gateway->slug;
     }
 
     private function buildOrderPaymentDto(Model $order, array $card): InitiateOrderPaymentDto
@@ -78,7 +101,7 @@ class InitiateOrderPaymentAction extends BaseOrderAction
                 cvv: $card['cvv'],
                 expiryMonth: $card['expiry_month'],
                 expiryYear: $card['expiry_year'],
-                pin: $card['pin'],
+                pin: $card['pin']
             ),
             customer: new CustomerData(
                 email: $user->email,
@@ -90,24 +113,5 @@ class InitiateOrderPaymentAction extends BaseOrderAction
         $initiatePaymentDto->setPaymentId($orderPayment->id);
 
         return $initiatePaymentDto;
-    }
-
-    private function getGateway(string $currency): string
-    {
-        $gatewayFilterData = new GatewayFilterData(
-            type: PaymentTypeEnum::CARD->value,
-            category: PaymentCategoryEnum::COLLECTION->value,
-            currency: $currency
-        );
-
-        $gatewayType = $this->gatewayTypeRepository->findGatewayType($gatewayFilterData);
-
-        $gateway = $this->gatewayRepository->findByColumn(
-            Gateway::class,
-            'id',
-            $gatewayType->primary_gateway_id,
-        );
-
-        return $gateway->slug;
     }
 }

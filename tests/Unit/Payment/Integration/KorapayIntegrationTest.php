@@ -121,21 +121,9 @@ it('should initialize charge successfully and mock endpoint response', function 
                 'fee' => 0,
                 'vat' => 0,
                 'response_message' => 'Card charged successfully',
-                'payment_reference' => 'KPY-JVKP3GL4X2EFX3CT',
+                'payment_reference' => 'KPY-12345-ref',
                 'status' => 'success',
                 'transaction_reference' => 'KPY-1234-ref',
-                'metadata' => [
-                    'gateway_code' => '00',
-                    'stan' => '1234',
-                    'receipt' => 'GK3773962095',
-                    'support_message' => 'Didn\'t get the OTP? Dial *322*0# on your phone (MTN, Etisalat, Airtel) Glo, use *805*0#.',
-                ],
-                'card' => [
-                    'card_type' => 'mastercard',
-                    'first_six' => '518851',
-                    'last_four' => '2975',
-                    'expiry' => '09/30',
-                ],
             ],
         ]);
 

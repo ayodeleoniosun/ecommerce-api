@@ -9,17 +9,24 @@ class OrderPaymentDto extends InitiateOrderPaymentDto
     use UtilitiesTrait;
 
     public function __construct(
-        private readonly ?array $card,
+        private readonly string $paymentMethod,
+        private readonly array $card,
     ) {}
 
     public static function fromArray(array $payload): self
     {
         return new self(
+            paymentMethod: $payload['payment_method'],
             card: $payload['card']
         );
     }
 
-    public function getCardData(): ?array
+    public function getPaymentMethod(): string
+    {
+        return $this->paymentMethod;
+    }
+
+    public function getCardData(): array
     {
         return $this->card;
     }

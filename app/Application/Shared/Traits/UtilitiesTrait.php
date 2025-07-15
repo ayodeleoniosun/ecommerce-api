@@ -2,6 +2,7 @@
 
 namespace App\Application\Shared\Traits;
 
+use App\Domain\Payment\Constants\AuthModelEnum;
 use App\Domain\Payment\Constants\PaymentStatusEnum;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -37,5 +38,14 @@ trait UtilitiesTrait
     public static function completedTransactionStatuses(): array
     {
         return [PaymentStatusEnum::FAILED->value, PaymentStatusEnum::SUCCESS->value];
+    }
+
+    public static function requiresAuthorization(string $authModel): bool
+    {
+        if ($authModel === AuthModelEnum::PIN->value) {
+            return false;
+        }
+
+        return true;
     }
 }
