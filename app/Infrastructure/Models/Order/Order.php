@@ -5,7 +5,7 @@ namespace App\Infrastructure\Models\Order;
 use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\User\User;
-use Database\Factories\OrderFactory;
+use Database\Factories\Order\OrderFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

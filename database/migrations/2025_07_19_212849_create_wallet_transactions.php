@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('wallet_id')->constrained('wallets')->nullOnDelete();
             $table->decimal('amount', total: 10);
+            $table->string('type');
             $table->timestamps();
             $table->softDeletes();
         });

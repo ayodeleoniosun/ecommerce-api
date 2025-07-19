@@ -3,7 +3,7 @@
 namespace App\Infrastructure\Models\Payment\Integration\Korapay;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
-use Database\Factories\TransactionKoraCardPaymentFactory;
+use Database\Factories\Payment\Integration\Korapay\TransactionKoraCardPaymentFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;

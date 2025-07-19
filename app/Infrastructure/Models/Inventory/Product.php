@@ -7,7 +7,7 @@ use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Cart\Wishlist;
 use App\Infrastructure\Models\Order\Order;
 use App\Infrastructure\Models\User\User;
-use Database\Factories\ProductFactory;
+use Database\Factories\Inventory\ProductFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

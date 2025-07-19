@@ -3,7 +3,7 @@
 namespace App\Infrastructure\Models\Order;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
-use Database\Factories\OrderPaymentFactory;
+use Database\Factories\Order\OrderPaymentFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

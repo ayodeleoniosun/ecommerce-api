@@ -3,7 +3,7 @@
 namespace App\Infrastructure\Models\Vendor;
 
 use App\Infrastructure\Models\User\User;
-use Database\Factories\VendorBusinessInformationFactory;
+use Database\Factories\Vendor\VendorBusinessInformationFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

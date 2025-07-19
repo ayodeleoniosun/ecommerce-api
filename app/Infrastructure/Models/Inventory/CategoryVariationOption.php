@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Models\Inventory;
 
-use Database\Factories\CategoryVariationOptionFactory;
+use Database\Factories\Inventory\CategoryVariationOptionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

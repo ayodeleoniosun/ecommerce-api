@@ -3,7 +3,7 @@
 namespace App\Infrastructure\Models\Inventory;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
-use Database\Factories\CategoryFactory;
+use Database\Factories\Inventory\CategoryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;

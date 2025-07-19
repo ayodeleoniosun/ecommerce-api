@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Models\Inventory;
 
-use Database\Factories\ProductImageFactory;
+use Database\Factories\Inventory\ProductImageFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

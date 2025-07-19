@@ -4,7 +4,7 @@ namespace App\Infrastructure\Models\Vendor;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Infrastructure\Models\User\User;
-use Database\Factories\VendorPaymentInformationFactory;
+use Database\Factories\Vendor\VendorPaymentInformationFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

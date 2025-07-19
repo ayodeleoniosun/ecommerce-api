@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Models\User;
 
-use Database\Factories\PasswordResetTokenFactory;
+use Database\Factories\User\PasswordResetTokenFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

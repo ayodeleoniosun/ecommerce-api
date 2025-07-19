@@ -3,7 +3,7 @@
 namespace App\Infrastructure\Models\Payment;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
-use Database\Factories\GatewayFactory;
+use Database\Factories\Payment\GatewayFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;

@@ -4,7 +4,7 @@ namespace App\Infrastructure\Models\Shipping\Address;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Infrastructure\Models\Shipping\PickupStation\PickupStation;
-use Database\Factories\StateFactory;
+use Database\Factories\Shipping\Address\StateFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

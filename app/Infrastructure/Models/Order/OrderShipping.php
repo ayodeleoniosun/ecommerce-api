@@ -6,7 +6,7 @@ use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Infrastructure\Models\Shipping\Address\City;
 use App\Infrastructure\Models\Shipping\Address\Country;
 use App\Infrastructure\Models\Shipping\Address\State;
-use Database\Factories\OrderShippingFactory;
+use Database\Factories\Order\OrderShippingFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

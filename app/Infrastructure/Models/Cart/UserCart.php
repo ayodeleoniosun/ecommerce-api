@@ -3,7 +3,7 @@
 namespace App\Infrastructure\Models\Cart;
 
 use App\Infrastructure\Models\User\User;
-use Database\Factories\UserCartFactory;
+use Database\Factories\Cart\UserCartFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

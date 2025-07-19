@@ -3,7 +3,7 @@
 namespace App\Infrastructure\Models\Inventory;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
-use Database\Factories\ProductItemFactory;
+use Database\Factories\Inventory\ProductItemFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -50,14 +50,14 @@ class ProductItem extends Model
         });
     }
 
-    public function images(): HasMany
-    {
-        return $this->hasMany(ProductImage::class, 'product_item_id', 'id');
-    }
-
     protected static function newFactory(): ProductItemFactory
     {
         return ProductItemFactory::new();
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(ProductImage::class, 'product_item_id', 'id');
     }
 
     public function product(): BelongsTo

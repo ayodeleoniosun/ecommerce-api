@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Models\User;
 
-use Database\Factories\UserVerificationFactory;
+use Database\Factories\User\UserVerificationFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

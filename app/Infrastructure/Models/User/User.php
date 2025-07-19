@@ -8,7 +8,7 @@ use App\Infrastructure\Models\Cart\Wishlist;
 use App\Infrastructure\Models\Inventory\Product;
 use App\Infrastructure\Models\Order\Order;
 use App\Infrastructure\Models\Shipping\Address\CustomerShippingAddress;
-use Database\Factories\UserFactory;
+use Database\Factories\User\UserFactory;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

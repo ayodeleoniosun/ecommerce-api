@@ -3,7 +3,7 @@
 namespace App\Infrastructure\Models\Inventory;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
-use Database\Factories\CategoryVariationFactory;
+use Database\Factories\Inventory\CategoryVariationFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -33,14 +33,14 @@ class CategoryVariation extends Model
         });
     }
 
-    public function options(): HasMany
-    {
-        return $this->hasMany(CategoryVariationOption::class, 'variation_id', 'id');
-    }
-
     protected static function newFactory(): CategoryVariationFactory
     {
         return CategoryVariationFactory::new();
+    }
+
+    public function options(): HasMany
+    {
+        return $this->hasMany(CategoryVariationOption::class, 'variation_id', 'id');
     }
 
     public function category(): BelongsTo
