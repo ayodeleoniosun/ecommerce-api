@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Auth;
 
-use App\Application\Shared\Enum\UserStatusEnum;
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Auth\Actions\LoginUserAction;
+use App\Domain\Auth\Enums\UserStatusEnum;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Infrastructure\Models\User\User;
 use Mockery;

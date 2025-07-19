@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\Shared\Enum;
+namespace App\Domain\Shipping\Enums;
 
 enum AddressTypeEnum: string
 {

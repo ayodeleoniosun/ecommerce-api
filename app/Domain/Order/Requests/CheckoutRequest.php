@@ -2,10 +2,10 @@
 
 namespace App\Domain\Order\Requests;
 
-use App\Application\Shared\Enum\DeliveryTypeEnum;
 use App\Application\Shared\Responses\ApiResponse;
 use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
-use App\Domain\Payment\Constants\PaymentTypeEnum;
+use App\Domain\Payment\Enums\PaymentTypeEnum;
+use App\Domain\Shipping\Enums\DeliveryTypeEnum;
 use App\Infrastructure\Models\Shipping\Address\CustomerShippingAddress;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;

@@ -3,7 +3,7 @@
 namespace App\Domain\Payment\Requests;
 
 use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
-use App\Domain\Payment\Constants\PaymentTypeEnum;
+use App\Domain\Payment\Enums\PaymentTypeEnum;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Domain\Payment\Constants;
+namespace App\Application\Shared\Enum;
 
-enum Currencies: string
+enum CurrencyEnum: string
 {
     case NGN = 'NGN';
     case USD = 'USD';

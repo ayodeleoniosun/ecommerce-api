@@ -2,9 +2,9 @@
 
 namespace App\Domain\Shipping\Requests\ShippingAddress;
 
-use App\Application\Shared\Enum\AddressTypeEnum;
 use App\Application\Shared\Responses\ApiResponse;
 use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
+use App\Domain\Shipping\Enums\AddressTypeEnum;
 use App\Infrastructure\Models\Shipping\Address\City;
 use App\Infrastructure\Models\Shipping\Address\Country;
 use App\Infrastructure\Models\Shipping\Address\CustomerShippingAddress;

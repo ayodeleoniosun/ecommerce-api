@@ -2,16 +2,16 @@
 
 namespace Tests\Unit\Order;
 
-use App\Application\Shared\Enum\CartOperationEnum;
-use App\Application\Shared\Enum\ProductStatusEnum;
+use App\Application\Shared\Enum\CurrencyEnum;
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Order\Actions\Cart\AddToCartAction;
 use App\Domain\Order\Dtos\CartDto;
+use App\Domain\Order\Enums\CartOperationEnum;
 use App\Domain\Order\Interfaces\Cart\UserCartItemRepositoryInterface;
 use App\Domain\Order\Interfaces\Cart\UserCartRepositoryInterface;
 use App\Domain\Order\Resources\Cart\CartResource;
-use App\Domain\Payment\Constants\Currencies;
+use App\Domain\Vendor\Products\Enums\ProductStatusEnum;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Cart\UserCartItem;
 use App\Infrastructure\Models\Inventory\ProductItem;
@@ -42,7 +42,7 @@ beforeEach(function () {
     $this->addCartDto = new CartDto(
         $this->productItem->uuid,
         $this->productItem->id,
-        Currencies::NGN->value,
+        CurrencyEnum::NGN->value,
         5,
         CartOperationEnum::INCREMENT->value,
         $this->user->id

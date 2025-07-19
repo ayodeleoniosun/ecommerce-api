@@ -2,13 +2,13 @@
 
 namespace Tests\Unit\Payment\Integration;
 
-use App\Domain\Payment\Constants\AuthModelEnum;
-use App\Domain\Payment\Constants\Currencies;
-use App\Domain\Payment\Constants\PaymentStatusEnum;
+use App\Application\Shared\Enum\CurrencyEnum;
 use App\Domain\Payment\Dtos\CardData;
 use App\Domain\Payment\Dtos\CustomerData;
 use App\Domain\Payment\Dtos\InitiateOrderPaymentDto;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
+use App\Domain\Payment\Enums\AuthModelEnum;
+use App\Domain\Payment\Enums\PaymentStatusEnum;
 use App\Domain\Payment\Interfaces\CardTransactionRepositoryInterface;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Order\Order;
@@ -47,7 +47,7 @@ beforeEach(function () {
 
     $this->paymentDto = new InitiateOrderPaymentDto(
         amount: 1000,
-        currency: Currencies::NGN->value,
+        currency: CurrencyEnum::NGN->value,
         card: new CardData(
             name: fake()->firstName().' '.fake()->lastName(),
             number: fake()->creditCardNumber(),
@@ -118,7 +118,7 @@ it('should initialize charge successfully using PIN auth model', function () {
                 'amount' => 490000,
                 'amount_charged' => 490000,
                 'auth_model' => AuthModelEnum::PIN->value,
-                'currency' => Currencies::NGN,
+                'currency' => CurrencyEnum::NGN,
                 'fee' => 0,
                 'vat' => 0,
                 'response_message' => 'Card charged successfully',
@@ -180,7 +180,7 @@ it('should initialize charge successfully using OTP auth model', function () {
                 'amount' => 490000,
                 'amount_charged' => 490000,
                 'auth_model' => AuthModelEnum::OTP->value,
-                'currency' => Currencies::NGN,
+                'currency' => CurrencyEnum::NGN,
                 'fee' => 0,
                 'vat' => 0,
                 'response_message' => 'Card charged successfully',
@@ -239,7 +239,7 @@ it('should initialize charge successfully using AVS auth model', function () {
                 'amount' => 490000,
                 'amount_charged' => 490000,
                 'auth_model' => AuthModelEnum::AVS->value,
-                'currency' => Currencies::NGN,
+                'currency' => CurrencyEnum::NGN,
                 'fee' => 0,
                 'vat' => 0,
                 'response_message' => 'Card charged successfully',

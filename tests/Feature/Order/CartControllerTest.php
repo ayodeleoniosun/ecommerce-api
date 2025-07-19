@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\Order;
 
-use App\Application\Shared\Enum\CartOperationEnum;
-use App\Application\Shared\Enum\ProductStatusEnum;
-use App\Application\Shared\Enum\UserStatusEnum;
-use App\Domain\Payment\Constants\Currencies;
+use App\Application\Shared\Enum\CurrencyEnum;
+use App\Domain\Auth\Enums\UserStatusEnum;
+use App\Domain\Order\Enums\CartOperationEnum;
+use App\Domain\Vendor\Products\Enums\ProductStatusEnum;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Cart\UserCartItem;
 use App\Infrastructure\Models\Inventory\Product;
@@ -50,7 +50,7 @@ describe('add item to cart', function () {
             'product_item_id' => $this->productItem->uuid,
             'merged_product_item_id' => $this->productItem->id,
             'quantity' => 10,
-            'currency' => Currencies::NGN->value,
+            'currency' => CurrencyEnum::NGN->value,
             'type' => 'invalid_type',
         ];
 
@@ -67,7 +67,7 @@ describe('add item to cart', function () {
             'product_item_id' => $this->productItem->uuid,
             'merged_product_item_id' => $this->productItem->id,
             'quantity' => 7,
-            'currency' => Currencies::NGN->value,
+            'currency' => CurrencyEnum::NGN->value,
             'type' => CartOperationEnum::INCREMENT->value,
         ];
 

@@ -2,8 +2,8 @@
 
 namespace App\Domain\Payment\Actions;
 
-use App\Application\Shared\Enum\CartStatusEnum;
-use App\Application\Shared\Enum\OrderStatusEnum;
+use App\Domain\Order\Enums\CartStatusEnum;
+use App\Domain\Order\Enums\OrderStatusEnum;
 use App\Domain\Order\Interfaces\Cart\UserCartItemRepositoryInterface;
 use App\Domain\Order\Interfaces\Cart\UserCartRepositoryInterface;
 use App\Domain\Order\Interfaces\Order\OrderPaymentRepositoryInterface;

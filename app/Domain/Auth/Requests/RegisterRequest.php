@@ -2,8 +2,8 @@
 
 namespace App\Domain\Auth\Requests;
 
-use App\Application\Shared\Enum\UserTypeEnum;
 use App\Application\Shared\Responses\OverrideDefaultValidationMethodTrait;
+use App\Domain\Auth\Enums\UserTypeEnum;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;

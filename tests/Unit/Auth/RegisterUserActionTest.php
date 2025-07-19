@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Auth;
 
-use App\Application\Shared\Enum\UserTypeEnum;
 use App\Domain\Auth\Actions\RegisterUserAction;
 use App\Domain\Auth\Dtos\CreateUserDto;
+use App\Domain\Auth\Enums\UserTypeEnum;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Domain\Auth\Notifications\RegistrationCompletedNotification;
 use App\Infrastructure\Models\User\User;

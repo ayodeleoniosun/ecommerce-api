@@ -2,8 +2,8 @@
 
 namespace App\Domain\Admin\Actions\RolesAndPermissions;
 
-use App\Application\Shared\Enum\UserStatusEnum;
 use App\Application\Shared\Exceptions\BadRequestException;
+use App\Domain\Auth\Enums\UserStatusEnum;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;

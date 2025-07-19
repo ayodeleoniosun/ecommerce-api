@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Repositories\Order;
 
-use App\Application\Shared\Enum\OrderStatusEnum;
+use App\Domain\Order\Enums\OrderStatusEnum;
 use App\Domain\Order\Interfaces\Order\OrderRepositoryInterface;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Order\Order;

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Domain\Payment\Constants;
+namespace App\Domain\Payment\Enums;
 
-enum GatewayPrefixReference: string
+enum GatewayPrefixReferenceEnum: string
 {
     case KORAPAY = 'KPY-';
     case FLUTTERWAVE = 'FLW-';

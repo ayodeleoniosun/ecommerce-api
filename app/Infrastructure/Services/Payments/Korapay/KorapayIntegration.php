@@ -2,15 +2,15 @@
 
 namespace App\Infrastructure\Services\Payments\Korapay;
 
-use App\Application\Shared\Enum\OrderStatusEnum;
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Domain\Payment\Constants\AuthModelEnum;
-use App\Domain\Payment\Constants\GatewayPrefixReference;
-use App\Domain\Payment\Constants\PaymentErrorEnum;
-use App\Domain\Payment\Constants\PaymentErrorTypeEnum;
+use App\Domain\Order\Enums\OrderStatusEnum;
 use App\Domain\Payment\Dtos\InitiateOrderPaymentDto;
 use App\Domain\Payment\Dtos\PaymentAuthorizationDto;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
+use App\Domain\Payment\Enums\AuthModelEnum;
+use App\Domain\Payment\Enums\GatewayPrefixReferenceEnum;
+use App\Domain\Payment\Enums\PaymentErrorEnum;
+use App\Domain\Payment\Enums\PaymentErrorTypeEnum;
 use App\Domain\Payment\Interfaces\CardTransactionRepositoryInterface;
 use App\Domain\Payment\Interfaces\PaymentGatewayIntegrationInterface;
 use App\Infrastructure\Models\Payment\Integration\Korapay\ApiLogsKoraCardPayment;
@@ -77,27 +77,6 @@ class KorapayIntegration extends PaymentGatewayIntegration implements PaymentGat
         );
     }
 
-    private function createTransaction(InitiateOrderPaymentDto $paymentDto): TransactionKoraCardPayment
-    {
-        if (! $paymentDto->getReference()) {
-            $paymentDto->setReference(self::generateRandomCharacters(GatewayPrefixReference::KORAPAY->value));
-        }
-
-        return DB::transaction(function () use ($paymentDto) {
-            $transaction = $this->cardTransactionRepository->create(
-                TransactionKoraCardPayment::class,
-                $paymentDto->toTransactionArray(),
-            );
-
-            $this->cardTransactionRepository->create(
-                ApiLogsKoraCardPayment::class,
-                ['transaction_id' => $transaction->id],
-            );
-
-            return $transaction->load('apiLog');
-        });
-    }
-
     /**
      * @throws ConnectionException
      */
@@ -115,38 +94,6 @@ class KorapayIntegration extends PaymentGatewayIntegration implements PaymentGat
                 'authorization' => $this->secretKey,
             ],
         );
-    }
-
-    private function updateTransactionAndApiLog(
-        Model $transaction,
-        string $status,
-        array $response,
-        bool $updateTransactionOnly = false,
-    ): void {
-        DB::transaction(function () use ($transaction, $status, $response, $updateTransactionOnly) {
-            $this->cardTransactionRepository->update(
-                model: TransactionKoraCardPayment::class,
-                data: [
-                    'transaction_id' => $transaction->id,
-                    'status' => $status,
-                    'auth_model' => $response['data']['auth_model'],
-                    'gateway_response' => $response['data']['response_message'],
-                    'gateway_transaction_reference' => $response['data']['transaction_reference'],
-                ],
-            );
-
-            if ($updateTransactionOnly) {
-                return;
-            }
-
-            $this->cardTransactionRepository->update(
-                model: ApiLogsKoraCardPayment::class,
-                data: [
-                    'transaction_id' => $transaction->apiLog->id,
-                    'charge_response' => json_encode($response),
-                ],
-            );
-        });
     }
 
     public function authorize(PaymentAuthorizationDto $paymentAuthorizationDto): PaymentResponseDto
@@ -231,5 +178,58 @@ class KorapayIntegration extends PaymentGatewayIntegration implements PaymentGat
     public function verify(string $reference): array
     {
         return [];
+    }
+
+    private function createTransaction(InitiateOrderPaymentDto $paymentDto): TransactionKoraCardPayment
+    {
+        if (! $paymentDto->getReference()) {
+            $paymentDto->setReference(self::generateRandomCharacters(GatewayPrefixReferenceEnum::KORAPAY->value));
+        }
+
+        return DB::transaction(function () use ($paymentDto) {
+            $transaction = $this->cardTransactionRepository->create(
+                TransactionKoraCardPayment::class,
+                $paymentDto->toTransactionArray(),
+            );
+
+            $this->cardTransactionRepository->create(
+                ApiLogsKoraCardPayment::class,
+                ['transaction_id' => $transaction->id],
+            );
+
+            return $transaction->load('apiLog');
+        });
+    }
+
+    private function updateTransactionAndApiLog(
+        Model $transaction,
+        string $status,
+        array $response,
+        bool $updateTransactionOnly = false,
+    ): void {
+        DB::transaction(function () use ($transaction, $status, $response, $updateTransactionOnly) {
+            $this->cardTransactionRepository->update(
+                model: TransactionKoraCardPayment::class,
+                data: [
+                    'transaction_id' => $transaction->id,
+                    'status' => $status,
+                    'auth_model' => $response['data']['auth_model'],
+                    'gateway_response' => $response['data']['response_message'],
+                    'gateway_transaction_reference' => $response['data']['transaction_reference'],
+                ],
+            );
+
+            if ($updateTransactionOnly) {
+                return;
+            }
+
+            $this->cardTransactionRepository->update(
+                model: ApiLogsKoraCardPayment::class,
+                data: [
+                    'transaction_id' => $transaction->apiLog->id,
+                    'charge_response' => json_encode($response),
+                ],
+            );
+        });
     }
 }

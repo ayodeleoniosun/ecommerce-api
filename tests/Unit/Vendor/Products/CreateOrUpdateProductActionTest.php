@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Vendor\Products;
 
-use App\Application\Shared\Enum\ProductStatusEnum;
 use App\Domain\Vendor\Products\Actions\CreateOrUpdateProductAction;
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductDto;
+use App\Domain\Vendor\Products\Enums\ProductStatusEnum;
 use App\Domain\Vendor\Products\Interfaces\ProductRepositoryInterface;
 use App\Domain\Vendor\Products\Resource\AllProductResource;
 use App\Infrastructure\Models\Inventory\Category;

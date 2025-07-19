@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Vendor\Products;
 
-use App\Application\Shared\Enum\ProductStatusEnum;
-use App\Domain\Payment\Constants\Currencies;
+use App\Application\Shared\Enum\CurrencyEnum;
 use App\Domain\Vendor\Products\Actions\CreateOrUpdateProductItemAction;
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductItemDto;
+use App\Domain\Vendor\Products\Enums\ProductStatusEnum;
 use App\Domain\Vendor\Products\Resource\ProductItemResource;
 use App\Infrastructure\Models\Inventory\CategoryVariationOption;
 use App\Infrastructure\Models\Inventory\Product;
@@ -24,7 +24,7 @@ beforeEach(function () {
         $this->product->id,
         $this->categoryVariationOption->id,
         10000,
-        Currencies::NGN->value,
+        CurrencyEnum::NGN->value,
         20
     );
 

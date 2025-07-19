@@ -2,7 +2,7 @@
 
 namespace Database\Factories\User;
 
-use App\Application\Shared\Enum\UserStatusEnum;
+use App\Domain\Auth\Enums\UserStatusEnum;
 use App\Infrastructure\Models\User\User;
 use App\Infrastructure\Models\User\UserVerification;
 use Carbon\Carbon;

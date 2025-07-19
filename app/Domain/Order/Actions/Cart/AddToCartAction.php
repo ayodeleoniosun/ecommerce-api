@@ -2,10 +2,10 @@
 
 namespace App\Domain\Order\Actions\Cart;
 
-use App\Application\Shared\Enum\CartOperationEnum;
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Order\Dtos\CartDto;
+use App\Domain\Order\Enums\CartOperationEnum;
 use App\Domain\Order\Interfaces\Cart\UserCartItemRepositoryInterface;
 use App\Domain\Order\Interfaces\Cart\UserCartRepositoryInterface;
 use App\Domain\Order\Resources\Cart\CartResource;

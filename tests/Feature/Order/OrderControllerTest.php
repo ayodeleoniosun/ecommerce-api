@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\Order;
 
-use App\Application\Shared\Enum\DeliveryTypeEnum;
-use App\Application\Shared\Enum\OrderStatusEnum;
-use App\Application\Shared\Enum\UserStatusEnum;
-use App\Domain\Payment\Constants\PaymentTypeEnum;
+use App\Domain\Auth\Enums\UserStatusEnum;
+use App\Domain\Order\Enums\OrderStatusEnum;
+use App\Domain\Payment\Enums\PaymentTypeEnum;
+use App\Domain\Shipping\Enums\DeliveryTypeEnum;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Cart\UserCartItem;
 use App\Infrastructure\Models\Inventory\Product;

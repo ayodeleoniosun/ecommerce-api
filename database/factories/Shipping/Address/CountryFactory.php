@@ -2,8 +2,8 @@
 
 namespace Database\Factories\Shipping\Address;
 
+use App\Application\Shared\Enum\CurrencyEnum;
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Domain\Payment\Constants\Currencies;
 use App\Infrastructure\Models\Shipping\Address\Country;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -28,7 +28,7 @@ class CountryFactory extends Factory
             'name' => fake()->country(),
             'code' => fake()->countryCode(),
             'phone_code' => '234',
-            'currency_code' => Currencies::NGN->value,
+            'currency_code' => CurrencyEnum::NGN->value,
             'currency' => 'Nigerian Naira',
             'currency_symbol' => '₦',
         ];

@@ -2,8 +2,8 @@
 
 namespace App\Application\Shared\Traits;
 
-use App\Domain\Payment\Constants\AuthModelEnum;
-use App\Domain\Payment\Constants\PaymentStatusEnum;
+use App\Domain\Payment\Enums\AuthModelEnum;
+use App\Domain\Payment\Enums\PaymentStatusEnum;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 

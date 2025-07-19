@@ -3,8 +3,8 @@
 namespace Database\Factories\Payment;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Domain\Payment\Constants\PaymentCategoryEnum;
-use App\Domain\Payment\Constants\PaymentTypeEnum;
+use App\Domain\Payment\Enums\PaymentCategoryEnum;
+use App\Domain\Payment\Enums\PaymentTypeEnum;
 use App\Infrastructure\Models\Payment\Gateway;
 use App\Infrastructure\Models\Payment\GatewayConfiguration;
 use Illuminate\Database\Eloquent\Factories\Factory;

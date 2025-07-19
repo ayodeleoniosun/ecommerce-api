@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Vendor;
 
-use App\Application\Shared\Enum\UserStatusEnum;
+use App\Domain\Auth\Enums\UserStatusEnum;
 use App\Infrastructure\Models\User\User;
 use App\Infrastructure\Models\Vendor\VendorBusinessInformation;
 use App\Infrastructure\Models\Vendor\VendorContactInformation;

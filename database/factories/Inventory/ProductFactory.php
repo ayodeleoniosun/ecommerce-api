@@ -2,8 +2,8 @@
 
 namespace Database\Factories\Inventory;
 
-use App\Application\Shared\Enum\ProductStatusEnum;
 use App\Application\Shared\Traits\UtilitiesTrait;
+use App\Domain\Vendor\Products\Enums\ProductStatusEnum;
 use App\Infrastructure\Models\Inventory\Category;
 use App\Infrastructure\Models\Inventory\Product;
 use App\Infrastructure\Models\User\User;

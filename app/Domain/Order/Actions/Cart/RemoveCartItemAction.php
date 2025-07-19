@@ -2,8 +2,8 @@
 
 namespace App\Domain\Order\Actions\Cart;
 
-use App\Application\Shared\Enum\CartStatusEnum;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
+use App\Domain\Order\Enums\CartStatusEnum;
 use App\Domain\Order\Interfaces\Cart\UserCartItemRepositoryInterface;
 use App\Infrastructure\Models\Cart\UserCartItem;
 

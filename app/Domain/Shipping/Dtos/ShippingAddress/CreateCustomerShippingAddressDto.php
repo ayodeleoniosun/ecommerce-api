@@ -2,8 +2,8 @@
 
 namespace App\Domain\Shipping\Dtos\ShippingAddress;
 
-use App\Application\Shared\Enum\AddressTypeEnum;
 use App\Application\Shared\Traits\UtilitiesTrait;
+use App\Domain\Shipping\Enums\AddressTypeEnum;
 
 class CreateCustomerShippingAddressDto
 {

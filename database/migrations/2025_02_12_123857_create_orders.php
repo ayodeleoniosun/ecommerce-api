@@ -1,6 +1,6 @@
 <?php
 
-use App\Application\Shared\Enum\OrderStatusEnum;
+use App\Domain\Order\Enums\OrderStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

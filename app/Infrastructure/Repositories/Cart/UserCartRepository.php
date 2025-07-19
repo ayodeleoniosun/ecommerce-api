@@ -2,8 +2,8 @@
 
 namespace App\Infrastructure\Repositories\Cart;
 
-use App\Application\Shared\Enum\CartStatusEnum;
 use App\Domain\Order\Dtos\CartDto;
+use App\Domain\Order\Enums\CartStatusEnum;
 use App\Domain\Order\Interfaces\Cart\UserCartRepositoryInterface;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Repositories\BaseRepository;

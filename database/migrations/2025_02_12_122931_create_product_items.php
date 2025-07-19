@@ -1,6 +1,6 @@
 <?php
 
-use App\Application\Shared\Enum\ProductStatusEnum;
+use App\Domain\Vendor\Products\Enums\ProductStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Domain\Payment\Constants\Currencies;
-use App\Domain\Payment\Constants\PaymentCategoryEnum;
-use App\Domain\Payment\Constants\PaymentTypeEnum;
+use App\Application\Shared\Enum\CurrencyEnum;
+use App\Domain\Payment\Enums\PaymentCategoryEnum;
+use App\Domain\Payment\Enums\PaymentTypeEnum;
 use App\Infrastructure\Models\Payment\Gateway;
 use App\Infrastructure\Models\Payment\GatewayConfiguration;
 use App\Infrastructure\Models\Payment\GatewayType;
@@ -29,7 +29,7 @@ class GatewaySeeder extends SeederOnce
             GatewayConfiguration::create([
                 'type' => PaymentTypeEnum::CARD->value,
                 'category' => PaymentCategoryEnum::COLLECTION->value,
-                'currency' => Currencies::NGN->value,
+                'currency' => CurrencyEnum::NGN->value,
                 'gateway_id' => $gateway->id,
                 'settings' => json_encode([
                     'transaction_limit' => [
@@ -43,7 +43,7 @@ class GatewaySeeder extends SeederOnce
         GatewayType::create([
             'type' => PaymentTypeEnum::CARD->value,
             'category' => PaymentCategoryEnum::COLLECTION->value,
-            'currency' => Currencies::NGN->value,
+            'currency' => CurrencyEnum::NGN->value,
             'primary_gateway_id' => 1,
             'secondary_gateway_id' => 2,
         ]);

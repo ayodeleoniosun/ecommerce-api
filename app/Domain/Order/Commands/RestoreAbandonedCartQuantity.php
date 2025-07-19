@@ -2,7 +2,7 @@
 
 namespace App\Domain\Order\Commands;
 
-use App\Application\Shared\Enum\CartStatusEnum;
+use App\Domain\Order\Enums\CartStatusEnum;
 use App\Infrastructure\Models\Cart\UserCartItem;
 use Illuminate\Console\Command;
 

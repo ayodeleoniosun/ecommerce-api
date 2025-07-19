@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Vendor\Products;
 
-use App\Application\Shared\Enum\ProductStatusEnum;
 use App\Domain\Vendor\Products\Actions\GetVendorProductsAction;
+use App\Domain\Vendor\Products\Enums\ProductStatusEnum;
 use App\Domain\Vendor\Products\Resource\ProductResourceCollection;
 use App\Infrastructure\Models\Inventory\Category;
 use App\Infrastructure\Models\Inventory\CategoryVariationOption;

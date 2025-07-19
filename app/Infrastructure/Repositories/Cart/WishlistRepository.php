@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Repositories\Cart;
 
-use App\Application\Shared\Enum\WishlistStatusEnum;
+use App\Domain\Order\Enums\WishlistStatusEnum;
 use App\Domain\Order\Interfaces\Cart\WishlistRepositoryInterface;
 use App\Infrastructure\Models\Cart\Wishlist;
 use App\Infrastructure\Repositories\BaseRepository;

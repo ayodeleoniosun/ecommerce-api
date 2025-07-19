@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Application\Shared\Enum\UserStatusEnum;
-use App\Application\Shared\Enum\UserTypeEnum;
+use App\Domain\Auth\Enums\UserStatusEnum;
+use App\Domain\Auth\Enums\UserTypeEnum;
 use App\Domain\Auth\Notifications\RegistrationCompletedNotification;
 use App\Infrastructure\Models\User\PasswordResetToken;
 use App\Infrastructure\Models\User\User;

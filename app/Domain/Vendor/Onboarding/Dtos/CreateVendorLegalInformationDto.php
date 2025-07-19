@@ -2,7 +2,7 @@
 
 namespace App\Domain\Vendor\Onboarding\Dtos;
 
-use App\Application\Shared\Enum\UserStatusEnum;
+use App\Domain\Auth\Enums\UserStatusEnum;
 use App\Domain\Vendor\Onboarding\Requests\VendorLegalInformationRequest;
 use Illuminate\Http\UploadedFile;
 

@@ -2,22 +2,22 @@
 
 namespace App\Domain\Payment\Actions;
 
-use App\Application\Shared\Enum\OrderStatusEnum;
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Domain\Order\Actions\Order\BaseOrderAction;
+use App\Domain\Order\Enums\OrderStatusEnum;
 use App\Domain\Order\Interfaces\Order\OrderItemRepositoryInterface;
 use App\Domain\Order\Interfaces\Order\OrderPaymentRepositoryInterface;
 use App\Domain\Order\Interfaces\Order\OrderRepositoryInterface;
-use App\Domain\Payment\Constants\PaymentCategoryEnum;
-use App\Domain\Payment\Constants\PaymentTypeEnum;
 use App\Domain\Payment\Dtos\CardData;
 use App\Domain\Payment\Dtos\CustomerData;
 use App\Domain\Payment\Dtos\GatewayFilterData;
 use App\Domain\Payment\Dtos\InitiateOrderPaymentDto;
 use App\Domain\Payment\Dtos\OrderPaymentDto;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
+use App\Domain\Payment\Enums\PaymentCategoryEnum;
+use App\Domain\Payment\Enums\PaymentTypeEnum;
 use App\Domain\Payment\Interfaces\CardTransactionRepositoryInterface;
 use App\Domain\Payment\Interfaces\GatewayRepositoryInterface;
 use App\Domain\Payment\Interfaces\GatewayTypeRepositoryInterface;

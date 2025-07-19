@@ -2,8 +2,8 @@
 
 namespace App\Domain\Order\Actions\Cart\Wishlist;
 
-use App\Application\Shared\Enum\WishlistStatusEnum;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
+use App\Domain\Order\Enums\WishlistStatusEnum;
 use App\Domain\Order\Interfaces\Cart\WishlistRepositoryInterface;
 use App\Infrastructure\Models\Cart\Wishlist;
 

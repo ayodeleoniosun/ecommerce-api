@@ -1,6 +1,6 @@
 <?php
 
-use App\Application\Shared\Enum\WishlistStatusEnum;
+use App\Domain\Order\Enums\WishlistStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

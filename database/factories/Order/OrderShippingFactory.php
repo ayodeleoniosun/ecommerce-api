@@ -2,8 +2,8 @@
 
 namespace Database\Factories\Order;
 
-use App\Application\Shared\Enum\DeliveryTypeEnum;
 use App\Application\Shared\Traits\UtilitiesTrait;
+use App\Domain\Shipping\Enums\DeliveryTypeEnum;
 use App\Infrastructure\Models\Order\Order;
 use App\Infrastructure\Models\Order\OrderShipping;
 use App\Infrastructure\Models\Shipping\Address\City;

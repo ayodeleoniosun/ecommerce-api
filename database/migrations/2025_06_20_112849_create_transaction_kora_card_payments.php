@@ -1,6 +1,6 @@
 <?php
 
-use App\Domain\Payment\Constants\PaymentStatusEnum;
+use App\Domain\Payment\Enums\PaymentStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Payment\Constants;
+namespace App\Domain\Payment\Enums;
 
 enum PaymentErrorTypeEnum: string
 {

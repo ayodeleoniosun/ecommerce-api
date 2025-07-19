@@ -2,8 +2,8 @@
 
 namespace Database\Factories\User;
 
-use App\Application\Shared\Enum\UserStatusEnum;
 use App\Application\Shared\Traits\UtilitiesTrait;
+use App\Domain\Auth\Enums\UserStatusEnum;
 use App\Infrastructure\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;

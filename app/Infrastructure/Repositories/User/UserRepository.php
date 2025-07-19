@@ -2,8 +2,8 @@
 
 namespace App\Infrastructure\Repositories\User;
 
-use App\Application\Shared\Enum\UserStatusEnum;
 use App\Domain\Auth\Dtos\CreateUserDto;
+use App\Domain\Auth\Enums\UserStatusEnum;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface;
 use App\Infrastructure\Models\User\User;

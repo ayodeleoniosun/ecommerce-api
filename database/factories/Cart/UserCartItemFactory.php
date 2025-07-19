@@ -2,8 +2,8 @@
 
 namespace Database\Factories\Cart;
 
-use App\Application\Shared\Enum\CartStatusEnum;
 use App\Application\Shared\Traits\UtilitiesTrait;
+use App\Domain\Order\Enums\CartStatusEnum;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Cart\UserCartItem;
 use App\Infrastructure\Models\Inventory\ProductItem;

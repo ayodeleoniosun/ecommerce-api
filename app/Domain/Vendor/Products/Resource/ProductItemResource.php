@@ -2,7 +2,7 @@
 
 namespace App\Domain\Vendor\Products\Resource;
 
-use App\Application\Shared\Enum\ProductStatusEnum;
+use App\Domain\Vendor\Products\Enums\ProductStatusEnum;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

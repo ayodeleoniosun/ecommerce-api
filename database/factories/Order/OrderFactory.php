@@ -2,9 +2,9 @@
 
 namespace Database\Factories\Order;
 
-use App\Application\Shared\Enum\OrderStatusEnum;
+use App\Application\Shared\Enum\CurrencyEnum;
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Domain\Payment\Constants\Currencies;
+use App\Domain\Order\Enums\OrderStatusEnum;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Order\Order;
 use App\Infrastructure\Models\User\User;
@@ -30,7 +30,7 @@ class OrderFactory extends Factory
         return [
             'uuid' => self::generateUUID(),
             'reference' => Str::random(),
-            'currency' => Currencies::NGN->value,
+            'currency' => CurrencyEnum::NGN->value,
             'cart_id' => UserCart::factory()->create()->id,
             'user_id' => User::factory()->create()->id,
         ];

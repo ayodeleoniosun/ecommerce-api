@@ -2,9 +2,9 @@
 
 namespace App\Domain\Order\Resources\Order;
 
-use App\Application\Shared\Enum\DeliveryTypeEnum;
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Domain\Payment\Constants\PaymentStatusEnum;
+use App\Domain\Payment\Enums\PaymentStatusEnum;
+use App\Domain\Shipping\Enums\DeliveryTypeEnum;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

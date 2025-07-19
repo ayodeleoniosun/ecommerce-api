@@ -3,10 +3,10 @@
 namespace App\Infrastructure\Services\Payments\Flutterwave;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Domain\Payment\Constants\GatewayPrefixReference;
 use App\Domain\Payment\Dtos\InitiateOrderPaymentDto;
 use App\Domain\Payment\Dtos\PaymentAuthorizationDto;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
+use App\Domain\Payment\Enums\GatewayPrefixReferenceEnum;
 use App\Domain\Payment\Interfaces\CardTransactionRepositoryInterface;
 use App\Domain\Payment\Interfaces\PaymentGatewayIntegrationInterface;
 use App\Infrastructure\Models\Payment\Integration\Flutterwave\ApiLogsFlutterwaveCardPayment;
@@ -70,9 +70,19 @@ class FlutterwaveIntegration extends PaymentGatewayIntegration implements Paymen
         );
     }
 
+    public function verify(string $reference): array
+    {
+        // TODO: Implement verify() method.
+    }
+
+    public function authorize(PaymentAuthorizationDto $paymentAuthorizationDto): PaymentResponseDto
+    {
+        // TODO: Implement authorize() method.
+    }
+
     private function createTransaction(InitiateOrderPaymentDto $paymentDto): TransactionFlutterwaveCardPayment
     {
-        $paymentDto->setReference(self::generateRandomCharacters(GatewayPrefixReference::FLUTTERWAVE->value));
+        $paymentDto->setReference(self::generateRandomCharacters(GatewayPrefixReferenceEnum::FLUTTERWAVE->value));
 
         return DB::transaction(function () use ($paymentDto) {
             $transaction = $this->cardTransactionRepository->create(
@@ -119,15 +129,5 @@ class FlutterwaveIntegration extends PaymentGatewayIntegration implements Paymen
                 'authorization' => $this->secretKey,
             ],
         );
-    }
-
-    public function verify(string $reference): array
-    {
-        // TODO: Implement verify() method.
-    }
-
-    public function authorize(PaymentAuthorizationDto $paymentAuthorizationDto): PaymentResponseDto
-    {
-        // TODO: Implement authorize() method.
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Application\Middleware;
 
-use App\Application\Shared\Enum\UserStatusEnum;
 use App\Application\Shared\Responses\ApiResponse;
+use App\Domain\Auth\Enums\UserStatusEnum;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
