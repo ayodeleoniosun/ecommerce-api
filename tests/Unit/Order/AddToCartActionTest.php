@@ -6,10 +6,10 @@ use App\Application\Shared\Enum\CartOperationEnum;
 use App\Application\Shared\Enum\ProductStatusEnum;
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
-use App\Domain\Order\Actions\AddToCartAction;
-use App\Domain\Order\Dtos\AddToCartDto;
-use App\Domain\Order\Interfaces\UserCartItemRepositoryInterface;
-use App\Domain\Order\Interfaces\UserCartRepositoryInterface;
+use App\Domain\Order\Actions\Cart\AddToCartAction;
+use App\Domain\Order\Dtos\CartDto;
+use App\Domain\Order\Interfaces\Cart\UserCartItemRepositoryInterface;
+use App\Domain\Order\Interfaces\Cart\UserCartRepositoryInterface;
 use App\Domain\Order\Resources\Cart\CartResource;
 use App\Domain\Payment\Constants\Currencies;
 use App\Infrastructure\Models\Cart\UserCart;
@@ -39,7 +39,7 @@ beforeEach(function () {
         'product_item_id' => $this->productItem->id,
     ]);
 
-    $this->addCartDto = new AddToCartDto(
+    $this->addCartDto = new CartDto(
         $this->productItem->uuid,
         $this->productItem->id,
         Currencies::NGN->value,

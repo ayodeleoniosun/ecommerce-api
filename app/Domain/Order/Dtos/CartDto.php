@@ -4,7 +4,7 @@ namespace App\Domain\Order\Dtos;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
 
-class AddToCartDto
+class CartDto
 {
     use UtilitiesTrait;
 

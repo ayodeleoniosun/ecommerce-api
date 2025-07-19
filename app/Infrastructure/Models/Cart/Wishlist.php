@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Models\Cart;
 
-use App\Infrastructure\Models\Inventory\Product;
+use App\Infrastructure\Models\Inventory\ProductItem;
 use App\Infrastructure\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,9 +15,9 @@ class Wishlist extends Model
 
     protected $guarded = ['id'];
 
-    public function product(): BelongsTo
+    public function productItem(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(ProductItem::class);
     }
 
     public function user(): BelongsTo

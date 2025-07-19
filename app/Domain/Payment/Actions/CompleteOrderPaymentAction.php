@@ -4,10 +4,10 @@ namespace App\Domain\Payment\Actions;
 
 use App\Application\Shared\Enum\CartStatusEnum;
 use App\Application\Shared\Enum\OrderStatusEnum;
-use App\Domain\Order\Interfaces\OrderPaymentRepositoryInterface;
-use App\Domain\Order\Interfaces\OrderRepositoryInterface;
-use App\Domain\Order\Interfaces\UserCartItemRepositoryInterface;
-use App\Domain\Order\Interfaces\UserCartRepositoryInterface;
+use App\Domain\Order\Interfaces\Cart\UserCartItemRepositoryInterface;
+use App\Domain\Order\Interfaces\Cart\UserCartRepositoryInterface;
+use App\Domain\Order\Interfaces\Order\OrderPaymentRepositoryInterface;
+use App\Domain\Order\Interfaces\Order\OrderRepositoryInterface;
 use App\Domain\Order\Notifications\OrderCompletedNotification;
 use App\Domain\Order\Resources\Order\OrderResource;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
@@ -47,6 +47,7 @@ class CompleteOrderPaymentAction
                     'fee' => $transactionResponse->getFee(),
                     'vat' => $transactionResponse->getVat(),
                     'amount_charged' => $amountCharged,
+                    'auth_model' => $transactionResponse->getAuthModel(),
                     'gateway' => $transactionResponse->getGateway(),
                     'gateway_reference' => $transactionResponse->getReference(),
                     'narration' => $transactionResponse->getResponseMessage(),

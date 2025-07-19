@@ -37,7 +37,7 @@ describe('add item to cart', function () {
             'merged_product_item_id' => 'John Doe',
         ];
 
-        $response = $this->postJson('/api/customers/carts', $payload);
+        $response = $this->postJson('/api/carts', $payload);
         $content = json_decode($response->getContent());
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
@@ -54,7 +54,7 @@ describe('add item to cart', function () {
             'type' => 'invalid_type',
         ];
 
-        $response = $this->postJson('/api/customers/carts', $payload);
+        $response = $this->postJson('/api/carts', $payload);
         $content = json_decode($response->getContent());
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
@@ -71,12 +71,12 @@ describe('add item to cart', function () {
             'type' => CartOperationEnum::INCREMENT->value,
         ];
 
-        $response = $this->postJson('/api/customers/carts', $payload);
+        $response = $this->postJson('/api/carts', $payload);
         $content = json_decode($response->getContent());
         $response->assertStatus(Response::HTTP_CREATED);
 
         expect($content->success)->toBeTrue()
-            ->and($content->message)->toBe('Item successfully added to cart')
+            ->and($content->message)->toBe('Item successfully added to your cart')
             ->and($content->data->product_item_id)->toBe($payload['product_item_id'])
             ->and($content->data->cart_quantity)->toBe($payload['quantity'])
             ->and($content->data->remaining_quantity)->toBe(3)
@@ -88,12 +88,12 @@ describe('remove cart item', function () {
     it('should return an error if cart item is invalid', function () {
         $invalidItemUUID = 'invalid-uuid';
 
-        $response = $this->deleteJson('/api/customers/carts/'.$invalidItemUUID);
+        $response = $this->deleteJson('/api/carts/'.$invalidItemUUID);
         $content = json_decode($response->getContent());
         $response->assertStatus(Response::HTTP_NOT_FOUND);
 
         expect($content->success)->toBeFalse()
-            ->and($content->message)->toBe('Item not found in cart');
+            ->and($content->message)->toBe('Item not found in your cart');
     });
 
     it('should return an error if type is not valid', function () {
@@ -102,12 +102,12 @@ describe('remove cart item', function () {
             'product_item_id' => $this->productItem->id,
         ]);
 
-        $response = $this->deleteJson('/api/customers/carts/'.$userCartItem->uuid);
+        $response = $this->deleteJson('/api/carts/'.$userCartItem->uuid);
         $content = json_decode($response->getContent());
         $response->assertStatus(Response::HTTP_OK);
 
         expect($content->success)->toBeTrue()
-            ->and($content->message)->toBe('Item successfully removed from cart');
+            ->and($content->message)->toBe('Item successfully removed from your cart');
     });
 });
 
@@ -138,15 +138,15 @@ describe('get all cart items', function () {
                 'cart_id' => $userCart->id,
             ]);
 
-        $response = $this->getJson('/api/customers/carts');
+        $response = $this->getJson('/api/carts');
         $content = json_decode($response->getContent());
         $response->assertStatus(Response::HTTP_OK);
 
-        $items = collect($content->data);
+        $items = collect($content->data->items);
 
         expect($content->success)->toBeTrue()
             ->and($content->message)->toBe('Cart items retrieved')
-            ->and($content->data)->toHaveCount(3)
+            ->and($items)->toHaveCount(3)
             ->and($items->every(fn ($item) => $item->status === ProductStatusEnum::IN_STOCK->value))->toBeTrue()
             ->and($items->map(fn ($item) => $item->cart_quantity)->all())->toEqual([2, 3, 5])
             ->and($items->map(fn ($item) => $item->remaining_quantity)->all())->toEqual([10, 15, 20]);

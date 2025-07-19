@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Order\Interfaces;
+namespace App\Domain\Order\Interfaces\Order;
 
 use App\Infrastructure\Models\Order\OrderPayment;
 

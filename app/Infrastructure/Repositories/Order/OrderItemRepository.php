@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Repositories\Order;
 
-use App\Domain\Order\Interfaces\OrderItemRepositoryInterface;
+use App\Domain\Order\Interfaces\Order\OrderItemRepositoryInterface;
 use App\Infrastructure\Models\Order\OrderItem;
 use App\Infrastructure\Repositories\BaseRepository;
 

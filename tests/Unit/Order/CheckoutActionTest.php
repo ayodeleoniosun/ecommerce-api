@@ -4,12 +4,12 @@ namespace Tests\Unit\Order;
 
 use App\Application\Shared\Enum\DeliveryTypeEnum;
 use App\Application\Shared\Enum\OrderStatusEnum;
-use App\Domain\Order\Actions\CheckoutAction;
+use App\Domain\Order\Actions\Order\CheckoutAction;
 use App\Domain\Order\Dtos\CheckoutDto;
-use App\Domain\Order\Interfaces\OrderPaymentRepositoryInterface;
-use App\Domain\Order\Interfaces\OrderRepositoryInterface;
-use App\Domain\Order\Interfaces\OrderShippingRepositoryInterface;
-use App\Domain\Order\Interfaces\UserCartRepositoryInterface;
+use App\Domain\Order\Interfaces\Cart\UserCartRepositoryInterface;
+use App\Domain\Order\Interfaces\Order\OrderPaymentRepositoryInterface;
+use App\Domain\Order\Interfaces\Order\OrderRepositoryInterface;
+use App\Domain\Order\Interfaces\Order\OrderShippingRepositoryInterface;
 use App\Domain\Order\Resources\Order\OrderResource;
 use App\Domain\Payment\Constants\PaymentTypeEnum;
 use App\Infrastructure\Models\Cart\UserCart;

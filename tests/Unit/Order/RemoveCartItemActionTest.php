@@ -4,13 +4,13 @@ namespace Tests\Unit\Order;
 
 use App\Application\Shared\Enum\CartStatusEnum;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
-use App\Domain\Order\Actions\RemoveCartItemAction;
+use App\Domain\Order\Actions\Cart\RemoveCartItemAction;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Cart\UserCartItem;
 use App\Infrastructure\Models\Inventory\Product;
 use App\Infrastructure\Models\Inventory\ProductItem;
 use App\Infrastructure\Models\User\User;
-use App\Infrastructure\Repositories\Order\UserCartItemRepository;
+use App\Infrastructure\Repositories\Cart\UserCartItemRepository;
 use Mockery;
 
 beforeEach(function () {
@@ -39,14 +39,14 @@ beforeEach(function () {
 
 it('should throw an exception if cart item does not exist', function () {
     $this->deleteCartItem->execute('invalid_uuid');
-})->throws(ResourceNotFoundException::class, 'Item not found in cart');
+})->throws(ResourceNotFoundException::class, 'Item not found in your cart');
 
 it('should throw an exception if cart item has already been checked out', function () {
     $this->userCartItem->status = CartStatusEnum::CHECKED_OUT->value;
     $this->userCartItem->save();
 
     $this->deleteCartItem->execute($this->userCartItem->uuid);
-})->throws(ResourceNotFoundException::class, 'Item not found in cart');
+})->throws(ResourceNotFoundException::class, 'Item not found in your cart');
 
 it('should delete an existing cart item', function () {
     $response = $this->deleteCartItem->execute($this->userCartItem->uuid);

@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Repositories\Order;
 
-use App\Domain\Order\Interfaces\OrderShippingRepositoryInterface;
+use App\Domain\Order\Interfaces\Order\OrderShippingRepositoryInterface;
 use App\Infrastructure\Models\Order\OrderShipping;
 use App\Infrastructure\Repositories\BaseRepository;
 

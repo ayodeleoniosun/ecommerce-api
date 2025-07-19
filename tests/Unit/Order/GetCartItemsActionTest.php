@@ -2,8 +2,9 @@
 
 namespace Tests\Unit\Order;
 
-use App\Domain\Order\Actions\GetCartItemsAction;
-use App\Domain\Order\Interfaces\UserCartItemRepositoryInterface;
+use App\Domain\Order\Actions\Cart\GetCartItemsAction;
+use App\Domain\Order\Interfaces\Cart\UserCartItemRepositoryInterface;
+use App\Domain\Order\Resources\Cart\CartResourceCollection;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Cart\UserCartItem;
 use App\Infrastructure\Models\Inventory\Product;
@@ -11,7 +12,6 @@ use App\Infrastructure\Models\Inventory\ProductItem;
 use App\Infrastructure\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Mockery;
 
@@ -64,6 +64,6 @@ it('should get cart items', function () {
 
     $response = $cartItems->execute($request);
 
-    expect($response)->toBeInstanceOf(AnonymousResourceCollection::class)
+    expect($response)->toBeInstanceOf(CartResourceCollection::class)
         ->and($response->collection)->toHaveCount(3);
 });

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Domain\Order\Interfaces;
+namespace App\Domain\Order\Interfaces\Cart;
 
-use App\Domain\Order\Dtos\AddToCartDto;
+use App\Domain\Order\Dtos\CartDto;
 use App\Infrastructure\Models\Cart\UserCart;
 
 interface UserCartRepositoryInterface
 {
-    public function findOrCreate(AddToCartDto $addToCartDto): UserCart;
+    public function findOrCreate(CartDto $addToCartDto): UserCart;
 
     public function findPendingCart(int $userId, bool $lockForUpdate = false): ?UserCart;
 

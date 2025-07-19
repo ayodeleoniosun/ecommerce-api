@@ -2,18 +2,20 @@
 
 namespace App\Infrastructure\Providers;
 
-use App\Domain\Order\Interfaces\OrderItemRepositoryInterface;
-use App\Domain\Order\Interfaces\OrderPaymentRepositoryInterface;
-use App\Domain\Order\Interfaces\OrderRepositoryInterface;
-use App\Domain\Order\Interfaces\OrderShippingRepositoryInterface;
-use App\Domain\Order\Interfaces\UserCartItemRepositoryInterface;
-use App\Domain\Order\Interfaces\UserCartRepositoryInterface;
+use App\Domain\Order\Interfaces\Cart\UserCartItemRepositoryInterface;
+use App\Domain\Order\Interfaces\Cart\UserCartRepositoryInterface;
+use App\Domain\Order\Interfaces\Cart\WishlistRepositoryInterface;
+use App\Domain\Order\Interfaces\Order\OrderItemRepositoryInterface;
+use App\Domain\Order\Interfaces\Order\OrderPaymentRepositoryInterface;
+use App\Domain\Order\Interfaces\Order\OrderRepositoryInterface;
+use App\Domain\Order\Interfaces\Order\OrderShippingRepositoryInterface;
+use App\Infrastructure\Repositories\Cart\UserCartItemRepository;
+use App\Infrastructure\Repositories\Cart\UserCartRepository;
+use App\Infrastructure\Repositories\Cart\WishlistRepository;
 use App\Infrastructure\Repositories\Order\OrderItemRepository;
 use App\Infrastructure\Repositories\Order\OrderPaymentRepository;
 use App\Infrastructure\Repositories\Order\OrderRepository;
 use App\Infrastructure\Repositories\Order\OrderShippingRepository;
-use App\Infrastructure\Repositories\Order\UserCartItemRepository;
-use App\Infrastructure\Repositories\Order\UserCartRepository;
 use Illuminate\Support\ServiceProvider;
 
 class OrderServiceProvider extends ServiceProvider
@@ -26,6 +28,9 @@ class OrderServiceProvider extends ServiceProvider
         /* Cart */
         $this->app->bind(UserCartRepositoryInterface::class, UserCartRepository::class);
         $this->app->bind(UserCartItemRepositoryInterface::class, UserCartItemRepository::class);
+
+        /* Wishlist */
+        $this->app->bind(WishlistRepositoryInterface::class, WishlistRepository::class);
 
         /* Order */
         $this->app->bind(OrderRepositoryInterface::class, OrderRepository::class);

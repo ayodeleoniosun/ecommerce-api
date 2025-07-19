@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Domain\Order\Actions;
+namespace App\Domain\Order\Actions\Order;
 
 use App\Application\Shared\Enum\OrderStatusEnum;
-use App\Domain\Order\Interfaces\OrderItemRepositoryInterface;
-use App\Domain\Order\Interfaces\OrderPaymentRepositoryInterface;
+use App\Domain\Order\Interfaces\Order\OrderItemRepositoryInterface;
+use App\Domain\Order\Interfaces\Order\OrderPaymentRepositoryInterface;
 use App\Infrastructure\Models\Order\Order;
 use App\Infrastructure\Models\Order\OrderItem;
 use App\Infrastructure\Models\Order\OrderPayment;

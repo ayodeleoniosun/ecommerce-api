@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Domain\Order\Interfaces;
+namespace App\Domain\Order\Interfaces\Cart;
 
-use App\Domain\Order\Dtos\AddToCartDto;
+use App\Domain\Order\Dtos\CartDto;
 use App\Infrastructure\Models\Cart\UserCartItem;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
@@ -11,7 +11,7 @@ interface UserCartItemRepositoryInterface
 {
     public function index(Request $request): LengthAwarePaginator;
 
-    public function storeOrUpdate(AddToCartDto $addToCartDto): UserCartItem;
+    public function storeOrUpdate(CartDto $addToCartDto): UserCartItem;
 
     public function completeCartItems(int $cartId, string $status): bool;
 

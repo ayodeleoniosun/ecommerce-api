@@ -3,10 +3,11 @@
 namespace App\Infrastructure\Repositories\Order;
 
 use App\Application\Shared\Enum\OrderStatusEnum;
-use App\Domain\Order\Interfaces\OrderRepositoryInterface;
+use App\Domain\Order\Interfaces\Order\OrderRepositoryInterface;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Order\Order;
 use App\Infrastructure\Repositories\BaseRepository;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class OrderRepository extends BaseRepository implements OrderRepositoryInterface
 {
@@ -33,5 +34,19 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
             ['user_id' => $userId, 'cart_id' => $cart->id, 'status' => OrderStatusEnum::PENDING->value],
             ['user_id' => $userId, 'cart_id' => $cart->id, 'currency' => $cart->currency],
         )->load('cart.items.productItem');
+    }
+
+    public function index(string $currency): LengthAwarePaginator
+    {
+        return Order::with(
+            'user',
+            'cart',
+            'items',
+            'shipping',
+            'payment',
+        )->where('user_id', auth()->user()->id)
+            ->where('currency', $currency)
+            ->latest()
+            ->paginate(50);
     }
 }

@@ -4,8 +4,8 @@ namespace Tests\Unit\Payment;
 
 use App\Application\Shared\Enum\CartStatusEnum;
 use App\Application\Shared\Enum\OrderStatusEnum;
-use App\Domain\Order\Interfaces\OrderRepositoryInterface;
-use App\Domain\Order\Interfaces\UserCartItemRepositoryInterface;
+use App\Domain\Order\Interfaces\Cart\UserCartItemRepositoryInterface;
+use App\Domain\Order\Interfaces\Order\OrderRepositoryInterface;
 use App\Domain\Order\Notifications\OrderCompletedNotification;
 use App\Domain\Order\Resources\Order\OrderResource;
 use App\Domain\Payment\Actions\CompleteOrderPaymentAction;
@@ -15,8 +15,8 @@ use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Order\Order;
 use App\Infrastructure\Models\Order\OrderPayment;
 use App\Infrastructure\Models\User\User;
+use App\Infrastructure\Repositories\Cart\UserCartRepository;
 use App\Infrastructure\Repositories\Order\OrderPaymentRepository;
-use App\Infrastructure\Repositories\Order\UserCartRepository;
 use Illuminate\Support\Facades\Notification;
 use Mockery;
 

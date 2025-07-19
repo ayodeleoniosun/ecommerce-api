@@ -3,10 +3,10 @@
 namespace App\Domain\Order\Controllers;
 
 use App\Application\Shared\Responses\ApiResponse;
-use App\Domain\Order\Actions\AddToCartAction;
-use App\Domain\Order\Actions\GetCartItemsAction;
-use App\Domain\Order\Actions\RemoveCartItemAction;
-use App\Domain\Order\Dtos\AddToCartDto;
+use App\Domain\Order\Actions\Cart\AddToCartAction;
+use App\Domain\Order\Actions\Cart\GetCartItemsAction;
+use App\Domain\Order\Actions\Cart\RemoveCartItemAction;
+use App\Domain\Order\Dtos\CartDto;
 use App\Domain\Order\Requests\AddToCartRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -32,25 +32,25 @@ class CartController
         }
     }
 
-    public function addToCart(AddToCartRequest $request): JsonResponse
+    public function store(AddToCartRequest $request): JsonResponse
     {
-        $cartDto = AddToCartDto::fromRequest($request->validated());
+        $cartDto = CartDto::fromRequest($request->validated());
 
         try {
             $data = $this->addToCart->execute($cartDto);
 
-            return ApiResponse::success('Item successfully added to cart', $data, Response::HTTP_CREATED);
+            return ApiResponse::success('Item successfully added to your cart', $data, Response::HTTP_CREATED);
         } catch (Exception $e) {
             return ApiResponse::error($e->getMessage(), $e->getCode());
         }
     }
 
-    public function removeCartItem(string $cartItemUUID): JsonResponse
+    public function delete(string $cartItemUUID): JsonResponse
     {
         try {
             $this->removeCartItem->execute($cartItemUUID);
 
-            return ApiResponse::success('Item successfully removed from cart');
+            return ApiResponse::success('Item successfully removed from your cart');
         } catch (Exception $e) {
             return ApiResponse::error($e->getMessage(), $e->getCode());
         }

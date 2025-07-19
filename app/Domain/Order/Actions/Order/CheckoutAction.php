@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Domain\Order\Actions;
+namespace App\Domain\Order\Actions\Order;
 
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Domain\Order\Dtos\CheckoutDto;
-use App\Domain\Order\Interfaces\OrderItemRepositoryInterface;
-use App\Domain\Order\Interfaces\OrderPaymentRepositoryInterface;
-use App\Domain\Order\Interfaces\OrderRepositoryInterface;
-use App\Domain\Order\Interfaces\OrderShippingRepositoryInterface;
-use App\Domain\Order\Interfaces\UserCartRepositoryInterface;
+use App\Domain\Order\Interfaces\Cart\UserCartRepositoryInterface;
+use App\Domain\Order\Interfaces\Order\OrderItemRepositoryInterface;
+use App\Domain\Order\Interfaces\Order\OrderPaymentRepositoryInterface;
+use App\Domain\Order\Interfaces\Order\OrderRepositoryInterface;
+use App\Domain\Order\Interfaces\Order\OrderShippingRepositoryInterface;
 use App\Domain\Order\Resources\Order\OrderResource;
 use App\Domain\Shipping\Interfaces\PickupStation\PickupStationRepositoryInterface;
 use App\Domain\Shipping\Interfaces\ShippingAddress\CustomerShippingAddressRepositoryInterface;

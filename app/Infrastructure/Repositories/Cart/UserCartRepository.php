@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Infrastructure\Repositories\Order;
+namespace App\Infrastructure\Repositories\Cart;
 
 use App\Application\Shared\Enum\CartStatusEnum;
-use App\Domain\Order\Dtos\AddToCartDto;
-use App\Domain\Order\Interfaces\UserCartRepositoryInterface;
+use App\Domain\Order\Dtos\CartDto;
+use App\Domain\Order\Interfaces\Cart\UserCartRepositoryInterface;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Repositories\BaseRepository;
 
 class UserCartRepository extends BaseRepository implements UserCartRepositoryInterface
 {
-    public function findOrCreate(AddToCartDto $addToCartDto): UserCart
+    public function findOrCreate(CartDto $addToCartDto): UserCart
     {
         return UserCart::firstOrCreate(
             ['user_id' => $addToCartDto->getUserId(), 'status' => CartStatusEnum::PENDING->value],

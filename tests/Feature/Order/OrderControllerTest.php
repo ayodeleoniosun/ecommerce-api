@@ -39,7 +39,7 @@ describe('checkout cart items', function () {
             'payment_method' => PaymentTypeEnum::CARD->value,
         ];
 
-        $response = $this->postJson('/api/customers/orders', $payload);
+        $response = $this->postJson('/api/orders', $payload);
         $content = json_decode($response->getContent());
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
@@ -55,7 +55,7 @@ describe('checkout cart items', function () {
             'payment_method' => PaymentTypeEnum::CARD->value,
         ];
 
-        $response = $this->postJson('/api/customers/orders', $payload);
+        $response = $this->postJson('/api/orders', $payload);
         $content = json_decode($response->getContent());
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
@@ -96,7 +96,7 @@ describe('checkout cart items', function () {
             'payment_method' => PaymentTypeEnum::CARD->value,
         ];
 
-        $response = $this->postJson('/api/customers/orders', $payload);
+        $response = $this->postJson('/api/orders', $payload);
         $content = json_decode($response->getContent());
         $response->assertStatus(Response::HTTP_OK);
 

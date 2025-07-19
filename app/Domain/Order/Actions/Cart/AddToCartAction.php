@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Domain\Order\Actions;
+namespace App\Domain\Order\Actions\Cart;
 
 use App\Application\Shared\Enum\CartOperationEnum;
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
-use App\Domain\Order\Dtos\AddToCartDto;
-use App\Domain\Order\Interfaces\UserCartItemRepositoryInterface;
-use App\Domain\Order\Interfaces\UserCartRepositoryInterface;
+use App\Domain\Order\Dtos\CartDto;
+use App\Domain\Order\Interfaces\Cart\UserCartItemRepositoryInterface;
+use App\Domain\Order\Interfaces\Cart\UserCartRepositoryInterface;
 use App\Domain\Order\Resources\Cart\CartResource;
 use App\Domain\Vendor\Products\Interfaces\ProductItemRepositoryInterface;
 use App\Infrastructure\Models\Cart\UserCartItem;
@@ -22,7 +22,7 @@ class AddToCartAction
         private readonly UserCartItemRepositoryInterface $userCartItemRepository,
     ) {}
 
-    public function execute(AddToCartDto $addToCartDto): CartResource
+    public function execute(CartDto $addToCartDto): CartResource
     {
         $productItem = $this->productItemRepository->findByColumn(
             ProductItem::class,
@@ -75,7 +75,7 @@ class AddToCartAction
         return new CartResource($cartItemRecord);
     }
 
-    private function updateQuantity(AddToCartDto $addToCartDto): void
+    private function updateQuantity(CartDto $addToCartDto): void
     {
         $existingCart = $this->userCartRepository->findPendingCart($addToCartDto->getUserId());
 
@@ -104,7 +104,7 @@ class AddToCartAction
         int $cartQuantity,
         ?UserCartItem $cartItem,
         ProductItem $productItem,
-        AddToCartDto $addToCartDto,
+        CartDto $addToCartDto,
     ): void {
         if ($addToCartDto->getType() === CartOperationEnum::INCREMENT->value) {
             $this->productItemRepository->decreaseStock($productItem, $cartQuantity);

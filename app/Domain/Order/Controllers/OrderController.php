@@ -4,7 +4,9 @@ namespace App\Domain\Order\Controllers;
 
 use App\Application\Shared\Responses\ApiResponse;
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Domain\Order\Actions\CheckoutAction;
+use App\Domain\Order\Actions\Order\CheckoutAction;
+use App\Domain\Order\Actions\Order\GetOrderAction;
+use App\Domain\Order\Actions\Order\GetOrdersAction;
 use App\Domain\Order\Dtos\CheckoutDto;
 use App\Domain\Order\Requests\CheckoutRequest;
 use App\Domain\Payment\Actions\AuthorizePaymentAction;
@@ -27,7 +29,31 @@ class OrderController
         private readonly InitiateOrderPaymentAction $initiateOrderPayment,
         private readonly CompleteOrderPaymentAction $completeOrderPayment,
         private readonly AuthorizePaymentAction $authorizePayment,
+        private readonly GetOrdersAction $getOrders,
+        private readonly GetOrderAction $getOrder,
     ) {}
+
+    public function index(string $currency): JsonResponse
+    {
+        try {
+            $data = $this->getOrders->execute($currency);
+
+            return ApiResponse::success('Orders retrieved', $data);
+        } catch (Exception $e) {
+            return ApiResponse::error($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function view(string $UUiD): JsonResponse
+    {
+        try {
+            $data = $this->getOrder->execute($UUiD);
+
+            return ApiResponse::success('Order retrieved', $data);
+        } catch (Exception $e) {
+            return ApiResponse::error($e->getMessage(), $e->getCode());
+        }
+    }
 
     public function store(CheckoutRequest $request): JsonResponse
     {
@@ -67,7 +93,7 @@ class OrderController
         }
     }
 
-    public function authorizePayment(PaymentAuthorizationRequest $request): JsonResponse
+    public function authorize(PaymentAuthorizationRequest $request): JsonResponse
     {
         $paymentAuthorizationDto = PaymentAuthorizationDto::fromArray($request->validated());
 

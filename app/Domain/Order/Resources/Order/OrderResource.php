@@ -27,6 +27,7 @@ class OrderResource extends JsonResource
             'currency' => $this->currency,
             'reference' => $this->reference,
             'amount' => $this->getAmount($this->status),
+            'payment_method' => $this->payment->payment_method,
             'delivery_type' => $this->shipping->delivery_type,
             'delivery_address' => $this->when($this->shipping->delivery_type === DeliveryTypeEnum::DOOR_DELIVERY->value,
                 $this->shipping->delivery_address),
@@ -34,6 +35,7 @@ class OrderResource extends JsonResource
                 $this->shipping->pickup_station_name),
             'estimated_delivery_start_date' => $this->parseDateOnly($this->shipping->estimated_delivery_start_date),
             'estimated_delivery_end_date' => $this->parseDateOnly($this->shipping->estimated_delivery_end_date),
+            'items' => OrderItemResource::collection($this->whenLoaded('items')),
         ];
     }
 

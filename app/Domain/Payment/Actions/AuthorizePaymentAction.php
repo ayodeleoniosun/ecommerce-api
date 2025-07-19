@@ -6,7 +6,7 @@ use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ConflictHttpException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Domain\Order\Interfaces\OrderPaymentRepositoryInterface;
+use App\Domain\Order\Interfaces\Order\OrderPaymentRepositoryInterface;
 use App\Domain\Payment\Constants\PaymentErrorEnum;
 use App\Domain\Payment\Dtos\PaymentAuthorizationDto;
 use App\Domain\Payment\Dtos\PaymentResponseDto;

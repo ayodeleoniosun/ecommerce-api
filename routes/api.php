@@ -7,6 +7,7 @@ use App\Domain\Inventory\Controllers\CategoryController;
 use App\Domain\Inventory\Controllers\ProductController;
 use App\Domain\Order\Controllers\CartController;
 use App\Domain\Order\Controllers\OrderController;
+use App\Domain\Order\Controllers\WishlistController;
 use App\Domain\Shipping\Controllers\PickupStationController;
 use App\Domain\Shipping\Controllers\ShippingAddressController;
 use App\Domain\Vendor\Onboarding\Controllers\OnboardingController;
@@ -41,23 +42,30 @@ Route::prefix('inventory')->group(function () {
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('authenticated', [AuthController::class, 'authenticated']);
 
-    Route::prefix('customers')->group(function () {
-        Route::prefix('addresses')->group(function () {
-            Route::post('/', [ShippingAddressController::class, 'store']);
-            Route::get('/', [ShippingAddressController::class, 'index']);
-        });
+    Route::prefix('addresses')->group(function () {
+        Route::post('/', [ShippingAddressController::class, 'store']);
+        Route::get('/', [ShippingAddressController::class, 'index']);
+    });
 
-        Route::prefix('orders')->group(function () {
-            Route::post('/', [OrderController::class, 'store']);
-            Route::post('/pay', [OrderController::class, 'pay']);
-            Route::post('/pay/authorize', [OrderController::class, 'authorizePayment']);
-        });
+    Route::prefix('orders')->group(function () {
+        Route::get('/{currency}', [OrderController::class, 'index']);
+        Route::get('/item/{id}', [OrderController::class, 'view']);
+        Route::post('/', [OrderController::class, 'store']);
+        Route::post('/pay', [OrderController::class, 'pay']);
+        Route::post('/pay/authorize', [OrderController::class, 'authorize']);
+    });
 
-        Route::prefix('carts')->group(function () {
-            Route::get('/', [CartController::class, 'index']);
-            Route::post('/', [CartController::class, 'addToCart']);
-            Route::delete('/{cartItemUUID}', [CartController::class, 'removeCartItem']);
-        });
+    Route::prefix('wishlists')->group(function () {
+        Route::get('/', [WishlistController::class, 'index']);
+        Route::post('/', [WishlistController::class, 'store']);
+        Route::post('/{id}/cart', [WishlistController::class, 'addToCart']);
+        Route::delete('/{id}', [WishlistController::class, 'delete']);
+    });
+
+    Route::prefix('carts')->group(function () {
+        Route::get('/', [CartController::class, 'index']);
+        Route::post('/', [CartController::class, 'store']);
+        Route::delete('/{cartItemUUID}', [CartController::class, 'delete']);
     });
 
     Route::prefix('admin')->group(function () {
