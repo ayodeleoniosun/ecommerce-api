@@ -9,7 +9,7 @@ class WishlistDto
     use UtilitiesTrait;
 
     public function __construct(
-        private readonly string $productItemUUID,
+        private string $productItemUUID,
         private readonly int $productItemId,
     ) {}
 
@@ -35,13 +35,13 @@ class WishlistDto
         return $this->productItemId;
     }
 
-    public function getUserId(): ?int
-    {
-        return $this->userId;
-    }
-
     public function getProductItemUUID(): string
     {
         return $this->productItemUUID;
+    }
+
+    public function setProductItemUUID(string $uuid): void
+    {
+        $this->productItemUUID = $uuid;
     }
 }

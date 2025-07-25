@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Order;
+namespace Tests\Unit\Order\Cart;
 
 use App\Domain\Order\Actions\Order\CheckoutAction;
 use App\Domain\Order\Dtos\CheckoutDto;

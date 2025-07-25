@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Order\Actions\Cart\Wishlist;
+namespace App\Domain\Order\Actions\Wishlist;
 
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;

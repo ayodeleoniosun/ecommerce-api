@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Order;
+namespace Tests\Unit\Order\Cart;
 
 use App\Application\Shared\Enum\CurrencyEnum;
 use App\Application\Shared\Exceptions\BadRequestException;

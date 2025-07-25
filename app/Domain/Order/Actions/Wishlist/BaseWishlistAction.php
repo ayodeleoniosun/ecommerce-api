@@ -1,22 +1,23 @@
 <?php
 
-namespace App\Domain\Order\Actions\Cart\Wishlist;
+namespace App\Domain\Order\Actions\Wishlist;
 
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Order\Enums\WishlistStatusEnum;
 use App\Domain\Order\Interfaces\Cart\WishlistRepositoryInterface;
 use App\Infrastructure\Models\Cart\Wishlist;
+use Illuminate\Database\Eloquent\Model;
 
-class RemoveWishlistItemAction
+class BaseWishlistAction
 {
     public function __construct(
-        private readonly WishlistRepositoryInterface $wishlistRepository,
+        protected WishlistRepositoryInterface $wishlistRepository,
     ) {}
 
     /**
      * @throws ResourceNotFoundException
      */
-    public function execute(string $wishlistUUID): bool
+    protected function validateWishlist(string $wishlistUUID): Model
     {
         $wishlist = $this->wishlistRepository->findByColumn(
             Wishlist::class,
@@ -30,6 +31,6 @@ class RemoveWishlistItemAction
             throw new ResourceNotFoundException('Item not found in your wishlist');
         }
 
-        return $this->wishlistRepository->delete($existingWishlist);
+        return $wishlist;
     }
 }

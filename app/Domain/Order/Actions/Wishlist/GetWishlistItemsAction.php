@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Domain\Order\Actions\Cart\Wishlist;
+namespace App\Domain\Order\Actions\Wishlist;
 
 use App\Domain\Order\Interfaces\Cart\WishlistRepositoryInterface;
 use App\Domain\Order\Resources\Cart\WishlistResourceCollection;
-use Illuminate\Http\Request;
 
 class GetWishlistItemsAction
 {
@@ -12,8 +11,8 @@ class GetWishlistItemsAction
         private readonly WishlistRepositoryInterface $wishlistRepository,
     ) {}
 
-    public function execute(Request $request): WishlistResourceCollection
+    public function execute(): WishlistResourceCollection
     {
-        return new WishlistResourceCollection($this->wishlistRepository->index($request));
+        return new WishlistResourceCollection($this->wishlistRepository->index());
     }
 }

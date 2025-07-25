@@ -2,17 +2,21 @@
 
 namespace Database\Factories\Cart;
 
+use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Infrastructure\Models\Cart\Wishlist;
-use App\Infrastructure\Models\Inventory\Product;
+use App\Infrastructure\Models\Inventory\ProductItem;
 use App\Infrastructure\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Wishlist>
  */
 class WishlistFactory extends Factory
 {
+    use UtilitiesTrait;
+
+    protected $model = Wishlist::class;
+
     /**
      * Define the model's default state.
      *
@@ -21,9 +25,9 @@ class WishlistFactory extends Factory
     public function definition(): array
     {
         return [
-            'uuid' => str::uuid(),
+            'uuid' => self::generateUUID(),
             'user_id' => User::factory()->create()->id,
-            'product_id' => Product::factory()->create()->id,
+            'product_item_id' => ProductItem::factory()->create()->id,
         ];
     }
 }

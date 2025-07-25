@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Order;
+namespace Tests\Unit\Order\Cart;
 
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Order\Actions\Cart\RemoveCartItemAction;

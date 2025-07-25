@@ -25,6 +25,11 @@ trait UtilitiesTrait
         return $prefix.$randomCharacters;
     }
 
+    public static function parseDate($date): string
+    {
+        return Carbon::parse($date)->format('F jS, Y h:i A');
+    }
+
     public static function parseDateOnly($date): string
     {
         return Carbon::parse($date)->format('F jS, Y');

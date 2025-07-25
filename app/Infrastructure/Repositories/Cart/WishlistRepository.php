@@ -7,11 +7,10 @@ use App\Domain\Order\Interfaces\Cart\WishlistRepositoryInterface;
 use App\Infrastructure\Models\Cart\Wishlist;
 use App\Infrastructure\Repositories\BaseRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Http\Request;
 
 class WishlistRepository extends BaseRepository implements WishlistRepositoryInterface
 {
-    public function index(Request $request): LengthAwarePaginator
+    public function index(): LengthAwarePaginator
     {
         return Wishlist::with(
             'productItem',

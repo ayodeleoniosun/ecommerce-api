@@ -17,7 +17,7 @@ class BaseOrderAction
         protected OrderPaymentRepositoryInterface $orderPaymentRepository,
     ) {}
 
-    public function createOrderPayment(Order|Model $order): OrderPayment
+    protected function createOrderPayment(Order|Model $order): OrderPayment
     {
         $totalOrderAmount = $this->calculateTotalOrderAmount($order->id);
 
@@ -30,7 +30,7 @@ class BaseOrderAction
         ]);
     }
 
-    private function calculateTotalOrderAmount(int $orderId): int
+    protected function calculateTotalOrderAmount(int $orderId): int
     {
         $orderItems = $this->orderItemRepository->findAllByColumn(
             OrderItem::class,

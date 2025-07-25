@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Order;
+namespace Tests\Unit\Order\Cart;
 
 use App\Domain\Order\Actions\Cart\GetCartItemsAction;
 use App\Domain\Order\Interfaces\Cart\UserCartItemRepositoryInterface;
@@ -30,10 +30,12 @@ it('should get cart items', function () {
     $productItem = ProductItem::factory()
         ->count(3)
         ->state(new Sequence(
-            ['product_id' => $product->id, 'price' => 10000, 'quantity' => 10],
-            ['product_id' => $product->id, 'price' => 20000, 'quantity' => 15],
-            ['product_id' => $product->id, 'price' => 30000, 'quantity' => 20],
-        ))->create();
+            ['price' => 10000, 'quantity' => 10],
+            ['price' => 20000, 'quantity' => 15],
+            ['price' => 30000, 'quantity' => 20],
+        ))->create([
+            'product_id' => $product->id,
+        ]);
 
     $userCartItems = UserCartItem::factory()
         ->count(3)

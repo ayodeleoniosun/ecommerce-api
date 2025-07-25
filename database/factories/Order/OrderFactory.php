@@ -33,6 +33,7 @@ class OrderFactory extends Factory
             'currency' => CurrencyEnum::NGN->value,
             'cart_id' => UserCart::factory()->create()->id,
             'user_id' => User::factory()->create()->id,
+            'status' => OrderStatusEnum::PENDING->value,
         ];
     }
 
