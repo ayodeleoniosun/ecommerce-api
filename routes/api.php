@@ -49,7 +49,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::prefix('orders')->group(function () {
         Route::get('/{currency}', [OrderController::class, 'index']);
-        Route::get('/item/{id}', [OrderController::class, 'view']);
+        Route::get('/view/{id}', [OrderController::class, 'view']);
         Route::post('/', [OrderController::class, 'store']);
         Route::post('/pay', [OrderController::class, 'pay']);
         Route::post('/pay/authorize', [OrderController::class, 'authorize']);

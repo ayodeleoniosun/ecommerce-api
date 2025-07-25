@@ -44,10 +44,10 @@ class OrderController
         }
     }
 
-    public function view(string $UUiD): JsonResponse
+    public function view(string $UUID): JsonResponse
     {
         try {
-            $data = $this->getOrder->execute($UUiD);
+            $data = $this->getOrder->execute($UUID);
 
             return ApiResponse::success('Order retrieved', $data);
         } catch (Exception $e) {
