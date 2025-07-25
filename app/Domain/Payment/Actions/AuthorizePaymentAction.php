@@ -9,7 +9,7 @@ use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Domain\Order\Interfaces\Order\OrderPaymentRepositoryInterface;
 use App\Domain\Payment\Dtos\PaymentAuthorizationDto;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
-use App\Domain\Payment\Enums\PaymentErrorEnum;
+use App\Domain\Payment\Enums\PaymentResponseMessageEnum;
 use App\Domain\Payment\Interfaces\CardTransactionRepositoryInterface;
 use App\Infrastructure\Models\Order\OrderPayment;
 use App\Infrastructure\Services\Payments\PaymentGateway;
@@ -35,11 +35,12 @@ class AuthorizePaymentAction
             $paymentAuthorizationDto->getReference(),
         );
 
-        throw_if(! $orderPayment, ResourceNotFoundException::class, PaymentErrorEnum::TRANSACTION_NOT_FOUND->value);
+        throw_if(! $orderPayment, ResourceNotFoundException::class,
+            PaymentResponseMessageEnum::TRANSACTION_NOT_FOUND->value);
 
         if (in_array($orderPayment->order->status, self::completedTransactionStatuses()) ||
             in_array($orderPayment->status, self::completedTransactionStatuses())) {
-            throw new ConflictHttpException(PaymentErrorEnum::TRANSACTION_ALREADY_COMPLETED->value);
+            throw new ConflictHttpException(PaymentResponseMessageEnum::TRANSACTION_ALREADY_COMPLETED->value);
         }
 
         $paymentGateway = PaymentGateway::make($orderPayment->gateway, $this->cardTransactionRepository);

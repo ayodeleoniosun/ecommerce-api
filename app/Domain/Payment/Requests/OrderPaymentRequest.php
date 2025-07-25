@@ -29,13 +29,13 @@ class OrderPaymentRequest extends FormRequest
     {
         return [
             'payment_method' => ['required', new Enum(PaymentTypeEnum::class)],
-            'card' => ['required', 'array'],
-            'card.name' => ['required', 'string'],
-            'card.number' => ['required', 'string'],
-            'card.cvv' => ['required', 'string'],
-            'card.expiry_month' => ['required', 'string'],
-            'card.expiry_year' => ['required', 'string'],
-            'card.pin' => ['required', 'string'],
+            'card' => ['sometimes', 'array'],
+            'card.name' => ['sometimes', 'string'],
+            'card.number' => ['sometimes', 'string'],
+            'card.cvv' => ['sometimes', 'string'],
+            'card.expiry_month' => ['sometimes', 'string'],
+            'card.expiry_year' => ['sometimes', 'string'],
+            'card.pin' => ['sometimes', 'string'],
         ];
     }
 }

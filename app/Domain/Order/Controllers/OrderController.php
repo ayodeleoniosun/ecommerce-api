@@ -12,8 +12,8 @@ use App\Domain\Order\Requests\CheckoutRequest;
 use App\Domain\Payment\Actions\AuthorizePaymentAction;
 use App\Domain\Payment\Actions\CompleteOrderPaymentAction;
 use App\Domain\Payment\Actions\InitiateOrderPaymentAction;
-use App\Domain\Payment\Dtos\OrderPaymentDto;
 use App\Domain\Payment\Dtos\PaymentAuthorizationDto;
+use App\Domain\Payment\Dtos\PaymentDto;
 use App\Domain\Payment\Enums\PaymentStatusEnum;
 use App\Domain\Payment\Requests\OrderPaymentRequest;
 use App\Domain\Payment\Requests\PaymentAuthorizationRequest;
@@ -70,12 +70,12 @@ class OrderController
 
     public function pay(OrderPaymentRequest $request): JsonResponse
     {
-        $orderPaymentDto = OrderPaymentDto::fromArray($request->validated());
+        $orderPaymentDto = PaymentDto::fromArray($request->validated());
 
         try {
             $transactionResponse = $this->initiateOrderPayment->execute($orderPaymentDto);
 
-            if (self::requiresAuthorization($transactionResponse->getAuthModel())) {
+            if ($transactionResponse->getAuthModel() && self::requiresAuthorization($transactionResponse->getAuthModel())) {
                 $this->completeOrderPayment->updateOrderPayment($transactionResponse);
 
                 return ApiResponse::success('Authorization required', $transactionResponse->toArray());

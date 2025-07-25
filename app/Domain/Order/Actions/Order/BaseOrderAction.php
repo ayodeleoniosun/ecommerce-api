@@ -30,7 +30,7 @@ class BaseOrderAction
         ]);
     }
 
-    public function calculateTotalOrderAmount(int $orderId): int
+    private function calculateTotalOrderAmount(int $orderId): int
     {
         $orderItems = $this->orderItemRepository->findAllByColumn(
             OrderItem::class,

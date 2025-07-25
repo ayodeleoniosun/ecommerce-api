@@ -5,7 +5,7 @@ namespace Tests\Unit\Payment\Integration;
 use App\Application\Shared\Enum\CurrencyEnum;
 use App\Domain\Payment\Dtos\CardData;
 use App\Domain\Payment\Dtos\CustomerData;
-use App\Domain\Payment\Dtos\InitiateOrderPaymentDto;
+use App\Domain\Payment\Dtos\InitiateCardPaymentDto;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
 use App\Domain\Payment\Enums\AuthModelEnum;
 use App\Domain\Payment\Enums\PaymentStatusEnum;
@@ -45,7 +45,7 @@ beforeEach(function () {
         'order_payment_id' => $this->orderPayment->id,
     ]);
 
-    $this->paymentDto = new InitiateOrderPaymentDto(
+    $this->paymentDto = new InitiateCardPaymentDto(
         amount: 1000,
         currency: CurrencyEnum::NGN->value,
         card: new CardData(

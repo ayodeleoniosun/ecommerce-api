@@ -3,15 +3,13 @@
 namespace App\Infrastructure\Models\Payment\Wallet;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Infrastructure\Models\User\User;
-use Database\Factories\Payment\Wallet\WalletFactory;
+use Database\Factories\Payment\Wallet\WalletTransactionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Wallet extends Model
+class WalletTransaction extends Model
 {
     use HasFactory, SoftDeletes, UtilitiesTrait;
 
@@ -22,18 +20,13 @@ class Wallet extends Model
         parent::boot();
     }
 
-    protected static function newFactory(): WalletFactory
+    protected static function newFactory(): WalletTransactionFactory
     {
-        return WalletFactory::new();
+        return WalletTransactionFactory::new();
     }
 
-    public function user(): BelongsTo
+    public function wallet(): BelongsTo
     {
-        return $this->belongsTo(User::class);
-    }
-
-    public function transactions(): HasMany
-    {
-        return $this->hasMany(WalletTransaction::class);
+        return $this->belongsTo(Wallet::class);
     }
 }

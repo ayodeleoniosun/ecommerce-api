@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('wallet_audit_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('wallet_id')->constrained('wallets')->nullOnDelete();
+            $table->foreignId('transaction_id')->constrained('wallet_transactions')->nullOnDelete();
             $table->decimal('previous_balance', total: 10);
             $table->decimal('new_balance', total: 10);
             $table->timestamps();

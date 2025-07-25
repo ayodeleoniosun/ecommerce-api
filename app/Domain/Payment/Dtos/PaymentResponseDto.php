@@ -10,15 +10,16 @@ class PaymentResponseDto
 
     public function __construct(
         private readonly string $status,
-        private readonly string $authModel,
-        private readonly string $gateway,
+        private readonly string $paymentMethod,
         private readonly string $reference,
         private readonly string $responseMessage,
+        private readonly ?string $authModel = null,
+        private readonly ?string $gateway = null,
         private readonly ?string $errorType = null,
         private ?string $redirectionUrl = null,
         private readonly ?int $amountCharged = null,
-        private readonly ?int $fee = null,
-        private readonly ?int $vat = null,
+        private readonly ?int $fee = 0,
+        private readonly ?int $vat = 0,
     ) {}
 
     public function toArray(): array
@@ -32,9 +33,15 @@ class PaymentResponseDto
             'auth_model' => $this->authModel,
             'reference' => $this->reference,
             'response_message' => $this->responseMessage,
+            'payment_method' => $this->paymentMethod,
         ], function ($value) {
             return $value !== null;
         }, ARRAY_FILTER_USE_BOTH);
+    }
+
+    public function getPaymentMethod(): ?string
+    {
+        return $this->paymentMethod;
     }
 
     public function getErrorType(): ?string
@@ -67,12 +74,12 @@ class PaymentResponseDto
         return $this->status;
     }
 
-    public function getAuthModel(): string
+    public function getAuthModel(): ?string
     {
         return $this->authModel;
     }
 
-    public function getGateway(): string
+    public function getGateway(): ?string
     {
         return $this->gateway;
     }

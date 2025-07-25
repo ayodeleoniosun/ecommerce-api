@@ -11,6 +11,7 @@ use App\Domain\Order\Resources\Order\OrderResource;
 use App\Domain\Payment\Actions\CompleteOrderPaymentAction;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
 use App\Domain\Payment\Enums\PaymentStatusEnum;
+use App\Domain\Payment\Enums\PaymentTypeEnum;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Order\Order;
 use App\Infrastructure\Models\Order\OrderPayment;
@@ -46,10 +47,11 @@ beforeEach(function () {
 
     $this->paymentResponseDto = new PaymentResponseDto(
         status: PaymentStatusEnum::SUCCESS->value,
-        authModel: 'PIN',
-        gateway: 'korapay',
+        paymentMethod: PaymentTypeEnum::CARD->value,
         reference: 'KPY-12345',
         responseMessage: 'Payment successful',
+        authModel: 'PIN',
+        gateway: 'korapay',
         amountCharged: 10000,
         fee: 100,
         vat: 10,

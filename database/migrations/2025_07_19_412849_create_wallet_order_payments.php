@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('wallet_transaction_id')->constrained('wallet_transactions')->nullOnDelete();
             $table->foreignId('order_payment_id')->constrained('order_payments')->nullOnDelete();
-            $table->decimal('amount', total: 10);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -3,7 +3,7 @@
 namespace App\Infrastructure\Services\Payments\Flutterwave;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Domain\Payment\Dtos\InitiateOrderPaymentDto;
+use App\Domain\Payment\Dtos\InitiateCardPaymentDto;
 use App\Domain\Payment\Dtos\PaymentAuthorizationDto;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
 use App\Domain\Payment\Enums\GatewayPrefixReferenceEnum;
@@ -30,7 +30,7 @@ class FlutterwaveIntegration extends PaymentGatewayIntegration implements Paymen
     /**
      * @throws ConnectionException
      */
-    public function initiate(InitiateOrderPaymentDto $paymentDto): PaymentResponseDto
+    public function initiate(InitiateCardPaymentDto $paymentDto): PaymentResponseDto
     {
         $transaction = $this->createTransaction($paymentDto);
 
@@ -70,17 +70,7 @@ class FlutterwaveIntegration extends PaymentGatewayIntegration implements Paymen
         );
     }
 
-    public function verify(string $reference): array
-    {
-        // TODO: Implement verify() method.
-    }
-
-    public function authorize(PaymentAuthorizationDto $paymentAuthorizationDto): PaymentResponseDto
-    {
-        // TODO: Implement authorize() method.
-    }
-
-    private function createTransaction(InitiateOrderPaymentDto $paymentDto): TransactionFlutterwaveCardPayment
+    private function createTransaction(InitiateCardPaymentDto $paymentDto): TransactionFlutterwaveCardPayment
     {
         $paymentDto->setReference(self::generateRandomCharacters(GatewayPrefixReferenceEnum::FLUTTERWAVE->value));
 
@@ -102,7 +92,7 @@ class FlutterwaveIntegration extends PaymentGatewayIntegration implements Paymen
     /**
      * @throws ConnectionException
      */
-    private function initializeCharge(InitiateOrderPaymentDto $paymentDto): array
+    private function initializeCharge(InitiateCardPaymentDto $paymentDto): array
     {
         $chargeToken = $this->encryptCardData(json_encode([
             'amount' => $paymentDto->getAmount(),
@@ -129,5 +119,15 @@ class FlutterwaveIntegration extends PaymentGatewayIntegration implements Paymen
                 'authorization' => $this->secretKey,
             ],
         );
+    }
+
+    public function verify(string $reference): array
+    {
+        // TODO: Implement verify() method.
+    }
+
+    public function authorize(PaymentAuthorizationDto $paymentAuthorizationDto): PaymentResponseDto
+    {
+        // TODO: Implement authorize() method.
     }
 }
