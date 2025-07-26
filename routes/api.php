@@ -8,6 +8,7 @@ use App\Domain\Inventory\Controllers\ProductController;
 use App\Domain\Order\Controllers\CartController;
 use App\Domain\Order\Controllers\OrderController;
 use App\Domain\Order\Controllers\WishlistController;
+use App\Domain\Payment\Controllers\WalletController;
 use App\Domain\Shipping\Controllers\PickupStationController;
 use App\Domain\Shipping\Controllers\ShippingAddressController;
 use App\Domain\Vendor\Onboarding\Controllers\OnboardingController;
@@ -45,6 +46,11 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::prefix('addresses')->group(function () {
         Route::post('/', [ShippingAddressController::class, 'store']);
         Route::get('/', [ShippingAddressController::class, 'index']);
+    });
+
+    Route::prefix('wallets')->group(function () {
+        Route::post('/fund', [WalletController::class, 'fund']);
+        Route::get('/balance/{currency}', [WalletController::class, 'balance']);
     });
 
     Route::prefix('orders')->group(function () {

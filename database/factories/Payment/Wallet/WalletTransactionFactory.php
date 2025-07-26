@@ -25,6 +25,7 @@ class WalletTransactionFactory extends Factory
             'wallet_id' => Wallet::factory()->create()->id,
             'amount' => 0,
             'type' => WalletTransactionTypeEnum::DEBIT->value,
+            'reference' => 'ref-1234',
         ];
     }
 }

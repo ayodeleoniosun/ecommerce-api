@@ -31,12 +31,17 @@ class PayWithCardAction extends BaseOrderAction
     public function __construct(
         private readonly OrderRepositoryInterface $orderRepository,
         private readonly CardTransactionRepositoryInterface $cardTransactionRepository,
-        private readonly GatewayRepositoryInterface $gatewayRepository,
-        private readonly GatewayTypeRepositoryInterface $gatewayTypeRepository,
+        protected GatewayRepositoryInterface $gatewayRepository,
+        protected GatewayTypeRepositoryInterface $gatewayTypeRepository,
         protected OrderItemRepositoryInterface $orderItemRepository,
         protected OrderPaymentRepositoryInterface $orderPaymentRepository,
     ) {
-        parent::__construct($orderItemRepository, $orderPaymentRepository);
+        parent::__construct(
+            $orderItemRepository,
+            $orderPaymentRepository,
+            $this->gatewayRepository,
+            $this->gatewayTypeRepository,
+        );
     }
 
     /**

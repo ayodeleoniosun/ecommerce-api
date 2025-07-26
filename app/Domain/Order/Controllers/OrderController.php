@@ -70,10 +70,10 @@ class OrderController
 
     public function pay(OrderPaymentRequest $request): JsonResponse
     {
-        $orderPaymentDto = PaymentDto::fromArray($request->validated());
+        $paymentDto = PaymentDto::fromArray($request->validated());
 
         try {
-            $transactionResponse = $this->initiateOrderPayment->execute($orderPaymentDto);
+            $transactionResponse = $this->initiateOrderPayment->execute($paymentDto);
 
             if ($transactionResponse->getAuthModel() && self::requiresAuthorization($transactionResponse->getAuthModel())) {
                 $this->completeOrderPayment->updateOrderPayment($transactionResponse);

@@ -24,7 +24,6 @@ class WalletOrderPaymentFactory extends Factory
         return [
             'wallet_transaction_id' => WalletTransaction::factory()->create()->id,
             'order_payment_id' => OrderPayment::factory()->create()->id,
-            'amount' => 0,
         ];
     }
 }

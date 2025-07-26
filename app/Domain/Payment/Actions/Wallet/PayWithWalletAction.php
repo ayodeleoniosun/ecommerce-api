@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Payment\Actions;
+namespace App\Domain\Payment\Actions\Wallet;
 
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Traits\UtilitiesTrait;

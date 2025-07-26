@@ -6,6 +6,7 @@ use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Domain\Order\Interfaces\Order\OrderRepositoryInterface;
+use App\Domain\Payment\Actions\Wallet\PayWithWalletAction;
 use App\Domain\Payment\Dtos\PaymentDto;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
 use App\Domain\Payment\Enums\PaymentTypeEnum;
