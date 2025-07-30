@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('transaction_kora_card_payments', function (Blueprint $table) {
             $table->id();
             $table->string('uuid');
-            $table->foreignId('order_payment_id')->constrained('order_payments')->nullOnDelete();
+            $table->string('order_payment_reference');
             $table->string('reference');
             $table->string('currency');
             $table->string('auth_model')->nullable();

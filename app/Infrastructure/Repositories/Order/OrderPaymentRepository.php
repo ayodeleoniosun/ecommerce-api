@@ -8,11 +8,8 @@ use App\Infrastructure\Repositories\BaseRepository;
 
 class OrderPaymentRepository extends BaseRepository implements OrderPaymentRepositoryInterface
 {
-    public function storeOrUpdate(array $data): OrderPayment
+    public function store(array $data): OrderPayment
     {
-        return OrderPayment::updateOrCreate(
-            ['order_id' => $data['order_id'], 'status' => $data['status']],
-            $data,
-        );
+        return OrderPayment::create($data);
     }
 }

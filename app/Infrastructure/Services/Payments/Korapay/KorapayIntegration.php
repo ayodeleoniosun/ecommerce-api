@@ -8,7 +8,6 @@ use App\Domain\Payment\Dtos\InitiateCardPaymentDto;
 use App\Domain\Payment\Dtos\PaymentAuthorizationDto;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
 use App\Domain\Payment\Enums\AuthModelEnum;
-use App\Domain\Payment\Enums\GatewayPrefixReferenceEnum;
 use App\Domain\Payment\Enums\PaymentErrorTypeEnum;
 use App\Domain\Payment\Enums\PaymentResponseMessageEnum;
 use App\Domain\Payment\Enums\PaymentTypeEnum;
@@ -81,10 +80,6 @@ class KorapayIntegration extends PaymentGatewayIntegration implements PaymentGat
 
     private function createTransaction(InitiateCardPaymentDto $paymentDto): TransactionKoraCardPayment
     {
-        if (! $paymentDto->getReference()) {
-            $paymentDto->setReference(self::generateRandomCharacters(GatewayPrefixReferenceEnum::KORAPAY->value));
-        }
-
         return DB::transaction(function () use ($paymentDto) {
             $transaction = $this->cardTransactionRepository->create(
                 TransactionKoraCardPayment::class,
@@ -240,7 +235,7 @@ class KorapayIntegration extends PaymentGatewayIntegration implements PaymentGat
         );
     }
 
-    public function verify(string $reference): array
+    public function verify(string $reference)
     {
         return [];
     }

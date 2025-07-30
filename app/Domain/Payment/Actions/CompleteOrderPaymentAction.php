@@ -11,6 +11,10 @@ use App\Domain\Order\Interfaces\Order\OrderRepositoryInterface;
 use App\Domain\Order\Notifications\OrderCompletedNotification;
 use App\Domain\Order\Resources\Order\OrderResource;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
+use App\Infrastructure\Models\Cart\UserCart;
+use App\Infrastructure\Models\Order\Order;
+use App\Infrastructure\Models\Order\OrderPayment;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class CompleteOrderPaymentAction
@@ -27,48 +31,35 @@ class CompleteOrderPaymentAction
         $order = null;
         $status = $transactionResponse->getStatus();
 
-        DB::transaction(function () use (&$order, $transactionResponse, $status) {
-            $order = $this->orderRepository->findPendingOrder(auth()->user()->id, lockForUpdate: true);
+        DB::transaction(function () use ($transactionResponse, &$order, $status) {
+            $orderPayment = $this->orderPaymentRepository->findByColumn(
+                OrderPayment::class,
+                'reference',
+                $transactionResponse->getReference(),
+            );
 
-            if (! $order) {
+            if (! $orderPayment) {
                 return;
             }
 
-            $cart = $this->userCartRepository->findPendingCart(auth()->user()->id, lockForUpdate: true);
+            $order = $orderPayment->order;
 
-            $orderPayment = $order->payment;
+            $cart = $this->userCartRepository->findPendingCart($order->user_id, lockForUpdate: true);
+
             $amountCharged = $orderPayment->order_amount + $orderPayment->delivery_amount + $transactionResponse->getFee() + $transactionResponse->getVat();
 
-            $this->orderPaymentRepository->updateColumns(
-                $orderPayment,
-                [
-                    'order_id' => $order->id,
-                    'status' => $status,
-                    'fee' => $transactionResponse->getFee(),
-                    'vat' => $transactionResponse->getVat(),
-                    'amount_charged' => $amountCharged,
-                    'auth_model' => $transactionResponse->getAuthModel(),
-                    'gateway' => $transactionResponse->getGateway(),
-                    'gateway_reference' => $transactionResponse->getReference(),
-                    'narration' => $transactionResponse->getResponseMessage(),
-                    'completed_at' => now()->toDateTimeString(),
-                ],
-            );
+            $this->orderPaymentRepository->updateColumns($orderPayment, [
+                'order_id' => $order->id,
+                'status' => $status,
+                'fee' => $transactionResponse->getFee(),
+                'vat' => $transactionResponse->getVat(),
+                'amount_charged' => $amountCharged,
+                'narration' => $transactionResponse->getResponseMessage(),
+                'completed_at' => now()->toDateTimeString(),
+            ]);
 
             if ($status === OrderStatusEnum::SUCCESS->value) {
-                $order = $this->orderRepository->storeOrUpdate([
-                    'id' => $order->id,
-                    'status' => $status,
-                ]);
-
-                $cartStatus = CartStatusEnum::CHECKED_OUT->value;
-
-                $this->userCartRepository->updateColumns(
-                    $cart,
-                    ['status' => $cartStatus],
-                );
-
-                $this->userCartItemRepository->completeCartItems($cart->id, $cartStatus);
+                $order = $this->completeOrder($status, $orderPayment, $cart);
             }
         });
 
@@ -79,6 +70,27 @@ class CompleteOrderPaymentAction
         $record = $order->load('items', 'shipping', 'payment');
 
         return new OrderResource($record);
+    }
+
+    private function completeOrder(
+        string $status,
+        Model $orderPayment,
+        UserCart $cart,
+    ): Order {
+        $order = $this->orderRepository->storeOrUpdate([
+            'id' => $orderPayment->order->id,
+            'status' => $status,
+        ]);
+
+        $cartStatus = CartStatusEnum::CHECKED_OUT->value;
+
+        $this->userCartRepository->updateColumns($cart, [
+            'status' => $cartStatus,
+        ]);
+
+        $this->userCartItemRepository->completeCartItems($cart->id, $cartStatus);
+
+        return $order;
     }
 
     public function updateOrderPayment(PaymentResponseDto $transactionResponse): void
@@ -92,15 +104,11 @@ class CompleteOrderPaymentAction
 
             $orderPayment = $order->payment;
 
-            $this->orderPaymentRepository->updateColumns(
-                $orderPayment,
-                [
-                    'status' => $transactionResponse->getStatus(),
-                    'gateway' => $transactionResponse->getGateway(),
-                    'gateway_reference' => $transactionResponse->getReference(),
-                    'narration' => $transactionResponse->getResponseMessage(),
-                ],
-            );
+            $this->orderPaymentRepository->updateColumns($orderPayment, [
+                'auth_model' => $transactionResponse->getAuthModel(),
+                'status' => $transactionResponse->getStatus(),
+                'narration' => $transactionResponse->getResponseMessage(),
+            ]);
         });
     }
 }

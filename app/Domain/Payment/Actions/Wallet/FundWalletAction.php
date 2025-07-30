@@ -2,6 +2,7 @@
 
 namespace App\Domain\Payment\Actions\Wallet;
 
+use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Domain\Payment\Dtos\CardData;
 use App\Domain\Payment\Dtos\CustomerData;
@@ -35,6 +36,9 @@ class FundWalletAction extends BaseWalletAction
         parent::__construct($walletRepository);
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function execute(FundWalletDto $fundWalletDto): PaymentResponseDto
     {
         $currency = $fundWalletDto->getCurrency();

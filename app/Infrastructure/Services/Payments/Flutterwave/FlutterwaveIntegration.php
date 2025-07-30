@@ -6,12 +6,16 @@ use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Domain\Payment\Dtos\InitiateCardPaymentDto;
 use App\Domain\Payment\Dtos\PaymentAuthorizationDto;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
-use App\Domain\Payment\Enums\GatewayPrefixReferenceEnum;
+use App\Domain\Payment\Enums\PaymentErrorTypeEnum;
+use App\Domain\Payment\Enums\PaymentStatusEnum;
+use App\Domain\Payment\Enums\PaymentTypeEnum;
 use App\Domain\Payment\Interfaces\CardTransactionRepositoryInterface;
 use App\Domain\Payment\Interfaces\PaymentGatewayIntegrationInterface;
 use App\Infrastructure\Models\Payment\Integration\Flutterwave\ApiLogsFlutterwaveCardPayment;
 use App\Infrastructure\Models\Payment\Integration\Flutterwave\TransactionFlutterwaveCardPayment;
+use App\Infrastructure\Services\Payments\Flutterwave\Enum\AuthModelEnum;
 use App\Infrastructure\Services\Payments\PaymentGatewayIntegration;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\DB;
 
@@ -27,53 +31,46 @@ class FlutterwaveIntegration extends PaymentGatewayIntegration implements Paymen
         parent::__construct();
     }
 
+    public function authorize(PaymentAuthorizationDto $paymentAuthorizationDto): PaymentResponseDto
+    {
+        // TODO: Implement authorize() method.
+    }
+
     /**
      * @throws ConnectionException
      */
     public function initiate(InitiateCardPaymentDto $paymentDto): PaymentResponseDto
     {
         $transaction = $this->createTransaction($paymentDto);
-
         $response = $this->initializeCharge($paymentDto);
 
-        $status = self::getKorapayStatus($response['data']['status']);
+        $authModel = AuthModelEnum::tryFrom($response['data']['auth_model'])->label();
+        $authMode = $response['meta']['authorization']['mode'];
+        $status = self::getFlutterwaveChargeStatus($response['data']['status']);
 
-        DB::transaction(function () use ($transaction, $status, $response) {
-            $this->cardTransactionRepository->update(
-                model: TransactionFlutterwaveCardPayment::class,
-                data: [
-                    'transaction_id' => $transaction->id,
-                    'status' => $status,
-                    'gateway_response' => $response['data']['response_message'],
-                    'gateway_transaction_reference' => $response['data']['transaction_reference'],
-                ],
-            );
+        $this->updateChargeResponseInTransactionAndApiLog($transaction, $status, $response);
 
-            $this->cardTransactionRepository->update(
-                model: ApiLogsFlutterwaveCardPayment::class,
-                data: [
-                    'transaction_id' => $transaction->apiLog->id,
-                    'charge_response' => json_encode($response),
-                ],
-            );
-        });
-
-        return new PaymentResponseDto(
+        $paymentResponseDto = new PaymentResponseDto(
             status: $status,
-            authModel: $response['data']['auth_model'],
+            paymentMethod: PaymentTypeEnum::CARD->value,
+            reference: $paymentDto->getOrderPaymentReference(),
+            responseMessage: $response['data']['processor_response'],
+            authModel: $authModel,
             gateway: $this->gateway,
-            reference: $response['data']['transaction_reference'],
-            responseMessage: $response['data']['response_message'],
-            amountCharged: $response['data']['amount_charged'],
-            fee: $response['data']['fee'],
-            vat: $response['data']['vat']
+            amountCharged: $response['data']['charged_amount'],
+            fee: $response['data']['app_fee'],
+            vat: 0,
         );
+
+        if (self::requiresRedirection($authMode)) {
+            $paymentResponseDto->setRedirectionUrl($response['meta']['authorization']['redirect']);
+        }
+
+        return $paymentResponseDto;
     }
 
     private function createTransaction(InitiateCardPaymentDto $paymentDto): TransactionFlutterwaveCardPayment
     {
-        $paymentDto->setReference(self::generateRandomCharacters(GatewayPrefixReferenceEnum::FLUTTERWAVE->value));
-
         return DB::transaction(function () use ($paymentDto) {
             $transaction = $this->cardTransactionRepository->create(
                 TransactionFlutterwaveCardPayment::class,
@@ -94,7 +91,7 @@ class FlutterwaveIntegration extends PaymentGatewayIntegration implements Paymen
      */
     private function initializeCharge(InitiateCardPaymentDto $paymentDto): array
     {
-        $chargeToken = $this->encryptCardData(json_encode([
+        $requestData = [
             'amount' => $paymentDto->getAmount(),
             'currency' => $paymentDto->getCurrency(),
             'card_number' => $paymentDto->getCard()->getNumber(),
@@ -102,18 +99,20 @@ class FlutterwaveIntegration extends PaymentGatewayIntegration implements Paymen
             'expiry_month' => $paymentDto->getCard()->getExpiryMonth(),
             'expiry_year' => $paymentDto->getCard()->getExpiryYear(),
             'email' => $paymentDto->getCustomer()->getEmail(),
-            'tx_ref' => $paymentDto->getReference(),
+            'tx_ref' => $paymentDto->getGatewayReference(),
             'authorization' => [
                 'mode' => 'pin',
                 'pin' => $paymentDto->getCard()->getPin(),
             ],
-        ]), $this->encryptionKey);
+        ];
+
+        $encryptedData = $this->encryptCardData($requestData, $this->encryptionKey);
 
         return $this->request(
             method: 'POST',
             path: '/charges?type=card',
             payload: [
-                'client' => 'Of8p6iJUVUezgvjUkjjJsP8aPd6CjHR3f9ptHiH5Q0+2h/FzHA/X1zPlDmRmH5v+GoLWWB4TqEojrKhZI38MSjbGm3DC8UPf385zBYEHZdgvQDsacDYZtFEruJqEWXmbvw9sUz+YwUHegTSogQdnXp7OGdUxPngiv6592YoL0YXa4eHcH1fRGjAimdqucGJPurFVu4sE5gJIEmBCXdESVqNPG72PwdRPfAINT9x1bXemI1M3bBdydtWvAx58ZE4fcOtWkD/IDi+o8K7qpmzgUR8YUbgZ71yi0pg5UmrT4YpcY2eq5i46Gg3L+fxFl4tauG9H4WBChF0agXtP4kjfhfYVD48N9Hrt',
+                'client' => 'L4BE6nhxdlf9SY2atIxJFB2mMahr/HP2fSpLfVaoBUDm12nwjIGGA2/pCzV/HUpVaAjACfW3bbQhF6e4/CC/J4PEieLGslsRN9cOt2a6FHKn+2RFKW3qCFJwMMnaZGd/bN6b7U37t+e3B/qP2njph1gTlYOftBm8XCjSeMf93ZGCRbNq7+dbiI4eZDnRo1sthUdHAHzwjoeH7rjSLrWujArmjPMRcIa9Fb/Ngzs1yZ+nZuzhorFrrVSofYKEY6RqwsEAL2Ik/Tb1Wzd6155mrXu5DGzAjceJ',
             ],
             options: [
                 'authorization' => $this->secretKey,
@@ -121,13 +120,112 @@ class FlutterwaveIntegration extends PaymentGatewayIntegration implements Paymen
         );
     }
 
-    public function verify(string $reference): array
-    {
-        // TODO: Implement verify() method.
+    private function updateChargeResponseInTransactionAndApiLog(
+        Model $transaction,
+        string $status,
+        array $response,
+    ): void {
+        DB::transaction(function () use ($transaction, $status, $response) {
+            $this->cardTransactionRepository->update(
+                model: TransactionFlutterwaveCardPayment::class,
+                data: [
+                    'transaction_id' => $transaction->id,
+                    'status' => $status,
+                    'auth_model' => AuthModelEnum::tryFrom($response['data']['auth_model'])->label(),
+                    'gateway_response' => $response['data']['processor_response'],
+                    'gateway_transaction_reference' => $response['data']['id'],
+                ],
+            );
+
+            $this->cardTransactionRepository->update(
+                model: ApiLogsFlutterwaveCardPayment::class,
+                data: [
+                    'transaction_id' => $transaction->apiLog->id,
+                    'charge_response' => json_encode($response),
+                ],
+            );
+        });
     }
 
-    public function authorize(PaymentAuthorizationDto $paymentAuthorizationDto): PaymentResponseDto
+    /**
+     * @throws ConnectionException
+     */
+    public function verify(string $reference): PaymentResponseDto
     {
-        // TODO: Implement authorize() method.
+        $response = $this->verifyCharge($reference);
+
+        $responseStatus = $response['status'];
+
+        if ($responseStatus === 'error') {
+            $status = PaymentStatusEnum::FAILED->value;
+
+            return new PaymentResponseDto(
+                status: $status,
+                paymentMethod: PaymentTypeEnum::CARD->value,
+                reference: $response['data']['tx_ref'],
+                responseMessage: $response['message'],
+                errorType: PaymentErrorTypeEnum::TRANSACTION_NOT_FOUND->value
+            );
+        }
+
+        $transaction = $this->cardTransactionRepository->findByColumn(
+            model: TransactionFlutterwaveCardPayment::class,
+            field: 'gateway_transaction_reference',
+            value: $reference,
+        );
+
+        $this->updateVerifyResponseInTransactionAndApiLog($transaction, $response['data']['status'], $response);
+
+        $vat = $response['data']['amount'] - $response['data']['app_fee'] - $response['data']['amount_settled'];
+
+        return new PaymentResponseDto(
+            status: self::getFlutterwaveVerifyStatus($response['data']['status']),
+            paymentMethod: PaymentTypeEnum::CARD->value,
+            reference: $response['data']['tx_ref'],
+            responseMessage: $response['data']['processor_response'],
+            authModel: AuthModelEnum::tryFrom($response['data']['auth_model'])->label(),
+            amountCharged: $response['data']['amount'],
+            fee: $response['data']['app_fee'],
+            vat: $vat,
+        );
+    }
+
+    /**
+     * @throws ConnectionException
+     */
+    private function verifyCharge(string $reference): array
+    {
+        return $this->request(
+            method: 'GET',
+            path: '/transactions/'.$reference.'/verify',
+            options: [
+                'authorization' => $this->secretKey,
+            ],
+        );
+    }
+
+    private function updateVerifyResponseInTransactionAndApiLog(
+        Model $transaction,
+        string $status,
+        array $response,
+    ): void {
+        DB::transaction(function () use ($transaction, $status, $response) {
+            $this->cardTransactionRepository->update(
+                model: TransactionFlutterwaveCardPayment::class,
+                data: [
+                    'transaction_id' => $transaction->id,
+                    'status' => $status,
+                    'gateway_response' => $response['data']['processor_response'],
+                ],
+            );
+
+            $this->cardTransactionRepository->update(
+                model: ApiLogsFlutterwaveCardPayment::class,
+                data: [
+                    'transaction_id' => $transaction->apiLog->id,
+                    'verify_response' => json_encode($response),
+                ],
+            );
+        });
     }
 }

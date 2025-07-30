@@ -12,5 +12,5 @@ interface PaymentGatewayIntegrationInterface
 
     public function authorize(PaymentAuthorizationDto $paymentAuthorizationDto): PaymentResponseDto;
 
-    public function verify(string $reference): array;
+    public function verify(string $reference);
 }

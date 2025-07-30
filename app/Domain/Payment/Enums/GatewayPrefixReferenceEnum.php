@@ -8,4 +8,10 @@ enum GatewayPrefixReferenceEnum: string
     case FLUTTERWAVE = 'FLW-';
     case PAYSTACK = 'PAY-';
     case STRIPE = 'STP-';
+
+    public static function getPrefix($gateway): self
+    {
+        return collect(self::cases())
+            ->first(fn ($case) => $case->name === strtoupper($gateway));
+    }
 }

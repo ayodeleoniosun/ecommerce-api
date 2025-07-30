@@ -9,6 +9,7 @@ use App\Domain\Order\Controllers\CartController;
 use App\Domain\Order\Controllers\OrderController;
 use App\Domain\Order\Controllers\WishlistController;
 use App\Domain\Payment\Controllers\WalletController;
+use App\Domain\Payment\Controllers\WebhookController;
 use App\Domain\Shipping\Controllers\PickupStationController;
 use App\Domain\Shipping\Controllers\ShippingAddressController;
 use App\Domain\Vendor\Onboarding\Controllers\OnboardingController;
@@ -38,6 +39,10 @@ Route::prefix('inventory')->group(function () {
             Route::get('/{variationUUID}/options', [CategoryController::class, 'getCategoryVariationOptions']);
         });
     });
+});
+
+Route::prefix('webhooks')->group(function () {
+    Route::post('/flutterwave', [WebhookController::class, 'flutterwave']);
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
@@ -106,12 +111,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             Route::get('/{stationUUID}', [PickupStationController::class, 'view']);
             Route::post('', [PickupStationController::class, 'store']);
             Route::post('/{stationUUID}/opening-hours', [PickupStationController::class, 'storeOpeningHours']);
-
-            //            Route::put('/{stationUUID}', [PickupStationController::class, 'update']);
-            //            Route::put('/{stationUUID}/opening-hours', [PickupStationController::class, 'updateOpeningHours']);
-            //
-            //            Route::delete('/{stationUUID}', [PickupStationController::class, 'delete']);
-            //            Route::delete('/{stationUUID}/opening-hours', [PickupStationController::class, 'deleteOpeningHours']);
         });
     });
 

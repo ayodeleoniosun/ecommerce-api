@@ -5,7 +5,6 @@ namespace App\Domain\Payment\Actions;
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Domain\Order\Actions\Order\BaseOrderAction;
-use App\Domain\Order\Enums\OrderStatusEnum;
 use App\Domain\Order\Interfaces\Order\OrderItemRepositoryInterface;
 use App\Domain\Order\Interfaces\Order\OrderPaymentRepositoryInterface;
 use App\Domain\Order\Interfaces\Order\OrderRepositoryInterface;
@@ -14,15 +13,16 @@ use App\Domain\Payment\Dtos\CustomerData;
 use App\Domain\Payment\Dtos\GatewayFilterData;
 use App\Domain\Payment\Dtos\InitiateCardPaymentDto;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
+use App\Domain\Payment\Enums\GatewayPrefixReferenceEnum;
 use App\Domain\Payment\Enums\PaymentCategoryEnum;
 use App\Domain\Payment\Enums\PaymentTypeEnum;
 use App\Domain\Payment\Interfaces\CardTransactionRepositoryInterface;
 use App\Domain\Payment\Interfaces\GatewayRepositoryInterface;
 use App\Domain\Payment\Interfaces\GatewayTypeRepositoryInterface;
 use App\Infrastructure\Models\Order\Order;
+use App\Infrastructure\Models\Order\OrderPayment;
 use App\Infrastructure\Models\Payment\Gateway;
 use App\Infrastructure\Services\Payments\PaymentGateway;
-use Illuminate\Database\Eloquent\Model;
 
 class PayWithCardAction extends BaseOrderAction
 {
@@ -39,8 +39,6 @@ class PayWithCardAction extends BaseOrderAction
         parent::__construct(
             $orderItemRepository,
             $orderPaymentRepository,
-            $this->gatewayRepository,
-            $this->gatewayTypeRepository,
         );
     }
 
@@ -49,30 +47,32 @@ class PayWithCardAction extends BaseOrderAction
      */
     public function execute(Order $order, array $cardData): PaymentResponseDto
     {
-        $this->orderPaymentRepository->updateColumns($order->payment, [
-            'payment_method' => PaymentTypeEnum::CARD->value,
-        ]);
+        $orderPayment = $this->createOrderPayment($order);
 
-        $initiateCardPaymentDto = $this->buildCardPaymentDto($order, $cardData);
+        $initiateCardPaymentDto = $this->buildCardPaymentDto($orderPayment, $cardData);
 
         $gateway = $this->getGateway($order->currency);
 
         $paymentGateway = PaymentGateway::make($gateway, $this->cardTransactionRepository);
 
+        $gatewayReference = $this->generateGatewayReference($gateway);
+
+        $this->orderPaymentRepository->updateColumns($orderPayment, [
+            'payment_method' => PaymentTypeEnum::CARD->value,
+            'gateway' => $gateway,
+            'gateway_reference' => $gatewayReference,
+        ]);
+
+        $initiateCardPaymentDto->setGatewayReference($gatewayReference);
+
         return $paymentGateway->initiate($initiateCardPaymentDto);
     }
 
-    private function buildCardPaymentDto(Model $order, array $card): InitiateCardPaymentDto
+    private function buildCardPaymentDto(OrderPayment $orderPayment, array $card): InitiateCardPaymentDto
     {
-        $orderPayment = $order->payment;
-
-        if (! $orderPayment || $orderPayment?->status === OrderStatusEnum::FAILED->value) {
-            $orderPayment = $this->createOrderPayment($order);
-        }
-
         $user = auth()->user();
 
-        $initiateCardPaymentDto = new InitiateCardPaymentDto(
+        return new InitiateCardPaymentDto(
             amount: $orderPayment->order_amount,
             currency: $orderPayment->order->currency,
             card: new CardData(
@@ -88,11 +88,8 @@ class PayWithCardAction extends BaseOrderAction
                 name: $user->fullname,
             ),
             redirectUrl: 'https://example.com',
+            orderPaymentReference: $orderPayment->reference,
         );
-
-        $initiateCardPaymentDto->setPaymentId($orderPayment->id);
-
-        return $initiateCardPaymentDto;
     }
 
     private function getGateway(string $currency): string
@@ -112,5 +109,12 @@ class PayWithCardAction extends BaseOrderAction
         );
 
         return $gateway->slug;
+    }
+
+    private function generateGatewayReference(string $gateway): string
+    {
+        $prefix = GatewayPrefixReferenceEnum::getPrefix($gateway);
+
+        return self::generateRandomCharacters($prefix->value);
     }
 }

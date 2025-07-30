@@ -6,5 +6,5 @@ use App\Infrastructure\Models\Order\OrderPayment;
 
 interface OrderPaymentRepositoryInterface
 {
-    public function storeOrUpdate(array $data): OrderPayment;
+    public function store(array $data): OrderPayment;
 }

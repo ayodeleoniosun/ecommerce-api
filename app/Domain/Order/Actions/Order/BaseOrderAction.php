@@ -2,6 +2,7 @@
 
 namespace App\Domain\Order\Actions\Order;
 
+use App\Application\Shared\Exceptions\BadRequestException;
 use App\Domain\Order\Enums\OrderStatusEnum;
 use App\Domain\Order\Interfaces\Order\OrderItemRepositoryInterface;
 use App\Domain\Order\Interfaces\Order\OrderPaymentRepositoryInterface;
@@ -21,7 +22,9 @@ class BaseOrderAction
     {
         $totalOrderAmount = $this->calculateTotalOrderAmount($order->id);
 
-        return $this->orderPaymentRepository->storeOrUpdate([
+        throw_if($totalOrderAmount <= 0, BadRequestException::class, 'Total order amount must be greater than zero.');
+
+        return $this->orderPaymentRepository->store([
             'status' => OrderStatusEnum::PENDING->value,
             'order_id' => $order->id,
             'order_amount' => $totalOrderAmount,

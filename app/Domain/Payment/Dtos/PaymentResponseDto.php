@@ -17,9 +17,9 @@ class PaymentResponseDto
         private readonly ?string $gateway = null,
         private readonly ?string $errorType = null,
         private ?string $redirectionUrl = null,
-        private readonly ?int $amountCharged = null,
-        private readonly ?int $fee = 0,
-        private readonly ?int $vat = 0,
+        private readonly ?float $amountCharged = null,
+        private readonly ?float $fee = 0,
+        private readonly ?float $vat = 0,
     ) {}
 
     public function toArray(): array
@@ -54,17 +54,17 @@ class PaymentResponseDto
         return $this->redirectionUrl;
     }
 
-    public function getFee(): ?int
+    public function getFee(): ?float
     {
         return $this->fee;
     }
 
-    public function getVat(): ?int
+    public function getVat(): ?float
     {
         return $this->vat;
     }
 
-    public function getAmountCharged(): ?int
+    public function getAmountCharged(): ?float
     {
         return $this->amountCharged;
     }

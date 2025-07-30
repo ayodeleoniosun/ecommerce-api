@@ -14,8 +14,8 @@ class InitiateCardPaymentDto
         private readonly CardData $card,
         private readonly CustomerData $customer,
         private readonly string $redirectUrl,
-        private ?string $reference = null,
-        private ?int $paymentId = null,
+        private ?string $orderPaymentReference = null,
+        private ?string $gatewayReference = null,
     ) {}
 
     public function toJson(): string
@@ -27,7 +27,7 @@ class InitiateCardPaymentDto
     {
         return [
             'amount' => $this->amount,
-            'reference' => $this->reference,
+            'reference' => $this->gatewayReference,
             'currency' => $this->currency,
             'card' => CardData::toArray($this->card),
             'customer' => CustomerData::toArray($this->customer),
@@ -39,9 +39,9 @@ class InitiateCardPaymentDto
     {
         return [
             'amount' => $this->amount,
-            'reference' => $this->reference,
+            'reference' => $this->gatewayReference,
             'currency' => $this->currency,
-            'order_payment_id' => $this->paymentId,
+            'order_payment_reference' => $this->orderPaymentReference,
         ];
     }
 
@@ -65,23 +65,23 @@ class InitiateCardPaymentDto
         return $this->customer;
     }
 
-    public function setPaymentId(int $paymentId): void
+    public function setOrderPaymentReference(string $reference): void
     {
-        $this->paymentId = $paymentId;
+        $this->orderPaymentReference = $reference;
     }
 
-    public function getPaymentId(): ?int
+    public function getOrderPaymentReference(): ?string
     {
-        return $this->paymentId;
+        return $this->orderPaymentReference;
     }
 
-    public function setReference(string $reference): void
+    public function setGatewayReference(string $reference): void
     {
-        $this->reference = $reference;
+        $this->gatewayReference = $reference;
     }
 
-    public function getReference(): ?string
+    public function getGatewayReference(): ?string
     {
-        return $this->reference;
+        return $this->gatewayReference;
     }
 }
