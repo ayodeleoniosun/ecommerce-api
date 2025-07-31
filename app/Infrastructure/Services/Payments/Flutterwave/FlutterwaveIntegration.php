@@ -100,7 +100,7 @@ class FlutterwaveIntegration extends PaymentGatewayIntegration implements Paymen
      * @throws ConnectionException
      * @throws Exception
      */
-    private function initializeCharge(InitiateCardPaymentDto $paymentDto): array
+    public function initializeCharge(InitiateCardPaymentDto $paymentDto): array
     {
         $requestData = [
             'amount' => $paymentDto->getAmount(),
@@ -203,7 +203,7 @@ class FlutterwaveIntegration extends PaymentGatewayIntegration implements Paymen
     /**
      * @throws ConnectionException
      */
-    private function verifyCharge(string $reference): array
+    public function verifyCharge(string $reference): array
     {
         return $this->request(
             method: 'GET',

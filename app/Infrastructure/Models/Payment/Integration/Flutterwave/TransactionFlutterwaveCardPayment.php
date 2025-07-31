@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Models\Payment\Integration\Flutterwave;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
+use Database\Factories\Payment\Integration\Flutterwave\TransactionFlutterwaveCardPaymentFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -20,6 +21,11 @@ class TransactionFlutterwaveCardPayment extends Model
         static::creating(function ($model) {
             $model->uuid = self::generateUUID();
         });
+    }
+
+    protected static function newFactory(): TransactionFlutterwaveCardPaymentFactory
+    {
+        return TransactionFlutterwaveCardPaymentFactory::new();
     }
 
     public function apiLog(): HasOne

@@ -48,6 +48,7 @@ class Webhook
             $paymentGateway = PaymentGateway::make(GatewayEnum::FLUTTERWAVE->value, $this->cardTransactionRepository);
             $verifyResponse = $paymentGateway->verify($transaction->gateway_transaction_reference);
 
+            dd($verifyResponse);
             PaymentWebhookCompleted::dispatch($verifyResponse);
         } else {
             $transaction = $this->cardTransactionRepository->update(
