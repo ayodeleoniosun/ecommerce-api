@@ -11,6 +11,7 @@ class PaymentAuthorizationDto
     public function __construct(
         private readonly string $reference,
         private readonly array $authorization,
+        private ?string $gatewayReference = null,
         private ?string $authModel = null,
     ) {}
 
@@ -28,6 +29,11 @@ class PaymentAuthorizationDto
         return $this->reference;
     }
 
+    public function getGatewayReference(): ?string
+    {
+        return $this->gatewayReference;
+    }
+
     public function getAuthModel(): ?string
     {
         return $this->authModel;
@@ -36,6 +42,11 @@ class PaymentAuthorizationDto
     public function getAuthorization(): ?array
     {
         return $this->authorization;
+    }
+
+    public function setGatewayReference(string $gatewayReference): void
+    {
+        $this->gatewayReference = $gatewayReference;
     }
 
     public function setAuthModel(string $authModel): void

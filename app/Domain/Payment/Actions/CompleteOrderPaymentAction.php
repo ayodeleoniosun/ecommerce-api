@@ -54,6 +54,7 @@ class CompleteOrderPaymentAction
                 'fee' => $transactionResponse->getFee(),
                 'vat' => $transactionResponse->getVat(),
                 'amount_charged' => $amountCharged,
+                'auth_model' => $transactionResponse->getAuthModel() ?? null,
                 'narration' => $transactionResponse->getResponseMessage(),
                 'completed_at' => now()->toDateTimeString(),
             ]);
@@ -105,7 +106,7 @@ class CompleteOrderPaymentAction
             $orderPayment = $order->payment;
 
             $this->orderPaymentRepository->updateColumns($orderPayment, [
-                'auth_model' => $transactionResponse->getAuthModel(),
+                'auth_model' => $transactionResponse->getAuthModel() ?? null,
                 'status' => $transactionResponse->getStatus(),
                 'narration' => $transactionResponse->getResponseMessage(),
             ]);

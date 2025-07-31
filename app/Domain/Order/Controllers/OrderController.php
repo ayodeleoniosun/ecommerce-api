@@ -75,6 +75,12 @@ class OrderController
         try {
             $transactionResponse = $this->initiateOrderPayment->execute($paymentDto);
 
+            if ($transactionResponse->getStatus() === PaymentStatusEnum::FAILED->value) {
+                $this->completeOrderPayment->updateOrderPayment($transactionResponse);
+
+                return ApiResponse::error($transactionResponse->getResponseMessage());
+            }
+
             if ($transactionResponse->getAuthModel() && self::requiresAuthorization($transactionResponse->getAuthModel())) {
                 $this->completeOrderPayment->updateOrderPayment($transactionResponse);
 
@@ -83,11 +89,7 @@ class OrderController
 
             $response = $this->completeOrderPayment->execute($transactionResponse);
 
-            if ($response->status === PaymentStatusEnum::SUCCESS->value) {
-                return ApiResponse::success('Order successfully completed', $response);
-            }
-
-            return ApiResponse::error($transactionResponse->getResponseMessage());
+            return ApiResponse::success('Order successfully completed', $response);
         } catch (Exception $e) {
             return ApiResponse::error($e->getMessage(), $e->getCode());
         }
@@ -100,18 +102,15 @@ class OrderController
         try {
             $transactionResponse = $this->authorizePayment->execute($paymentAuthorizationDto);
 
-            if ($transactionResponse->getErrorType()) {
+            if ($transactionResponse->getStatus() === PaymentStatusEnum::FAILED->value) {
+                $this->completeOrderPayment->updateOrderPayment($transactionResponse);
+
                 return ApiResponse::error($transactionResponse->getResponseMessage());
             }
 
             $response = $this->completeOrderPayment->execute($transactionResponse);
 
-            if ($transactionResponse->getStatus() === PaymentStatusEnum::SUCCESS->value) {
-                return ApiResponse::success('Order successfully completed', $response);
-            }
-
-            return ApiResponse::error($transactionResponse->getResponseMessage());
-
+            return ApiResponse::success('Order successfully completed', $response);
         } catch (Exception $e) {
             return ApiResponse::error($e->getMessage(), $e->getCode());
         }

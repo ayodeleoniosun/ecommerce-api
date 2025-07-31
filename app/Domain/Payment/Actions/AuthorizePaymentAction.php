@@ -31,7 +31,7 @@ class AuthorizePaymentAction
     {
         $orderPayment = $this->orderPaymentRepository->findByColumn(
             OrderPayment::class,
-            'gateway_reference',
+            'reference',
             $paymentAuthorizationDto->getReference(),
         );
 

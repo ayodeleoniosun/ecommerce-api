@@ -47,7 +47,7 @@ trait UtilitiesTrait
 
     public static function requiresAuthorization(string $authModel): bool
     {
-        if ($authModel === AuthModelEnum::PIN->value) {
+        if (in_array($authModel, [AuthModelEnum::NO_AUTH->value, AuthModelEnum::PIN->value])) {
             return false;
         }
 

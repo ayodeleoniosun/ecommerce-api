@@ -9,17 +9,16 @@ class PaymentResponseDto
     use UtilitiesTrait;
 
     public function __construct(
-        private readonly string $status,
+        private string $status,
         private readonly string $paymentMethod,
         private readonly string $reference,
         private readonly string $responseMessage,
-        private readonly ?string $authModel = null,
+        private ?string $authModel = null,
         private readonly ?string $gateway = null,
-        private readonly ?string $errorType = null,
         private ?string $redirectionUrl = null,
-        private readonly ?float $amountCharged = null,
-        private readonly ?float $fee = 0,
-        private readonly ?float $vat = 0,
+        private ?float $amountCharged = null,
+        private ?float $fee = 0,
+        private ?float $vat = 0,
     ) {}
 
     public function toArray(): array
@@ -42,11 +41,6 @@ class PaymentResponseDto
     public function getPaymentMethod(): ?string
     {
         return $this->paymentMethod;
-    }
-
-    public function getErrorType(): ?string
-    {
-        return $this->errorType;
     }
 
     public function getRedirectionUrl(): ?string
@@ -94,8 +88,33 @@ class PaymentResponseDto
         return $this->responseMessage;
     }
 
+    public function setStatus(string $status): void
+    {
+        $this->status = $status;
+    }
+
     public function setRedirectionUrl(string $url): void
     {
         $this->redirectionUrl = $url;
+    }
+
+    public function setAuthModel(string $authModel): void
+    {
+        $this->authModel = $authModel;
+    }
+
+    public function setAmountCharged(float $amountCharged): void
+    {
+        $this->amountCharged = $amountCharged;
+    }
+
+    public function setFee(float $fee): void
+    {
+        $this->fee = $fee;
+    }
+
+    public function setVat(float $vat): void
+    {
+        $this->vat = $vat;
     }
 }

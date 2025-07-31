@@ -23,12 +23,11 @@ class OrderResource extends JsonResource
         return [
             'id' => $this->uuid,
             'status' => $this->status,
-            'failure_reason' => $this->when($this->status === PaymentStatusEnum::FAILED->value,
-                $this->payment->narration),
+            'failure_reason' => $this->when($this->payment, $this->failureReason()),
             'currency' => $this->currency,
             'reference' => $this->reference,
-            'amount' => $this->getAmount($this->status),
-            'payment_method' => $this->payment->payment_method,
+            'amount' => $this->when($this->payment, $this->getAmount($this->status)),
+            'payment_method' => $this->when($this->payment, $this->payment?->payment_method),
             'delivery_type' => $this->shipping->delivery_type,
             'delivery_address' => $this->when($this->shipping->delivery_type === DeliveryTypeEnum::DOOR_DELIVERY->value,
                 $this->shipping->delivery_address),
@@ -41,13 +40,24 @@ class OrderResource extends JsonResource
         ];
     }
 
-    private function getAmount(string $status): int
+    private function failureReason(): ?string
     {
-        if (in_array($status, self::completedTransactionStatuses())) {
-            return $this->payment->amount_charged;
+        $isPaymentFailed = $this->payment && $this->status === PaymentStatusEnum::FAILED->value;
+
+        if ($isPaymentFailed) {
+            return $this->payment->narration;
         }
 
-        return $this->payment->order_amount;
+        return null;
+    }
+
+    private function getAmount(string $status): ?int
+    {
+        if (in_array($status, self::completedTransactionStatuses())) {
+            return $this->payment?->amount_charged;
+        }
+
+        return $this->payment?->order_amount;
     }
 
     private function orderSuccessful(): bool

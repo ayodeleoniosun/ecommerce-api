@@ -60,10 +60,9 @@ class CheckoutAction extends BaseOrderAction
             $order = $this->createOrder(auth()->user()->id);
             $this->createOrderItems($order);
             $this->createOrderShipping($order->id, $checkoutDto->getDeliveryType(), $customerAddress, $pickupStation);
-            $this->createOrderPayment($order);
         });
 
-        $record = $order->load('items', 'shipping', 'payment');
+        $record = $order->load('items', 'shipping');
 
         return new OrderResource($record);
     }

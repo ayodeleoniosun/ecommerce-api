@@ -8,8 +8,8 @@ use App\Domain\Payment\Dtos\InitiateCardPaymentDto;
 use App\Domain\Payment\Dtos\PaymentAuthorizationDto;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
 use App\Domain\Payment\Enums\AuthModelEnum;
-use App\Domain\Payment\Enums\PaymentErrorTypeEnum;
 use App\Domain\Payment\Enums\PaymentResponseMessageEnum;
+use App\Domain\Payment\Enums\PaymentStatusEnum;
 use App\Domain\Payment\Enums\PaymentTypeEnum;
 use App\Domain\Payment\Interfaces\CardTransactionRepositoryInterface;
 use App\Domain\Payment\Interfaces\PaymentGatewayIntegrationInterface;
@@ -40,20 +40,28 @@ class KorapayIntegration extends PaymentGatewayIntegration implements PaymentGat
         $transaction = $this->createTransaction($paymentDto);
         $response = $this->initializeCharge($paymentDto);
 
-        $authModel = $response['data']['auth_model'];
         $status = $response['data']['status'];
+
+        $paymentResponseDto = new PaymentResponseDto(
+            status: $status,
+            paymentMethod: PaymentTypeEnum::CARD->value,
+            reference: $paymentDto->getOrderPaymentReference(),
+            responseMessage: $response['data']['response_message'],
+            gateway: $this->gateway,
+        );
+
+        if ($status === PaymentStatusEnum::FAILED->value) {
+            $this->updateTransactionAndApiLog($transaction, $status, $response);
+
+            return $paymentResponseDto;
+        }
+
+        $authModel = $response['data']['auth_model'];
+
+        $paymentResponseDto->setAuthModel($authModel);
 
         if (self::requiresAuthorization($authModel)) {
             $this->updateTransactionAndApiLog($transaction, $status, $response, updateTransactionOnly: true);
-
-            $paymentResponseDto = new PaymentResponseDto(
-                status: $status,
-                paymentMethod: PaymentTypeEnum::CARD->value,
-                reference: $response['data']['transaction_reference'],
-                responseMessage: $response['data']['response_message'],
-                authModel: $authModel,
-                gateway: $this->gateway,
-            );
 
             if ($authModel === AuthModelEnum::THREE_DS->value) {
                 $paymentResponseDto->setRedirectionUrl($response['data']['redirect_url']);
@@ -66,16 +74,12 @@ class KorapayIntegration extends PaymentGatewayIntegration implements PaymentGat
 
         $this->updateTransactionAndApiLog($transaction, $status, $response);
 
-        return new PaymentResponseDto(
-            status: $status,
-            paymentMethod: PaymentTypeEnum::CARD->value,
-            reference: $response['data']['transaction_reference'],
-            responseMessage: $response['data']['response_message'],
-            authModel: $authModel,
-            amountCharged: $response['data']['amount_charged'],
-            fee: $response['data']['fee'],
-            vat: $response['data']['vat']
-        );
+        $paymentResponseDto->setStatus($status);
+        $paymentResponseDto->setAmountCharged($response['data']['amount_charged']);
+        $paymentResponseDto->setFee($response['data']['fee']);
+        $paymentResponseDto->setVat($response['data']['vat']);
+
+        return $paymentResponseDto;
     }
 
     private function createTransaction(InitiateCardPaymentDto $paymentDto): TransactionKoraCardPayment
@@ -126,9 +130,9 @@ class KorapayIntegration extends PaymentGatewayIntegration implements PaymentGat
                 data: [
                     'transaction_id' => $transaction->id,
                     'status' => $status,
-                    'auth_model' => $response['data']['auth_model'],
+                    'auth_model' => $response['data']['auth_model'] ?? null,
                     'gateway_response' => $response['data']['response_message'],
-                    'gateway_transaction_reference' => $response['data']['transaction_reference'],
+                    'gateway_transaction_reference' => $response['data']['transaction_reference'] ?? null,
                 ],
             );
 
@@ -153,7 +157,7 @@ class KorapayIntegration extends PaymentGatewayIntegration implements PaymentGat
     {
         $transaction = $this->cardTransactionRepository->findByColumn(
             TransactionKoraCardPayment::class,
-            'gateway_transaction_reference',
+            'order_payment_reference',
             $paymentAuthorizationDto->getReference(),
         );
 
@@ -163,9 +167,7 @@ class KorapayIntegration extends PaymentGatewayIntegration implements PaymentGat
                 paymentMethod: PaymentTypeEnum::CARD->value,
                 reference: $paymentAuthorizationDto->getReference(),
                 responseMessage: PaymentResponseMessageEnum::TRANSACTION_NOT_FOUND->value,
-                authModel: $transaction->auth_model,
-                gateway: $this->gateway,
-                errorType: PaymentErrorTypeEnum::TRANSACTION_NOT_FOUND->value
+                gateway: $this->gateway
             );
         }
 
@@ -176,11 +178,11 @@ class KorapayIntegration extends PaymentGatewayIntegration implements PaymentGat
                 reference: $paymentAuthorizationDto->getReference(),
                 responseMessage: PaymentResponseMessageEnum::TRANSACTION_ALREADY_COMPLETED->value,
                 authModel: $transaction->auth_model,
-                gateway: $this->gateway,
-                errorType: PaymentErrorTypeEnum::TRANSACTION_ALREADY_COMPLETED->value
+                gateway: $this->gateway
             );
         }
 
+        $paymentAuthorizationDto->setGatewayReference($transaction->gateway_transaction_reference);
         $paymentAuthorizationDto->setAuthModel($transaction->auth_model);
 
         $response = $this->authorizeCharge($paymentAuthorizationDto);
@@ -191,20 +193,30 @@ class KorapayIntegration extends PaymentGatewayIntegration implements PaymentGat
             return new PaymentResponseDto(
                 status: $status,
                 paymentMethod: PaymentTypeEnum::CARD->value,
-                reference: $transaction->gateway_transaction_reference,
+                reference: $paymentAuthorizationDto->getReference(),
                 responseMessage: $response['message'],
                 authModel: $transaction->auth_model,
-                gateway: $this->gateway,
-                errorType: PaymentErrorTypeEnum::INVALID_REQUEST->value
+                gateway: $this->gateway
             );
         }
 
         $this->updateTransactionAndApiLog($transaction, $status, $response);
 
+        if ($status === PaymentStatusEnum::FAILED->value) {
+            return new PaymentResponseDto(
+                status: OrderStatusEnum::FAILED->value,
+                paymentMethod: PaymentTypeEnum::CARD->value,
+                reference: $paymentAuthorizationDto->getReference(),
+                responseMessage: $response['data']['response_message'],
+                authModel: $transaction->auth_model,
+                gateway: $this->gateway,
+            );
+        }
+
         return new PaymentResponseDto(
             status: $status,
             paymentMethod: PaymentTypeEnum::CARD->value,
-            reference: $response['data']['transaction_reference'],
+            reference: $paymentAuthorizationDto->getReference(),
             responseMessage: $response['data']['response_message'],
             authModel: $transaction->auth_model,
             gateway: $this->gateway,
@@ -223,7 +235,7 @@ class KorapayIntegration extends PaymentGatewayIntegration implements PaymentGat
             method: 'POST',
             path: '/charges/card/authorize',
             payload: [
-                'transaction_reference' => $paymentAuthorizationDto->getReference(),
+                'transaction_reference' => $paymentAuthorizationDto->getGatewayReference(),
                 'authorization' => self::getAuthorizationData(
                     $paymentAuthorizationDto->getAuthModel(),
                     $paymentAuthorizationDto->getAuthorization(),
