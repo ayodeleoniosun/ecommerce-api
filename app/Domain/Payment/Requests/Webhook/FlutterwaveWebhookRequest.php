@@ -28,7 +28,6 @@ class FlutterwaveWebhookRequest extends FormRequest
         return [
             'id' => ['required', 'integer'],
             'txRef' => ['required', 'string'],
-            'flwRef' => ['required', 'string'],
             'amount' => ['required', 'integer'],
             'charged_amount' => ['required', 'integer'],
             'status' => ['required', 'string'],

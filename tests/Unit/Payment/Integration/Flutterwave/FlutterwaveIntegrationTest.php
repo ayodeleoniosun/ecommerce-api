@@ -51,7 +51,7 @@ beforeEach(function () {
         amount: 1000,
         currency: CurrencyEnum::NGN->value,
         card: new CardData(
-            name: fake()->firstName().' '.fake()->lastName(),
+            name: fake()->firstName().' FlutterwaveIntegrationTest.php'.fake()->lastName(),
             number: fake()->creditCardNumber(),
             cvv: '123',
             expiryMonth: fake()->month(),
@@ -60,7 +60,7 @@ beforeEach(function () {
         ),
         customer: new CustomerData(
             email: fake()->email(),
-            name: fake()->firstName().' '.fake()->lastName(),
+            name: fake()->firstName().' FlutterwaveIntegrationTest.php'.fake()->lastName(),
         ),
         redirectUrl: 'https://example.com',
         orderPaymentReference: 'KPY-12345',
@@ -227,15 +227,10 @@ it('should verify transaction if found', function () {
             Mockery::type('array'),
         )->andReturn($this->apiLogCardTransactionMock);
 
-    $cardTransactionMock = Mockery::mock(TransactionFlutterwaveCardPayment::class)->makePartial();
-    $cardTransactionMock->gateway_transaction_reference = $this->paymentDto->getOrderPaymentReference();
-
-    $apiLogCardTransactionMock = Mockery::mock(ApiLogsFlutterwaveCardPayment::class)->makePartial();
-    $apiLogCardTransactionMock->id = 1;
-    $cardTransactionMock->apiLog = $this->apiLogCardTransactionMock;
+    $this->cardTransactionMock->gateway_transaction_reference = $this->paymentDto->getOrderPaymentReference();
 
     $this->cardTransactionRepo->shouldReceive('findByColumn')
-        ->andReturn($cardTransactionMock);
+        ->andReturn($this->cardTransactionMock);
 
     $this->flutterwaveIntegration->shouldReceive('verifyCharge')
         ->once()

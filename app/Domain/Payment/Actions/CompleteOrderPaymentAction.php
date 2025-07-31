@@ -2,6 +2,7 @@
 
 namespace App\Domain\Payment\Actions;
 
+use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Order\Enums\CartStatusEnum;
 use App\Domain\Order\Enums\OrderStatusEnum;
 use App\Domain\Order\Interfaces\Cart\UserCartItemRepositoryInterface;
@@ -11,6 +12,7 @@ use App\Domain\Order\Interfaces\Order\OrderRepositoryInterface;
 use App\Domain\Order\Notifications\OrderCompletedNotification;
 use App\Domain\Order\Resources\Order\OrderResource;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
+use App\Domain\Payment\Enums\PaymentResponseMessageEnum;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Order\Order;
 use App\Infrastructure\Models\Order\OrderPayment;
@@ -28,20 +30,19 @@ class CompleteOrderPaymentAction
 
     public function execute(PaymentResponseDto $transactionResponse): OrderResource
     {
+        $orderPayment = $this->orderPaymentRepository->findByColumn(
+            OrderPayment::class,
+            'reference',
+            $transactionResponse->getReference(),
+        );
+
+        throw_if(! $orderPayment, ResourceNotFoundException::class,
+            PaymentResponseMessageEnum::TRANSACTION_NOT_FOUND->value);
+
         $order = null;
         $status = $transactionResponse->getStatus();
 
-        DB::transaction(function () use ($transactionResponse, &$order, $status) {
-            $orderPayment = $this->orderPaymentRepository->findByColumn(
-                OrderPayment::class,
-                'reference',
-                $transactionResponse->getReference(),
-            );
-
-            if (! $orderPayment) {
-                return;
-            }
-
+        DB::transaction(function () use (&$order, $orderPayment, $transactionResponse, $status) {
             $order = $orderPayment->order;
 
             $cart = $this->userCartRepository->findPendingCart($order->user_id, lockForUpdate: true);

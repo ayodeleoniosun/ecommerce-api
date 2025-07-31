@@ -11,10 +11,9 @@ class FlutterwaveWebhookDto
     public function __construct(
         private readonly string $id,
         private readonly string $transactionReference,
-        private readonly string $flutterwaveReference,
         private readonly string $amount,
         private readonly string $chargedAmount,
-        private readonly string $status,
+        private string $status,
     ) {}
 
     public static function fromArray(array $payload): self
@@ -22,7 +21,6 @@ class FlutterwaveWebhookDto
         return new self(
             id: $payload['id'],
             transactionReference: $payload['txRef'],
-            flutterwaveReference: $payload['flwRef'],
             amount: $payload['amount'],
             chargedAmount: $payload['charged_amount'],
             status: $payload['status']
@@ -34,7 +32,6 @@ class FlutterwaveWebhookDto
         return [
             'id' => $this->id,
             'txRef' => $this->transactionReference,
-            'flwRef' => $this->flutterwaveReference,
             'amount' => $this->amount,
             'charged_amount' => $this->chargedAmount,
             'status' => $this->status,
@@ -51,11 +48,6 @@ class FlutterwaveWebhookDto
         return $this->transactionReference;
     }
 
-    public function getFlutterwaveReference(): string
-    {
-        return $this->flutterwaveReference;
-    }
-
     public function getAmount(): string
     {
         return $this->amount;
@@ -69,5 +61,10 @@ class FlutterwaveWebhookDto
     public function getStatus(): string
     {
         return $this->status;
+    }
+
+    public function setStatus(string $status): void
+    {
+        $this->status = $status;
     }
 }

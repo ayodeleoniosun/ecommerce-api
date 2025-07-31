@@ -41,14 +41,13 @@ class Webhook
         if (! $transaction) {
             Log::info('Transaction reference '.$webhookDto->getTransactionReference().' does not exist as a flutterwave transaction');
 
-            throw new ResourceNotFoundException('Transaction does not exist.');
+            throw new ResourceNotFoundException('Transaction does not exist');
         }
 
         if ($webhookDto->getStatus() === PaymentStatusEnum::SUCCESSFUL->value) {
             $paymentGateway = PaymentGateway::make(GatewayEnum::FLUTTERWAVE->value, $this->cardTransactionRepository);
             $verifyResponse = $paymentGateway->verify($transaction->gateway_transaction_reference);
 
-            dd($verifyResponse);
             PaymentWebhookCompleted::dispatch($verifyResponse);
         } else {
             $transaction = $this->cardTransactionRepository->update(
