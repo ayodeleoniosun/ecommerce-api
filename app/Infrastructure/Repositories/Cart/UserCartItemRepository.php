@@ -8,6 +8,7 @@ use App\Domain\Order\Interfaces\Cart\UserCartItemRepositoryInterface;
 use App\Infrastructure\Models\Cart\UserCartItem;
 use App\Infrastructure\Repositories\BaseRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 class UserCartItemRepository extends BaseRepository implements UserCartItemRepositoryInterface
@@ -23,7 +24,7 @@ class UserCartItemRepository extends BaseRepository implements UserCartItemRepos
         )->whereHas('cart', function ($query) {
             $query->where('status', CartStatusEnum::PENDING->value)
                 ->where('user_id', auth()->user()->id);
-        })->where('status', CartStatusEnum::PENDING->value)
+        })->whereIn('status', [CartStatusEnum::PENDING->value, CartStatusEnum::OUT_OF_STOCK->value])
             ->latest()
             ->paginate(50);
     }
@@ -52,5 +53,13 @@ class UserCartItemRepository extends BaseRepository implements UserCartItemRepos
             ->where('cart_id', $cartId)
             ->where('product_item_id', $productItemId)
             ->first();
+    }
+
+    public function getAllOutOfStockItems(int $productItemId): Collection
+    {
+        return UserCartItem::query()
+            ->where('status', CartStatusEnum::OUT_OF_STOCK->value)
+            ->where('product_item_id', $productItemId)
+            ->get();
     }
 }

@@ -6,11 +6,13 @@ use App\Application\Shared\Enum\CurrencyEnum;
 use App\Domain\Vendor\Products\Actions\CreateOrUpdateProductItemAction;
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductItemDto;
 use App\Domain\Vendor\Products\Enums\ProductStatusEnum;
+use App\Domain\Vendor\Products\Events\CartItemsRestocked;
 use App\Domain\Vendor\Products\Resource\ProductItemResource;
 use App\Infrastructure\Models\Inventory\CategoryVariationOption;
 use App\Infrastructure\Models\Inventory\Product;
 use App\Infrastructure\Models\Inventory\ProductItem;
 use App\Infrastructure\Repositories\Vendor\Products\ProductItemRepository;
+use Illuminate\Support\Facades\Event;
 use Mockery;
 
 beforeEach(function () {
@@ -42,6 +44,8 @@ beforeEach(function () {
 });
 
 it('should create a new vendor product item', function () {
+    Event::fake();
+
     $this->productItemRepo->shouldReceive('findExistingProductItem')
         ->once()
         ->with($this->productItemDto->getProductId(), $this->productItemDto->getCategoryVariationOptionId())
@@ -53,6 +57,8 @@ it('should create a new vendor product item', function () {
         ->andReturn($this->productItem);
 
     $response = $this->createOrUpdateProductItem->execute($this->productItemDto);
+
+    Event::assertDispatched(CartItemsRestocked::class);
 
     expect($response['is_existing_product_item'])->toBeFalse()
         ->and($response['product_item'])->toBeInstanceOf(ProductItemResource::class)

@@ -3,6 +3,7 @@
 namespace App\Domain\Vendor\Products\Actions;
 
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductItemDto;
+use App\Domain\Vendor\Products\Events\CartItemsRestocked;
 use App\Domain\Vendor\Products\Interfaces\ProductItemRepositoryInterface;
 use App\Domain\Vendor\Products\Resource\ProductItemResource;
 
@@ -19,6 +20,8 @@ class CreateOrUpdateProductItemAction
         $isUpdating = (bool) $createOrUpdateProductItemDto->getProductItemId();
 
         $productItem = $this->productItemRepository->storeOrUpdate($createOrUpdateProductItemDto);
+
+        CartItemsRestocked::dispatch($productItem);
 
         return [
             'is_existing_product_item' => $isExist || $isUpdating,

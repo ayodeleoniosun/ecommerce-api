@@ -25,4 +25,9 @@ class BaseRepository
     {
         return $model->update($data);
     }
+
+    public function lockForUpdate(Model $model): Model
+    {
+        return $model->lockForUpdate()->first();
+    }
 }

@@ -50,7 +50,6 @@ class CompleteOrderPaymentAction
             $amountCharged = $orderPayment->order_amount + $orderPayment->delivery_amount + $transactionResponse->getFee() + $transactionResponse->getVat();
 
             $this->orderPaymentRepository->updateColumns($orderPayment, [
-                'order_id' => $order->id,
                 'status' => $status,
                 'fee' => $transactionResponse->getFee(),
                 'vat' => $transactionResponse->getVat(),

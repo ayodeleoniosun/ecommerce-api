@@ -30,6 +30,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withEvents(discover: [
         __DIR__.'/../app/Domain/*/Events',
         __DIR__.'/../app/Domain/*/Listeners',
+        __DIR__.'/../app/Domain/*/*/Events',
+        __DIR__.'/../app/Domain/*/*/Listeners',
     ])
     ->withCommands([
         RestoreAbandonedCartQuantity::class,

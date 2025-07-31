@@ -34,9 +34,9 @@ class AddToCartAction
 
         $cartItem = null;
 
-        DB::transaction(function () use ($productItem, $addToCartDto, &$cartItem) {
-            $lockedProductItem = $this->productItemRepository->lockItem($productItem->id);
+        $lockedProductItem = $this->productItemRepository->lockForUpdate($productItem);
 
+        DB::transaction(function () use ($addToCartDto, $lockedProductItem, &$cartItem) {
             $cartQuantity = $addToCartDto->getQuantity();
 
             throw_if(

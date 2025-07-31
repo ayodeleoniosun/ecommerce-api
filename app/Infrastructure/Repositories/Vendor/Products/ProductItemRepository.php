@@ -6,6 +6,7 @@ use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductItemDto;
 use App\Domain\Vendor\Products\Interfaces\ProductItemRepositoryInterface;
 use App\Infrastructure\Models\Inventory\ProductItem;
 use App\Infrastructure\Repositories\BaseRepository;
+use Illuminate\Database\Eloquent\Model;
 
 class ProductItemRepository extends BaseRepository implements ProductItemRepositoryInterface
 {
@@ -39,19 +40,12 @@ class ProductItemRepository extends BaseRepository implements ProductItemReposit
             ->first();
     }
 
-    public function lockItem(int $productItemId): ?ProductItem
-    {
-        return ProductItem::where('id', $productItemId)
-            ->lockForUpdate()
-            ->first();
-    }
-
     public function increaseStock(ProductItem $productItem, int $quantity): bool|int
     {
         return $productItem->increment('quantity', $quantity);
     }
 
-    public function decreaseStock(ProductItem $productItem, int $quantity): bool|int
+    public function decreaseStock(ProductItem|Model $productItem, int $quantity): bool|int
     {
         return $productItem->decrement('quantity', $quantity);
     }
