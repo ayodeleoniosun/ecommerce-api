@@ -59,6 +59,9 @@ class KorapayIntegration extends PaymentGatewayIntegration implements PaymentGat
         $authModel = $response['data']['auth_model'];
 
         $paymentResponseDto->setAuthModel($authModel);
+        $paymentResponseDto->setAmountCharged($response['data']['amount_charged']);
+        $paymentResponseDto->setFee($response['data']['fee']);
+        $paymentResponseDto->setVat($response['data']['vat']);
 
         if (self::requiresAuthorization($authModel)) {
             $this->updateTransactionAndApiLog($transaction, $status, $response, updateTransactionOnly: true);
@@ -75,9 +78,6 @@ class KorapayIntegration extends PaymentGatewayIntegration implements PaymentGat
         $this->updateTransactionAndApiLog($transaction, $status, $response);
 
         $paymentResponseDto->setStatus($status);
-        $paymentResponseDto->setAmountCharged($response['data']['amount_charged']);
-        $paymentResponseDto->setFee($response['data']['fee']);
-        $paymentResponseDto->setVat($response['data']['vat']);
 
         return $paymentResponseDto;
     }
@@ -187,11 +187,9 @@ class KorapayIntegration extends PaymentGatewayIntegration implements PaymentGat
 
         $response = $this->authorizeCharge($paymentAuthorizationDto);
 
-        $status = self::getKorapayStatus($response['data']['status'] ?? null);
-
         if (! isset($response['data']['status'])) {
             return new PaymentResponseDto(
-                status: $status,
+                status: PaymentStatusEnum::FAILED->value,
                 paymentMethod: PaymentTypeEnum::CARD->value,
                 reference: $paymentAuthorizationDto->getReference(),
                 responseMessage: $response['message'],
@@ -199,6 +197,8 @@ class KorapayIntegration extends PaymentGatewayIntegration implements PaymentGat
                 gateway: $this->gateway
             );
         }
+
+        $status = self::getKorapayStatus($response['data']['status']);
 
         $this->updateTransactionAndApiLog($transaction, $status, $response);
 

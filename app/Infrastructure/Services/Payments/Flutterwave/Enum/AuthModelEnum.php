@@ -4,18 +4,13 @@ namespace App\Infrastructure\Services\Payments\Flutterwave\Enum;
 
 enum AuthModelEnum: string
 {
-    case VBVSECURECODE = 'VBVSECURECODE';
+    case VBVSECURECODE = 'OTP';
     case THREE_DS = '3DS';
     case AVS = 'AVS';
-    case OTP = 'OTP';
 
-    public function label(): string
+    public static function label($authModel): self
     {
-        return match ($this) {
-            self::VBVSECURECODE => 'pin',
-            self::THREE_DS => '3ds',
-            self::AVS => 'avs',
-            self::OTP => 'otp'
-        };
+        return collect(self::cases())
+            ->first(fn ($case) => $case->name === $authModel);
     }
 }

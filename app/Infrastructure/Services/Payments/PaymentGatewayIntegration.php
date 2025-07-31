@@ -19,12 +19,15 @@ abstract class PaymentGatewayIntegration
 
     public string $encryptionKey;
 
+    public string $webhookURL;
+
     public function __construct()
     {
         $this->baseUrl = config("payment.gateways.{$this->gateway}.base_url");
         $this->publicKey = config("payment.gateways.{$this->gateway}.public_key");
         $this->secretKey = config("payment.gateways.{$this->gateway}.secret_key");
         $this->encryptionKey = config("payment.gateways.{$this->gateway}.encryption_key");
+        $this->webhookURL = config("payment.gateways.{$this->gateway}.webhook_url");
     }
 
     /**

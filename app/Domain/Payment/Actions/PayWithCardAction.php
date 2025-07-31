@@ -49,8 +49,6 @@ class PayWithCardAction extends BaseOrderAction
     {
         $orderPayment = $this->createOrderPayment($order);
 
-        $initiateCardPaymentDto = $this->buildCardPaymentDto($orderPayment, $cardData);
-
         $gateway = $this->getGateway($order->currency);
 
         $paymentGateway = PaymentGateway::make($gateway, $this->cardTransactionRepository);
@@ -63,33 +61,9 @@ class PayWithCardAction extends BaseOrderAction
             'gateway_reference' => $gatewayReference,
         ]);
 
-        $initiateCardPaymentDto->setGatewayReference($gatewayReference);
+        $initiateCardPaymentDto = $this->buildCardPaymentDto($orderPayment, $cardData);
 
         return $paymentGateway->initiate($initiateCardPaymentDto);
-    }
-
-    private function buildCardPaymentDto(OrderPayment $orderPayment, array $card): InitiateCardPaymentDto
-    {
-        $user = auth()->user();
-
-        return new InitiateCardPaymentDto(
-            amount: $orderPayment->order_amount,
-            currency: $orderPayment->order->currency,
-            card: new CardData(
-                name: $card['name'],
-                number: $card['number'],
-                cvv: $card['cvv'],
-                expiryMonth: $card['expiry_month'],
-                expiryYear: $card['expiry_year'],
-                pin: $card['pin']
-            ),
-            customer: new CustomerData(
-                email: $user->email,
-                name: $user->fullname,
-            ),
-            redirectUrl: 'https://example.com',
-            orderPaymentReference: $orderPayment->reference,
-        );
     }
 
     private function getGateway(string $currency): string
@@ -116,5 +90,30 @@ class PayWithCardAction extends BaseOrderAction
         $prefix = GatewayPrefixReferenceEnum::getPrefix($gateway);
 
         return self::generateRandomCharacters($prefix->value);
+    }
+
+    private function buildCardPaymentDto(OrderPayment $orderPayment, array $card): InitiateCardPaymentDto
+    {
+        $user = auth()->user();
+
+        return new InitiateCardPaymentDto(
+            amount: $orderPayment->order_amount,
+            currency: $orderPayment->order->currency,
+            card: new CardData(
+                name: $card['name'],
+                number: $card['number'],
+                cvv: $card['cvv'],
+                expiryMonth: $card['expiry_month'],
+                expiryYear: $card['expiry_year'],
+                pin: $card['pin']
+            ),
+            customer: new CustomerData(
+                email: $user->email,
+                name: $user->fullname,
+            ),
+            redirectUrl: config("payment.gateways.{$orderPayment->gateway}.webhook_url"),
+            orderPaymentReference: $orderPayment->reference,
+            gatewayReference: $orderPayment->gateway_reference
+        );
     }
 }

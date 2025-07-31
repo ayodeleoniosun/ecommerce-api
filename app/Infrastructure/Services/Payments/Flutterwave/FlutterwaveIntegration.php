@@ -6,7 +6,6 @@ use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Domain\Payment\Dtos\InitiateCardPaymentDto;
 use App\Domain\Payment\Dtos\PaymentAuthorizationDto;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
-use App\Domain\Payment\Enums\PaymentErrorTypeEnum;
 use App\Domain\Payment\Enums\PaymentStatusEnum;
 use App\Domain\Payment\Enums\PaymentTypeEnum;
 use App\Domain\Payment\Interfaces\CardTransactionRepositoryInterface;
@@ -15,6 +14,7 @@ use App\Infrastructure\Models\Payment\Integration\Flutterwave\ApiLogsFlutterwave
 use App\Infrastructure\Models\Payment\Integration\Flutterwave\TransactionFlutterwaveCardPayment;
 use App\Infrastructure\Services\Payments\Flutterwave\Enum\AuthModelEnum;
 use App\Infrastructure\Services\Payments\PaymentGatewayIntegration;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\DB;
@@ -44,7 +44,17 @@ class FlutterwaveIntegration extends PaymentGatewayIntegration implements Paymen
         $transaction = $this->createTransaction($paymentDto);
         $response = $this->initializeCharge($paymentDto);
 
-        $authModel = AuthModelEnum::tryFrom($response['data']['auth_model'])->label();
+        if (! isset($response['data']['status'])) {
+            return new PaymentResponseDto(
+                status: PaymentStatusEnum::FAILED->value,
+                paymentMethod: PaymentTypeEnum::CARD->value,
+                reference: $paymentDto->getOrderPaymentReference(),
+                responseMessage: $response['message'],
+                gateway: $this->gateway
+            );
+        }
+
+        $authModel = AuthModelEnum::label($response['data']['auth_model'])->value;
         $authMode = $response['meta']['authorization']['mode'];
         $status = self::getFlutterwaveChargeStatus($response['data']['status']);
 
@@ -88,6 +98,7 @@ class FlutterwaveIntegration extends PaymentGatewayIntegration implements Paymen
 
     /**
      * @throws ConnectionException
+     * @throws Exception
      */
     private function initializeCharge(InitiateCardPaymentDto $paymentDto): array
     {
@@ -112,7 +123,7 @@ class FlutterwaveIntegration extends PaymentGatewayIntegration implements Paymen
             method: 'POST',
             path: '/charges?type=card',
             payload: [
-                'client' => 'L4BE6nhxdlf9SY2atIxJFB2mMahr/HP2fSpLfVaoBUDm12nwjIGGA2/pCzV/HUpVaAjACfW3bbQhF6e4/CC/J4PEieLGslsRN9cOt2a6FHKn+2RFKW3qCFJwMMnaZGd/bN6b7U37t+e3B/qP2njph1gTlYOftBm8XCjSeMf93ZGCRbNq7+dbiI4eZDnRo1sthUdHAHzwjoeH7rjSLrWujArmjPMRcIa9Fb/Ngzs1yZ+nZuzhorFrrVSofYKEY6RqwsEAL2Ik/Tb1Wzd6155mrXu5DGzAjceJ',
+                'client' => $encryptedData,
             ],
             options: [
                 'authorization' => $this->secretKey,
@@ -131,7 +142,7 @@ class FlutterwaveIntegration extends PaymentGatewayIntegration implements Paymen
                 data: [
                     'transaction_id' => $transaction->id,
                     'status' => $status,
-                    'auth_model' => AuthModelEnum::tryFrom($response['data']['auth_model'])->label(),
+                    'auth_model' => AuthModelEnum::label($response['data']['auth_model'])->value,
                     'gateway_response' => $response['data']['processor_response'],
                     'gateway_transaction_reference' => $response['data']['id'],
                 ],
@@ -163,8 +174,7 @@ class FlutterwaveIntegration extends PaymentGatewayIntegration implements Paymen
                 status: $status,
                 paymentMethod: PaymentTypeEnum::CARD->value,
                 reference: $response['data']['tx_ref'],
-                responseMessage: $response['message'],
-                errorType: PaymentErrorTypeEnum::TRANSACTION_NOT_FOUND->value
+                responseMessage: $response['message']
             );
         }
 
@@ -183,7 +193,7 @@ class FlutterwaveIntegration extends PaymentGatewayIntegration implements Paymen
             paymentMethod: PaymentTypeEnum::CARD->value,
             reference: $response['data']['tx_ref'],
             responseMessage: $response['data']['processor_response'],
-            authModel: AuthModelEnum::tryFrom($response['data']['auth_model'])->label(),
+            authModel: AuthModelEnum::label($response['data']['auth_model'])->value,
             amountCharged: $response['data']['amount'],
             fee: $response['data']['app_fee'],
             vat: $vat,

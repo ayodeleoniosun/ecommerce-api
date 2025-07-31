@@ -4,25 +4,34 @@ namespace App\Infrastructure\Services\Payments\Flutterwave;
 
 use App\Domain\Payment\Enums\PaymentStatusEnum;
 use App\Infrastructure\Services\Payments\Flutterwave\Enum\AuthorizationModeEnum;
+use Exception;
 
 trait Utility
 {
+    /**
+     * @throws Exception
+     */
     public static function encryptCardData(array $data, string $key): string
     {
-        $dataString = json_encode($data);
+        if (strlen($key) !== 24) {
+            throw new Exception('Key must be 24 bytes for 3DES encryption.');
+        }
 
-        // 3DES key must be 24 bytes (192 bits). Pad or truncate if necessary.
-        $key = substr(hash('sha256', $key, true), 0, 24);
-
-        $cipher = 'DES-EDE3'; // 3DES ECB mode in OpenSSL
-        $options = OPENSSL_RAW_DATA | OPENSSL_NO_PADDING;
-
-        // Pad the data to a multiple of 8 bytes (block size)
+        $jsonData = json_encode($data);
         $blockSize = 8;
-        $padding = $blockSize - (strlen($dataString) % $blockSize);
-        $dataString .= str_repeat(chr($padding), $padding);
+        $pad = $blockSize - (strlen($jsonData) % $blockSize);
+        $paddedData = $jsonData.str_repeat(chr($pad), $pad);
 
-        $encrypted = openssl_encrypt($dataString, $cipher, $key, $options);
+        $encrypted = openssl_encrypt(
+            $paddedData,
+            'des-ede3-ecb', // 3DES-ECB algorithm
+            $key,
+            OPENSSL_RAW_DATA | OPENSSL_NO_PADDING,
+        );
+
+        if ($encrypted === false) {
+            throw new Exception('Encryption failed.');
+        }
 
         return base64_encode($encrypted);
     }
