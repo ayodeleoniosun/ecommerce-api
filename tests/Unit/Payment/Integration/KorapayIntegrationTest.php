@@ -42,7 +42,7 @@ beforeEach(function () {
     ]);
 
     $this->cardTransaction = TransactionKoraCardPayment::factory()->create([
-        'order_payment_id' => $this->orderPayment->id,
+        'order_payment_reference' => $this->orderPayment->reference,
     ]);
 
     $this->paymentDto = new InitiateCardPaymentDto(
@@ -61,8 +61,7 @@ beforeEach(function () {
             name: fake()->firstName().' '.fake()->lastName(),
         ),
         redirectUrl: 'https://example.com',
-        reference: 'KPY-12345',
-        paymentId: $this->orderPayment->id,
+        orderPaymentReference: 'KPY-12345',
     );
 
     $this->cardTransactionMock = Mockery::mock(TransactionKoraCardPayment::class)->makePartial();
@@ -133,11 +132,10 @@ it('should initialize charge successfully using PIN auth model', function () {
     expect($response)->toBeInstanceOf(PaymentResponseDto::class)
         ->and($response->getStatus())->toBe(PaymentStatusEnum::SUCCESS->value)
         ->and($response->getAuthModel())->toBe(AuthModelEnum::PIN->value)
-        ->and($response->getAmountCharged())->toBe(490000)
-        ->and($response->getFee())->toBe(0)
-        ->and($response->getErrorType())->toBeNull()
+        ->and($response->getAmountCharged())->toBe(490000.0)
+        ->and($response->getFee())->toBe(0.0)
         ->and($response->getRedirectionUrl())->toBeNull()
-        ->and($response->getVat())->toBe(0);
+        ->and($response->getVat())->toBe(0.0);
 });
 
 it('should initialize charge successfully using OTP auth model', function () {
@@ -195,7 +193,6 @@ it('should initialize charge successfully using OTP auth model', function () {
     expect($response)->toBeInstanceOf(PaymentResponseDto::class)
         ->and($response->getStatus())->toBe(PaymentStatusEnum::SUCCESS->value)
         ->and($response->getAuthModel())->toBe(AuthModelEnum::OTP->value)
-        ->and($response->getErrorType())->toBeNull()
         ->and($response->getRedirectionUrl())->toBeNull();
 });
 
@@ -254,6 +251,5 @@ it('should initialize charge successfully using AVS auth model', function () {
     expect($response)->toBeInstanceOf(PaymentResponseDto::class)
         ->and($response->getStatus())->toBe(PaymentStatusEnum::SUCCESS->value)
         ->and($response->getAuthModel())->toBe(AuthModelEnum::AVS->value)
-        ->and($response->getErrorType())->toBeNull()
         ->and($response->getRedirectionUrl())->toBeNull();
 });

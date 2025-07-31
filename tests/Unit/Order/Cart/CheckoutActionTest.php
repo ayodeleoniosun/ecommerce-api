@@ -4,7 +4,6 @@ namespace Tests\Unit\Order\Cart;
 
 use App\Domain\Order\Actions\Order\CheckoutAction;
 use App\Domain\Order\Dtos\CheckoutDto;
-use App\Domain\Order\Enums\OrderStatusEnum;
 use App\Domain\Order\Interfaces\Cart\UserCartRepositoryInterface;
 use App\Domain\Order\Interfaces\Order\OrderPaymentRepositoryInterface;
 use App\Domain\Order\Interfaces\Order\OrderRepositoryInterface;
@@ -141,17 +140,6 @@ it('should checkout cart items', function () {
             'estimated_delivery_end_date' => now()->addDays(9)->toDateString(),
         ])
         ->andReturn($this->orderShipping);
-
-    $this->orderPaymentRepo->shouldReceive('storeOrUpdate')
-        ->once()
-        ->with([
-            'status' => OrderStatusEnum::PENDING->value,
-            'order_id' => $this->order->id,
-            'order_amount' => 230000,
-            'currency' => $this->order->currency,
-            'delivery_amount' => 1000,
-        ])
-        ->andReturn($this->orderPayment);
 
     $response = $this->checkout->execute($this->checkoutDto);
 

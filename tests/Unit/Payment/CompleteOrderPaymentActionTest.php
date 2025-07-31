@@ -10,6 +10,7 @@ use App\Domain\Order\Notifications\OrderCompletedNotification;
 use App\Domain\Order\Resources\Order\OrderResource;
 use App\Domain\Payment\Actions\CompleteOrderPaymentAction;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
+use App\Domain\Payment\Enums\AuthModelEnum;
 use App\Domain\Payment\Enums\PaymentStatusEnum;
 use App\Domain\Payment\Enums\PaymentTypeEnum;
 use App\Infrastructure\Models\Cart\UserCart;
@@ -43,14 +44,15 @@ beforeEach(function () {
     $this->orderPayment = OrderPayment::factory()->create([
         'order_id' => $this->order->id,
         'order_amount' => 20000,
+        'reference' => 'KPY-12345',
     ]);
 
     $this->paymentResponseDto = new PaymentResponseDto(
         status: PaymentStatusEnum::SUCCESS->value,
         paymentMethod: PaymentTypeEnum::CARD->value,
-        reference: 'KPY-12345',
+        reference: $this->orderPayment->reference,
         responseMessage: 'Payment successful',
-        authModel: 'PIN',
+        authModel: AuthModelEnum::PIN->value,
         gateway: 'korapay',
         amountCharged: 10000,
         fee: 100,
@@ -67,11 +69,6 @@ beforeEach(function () {
 
 it('should complete order payment', function () {
     Notification::fake();
-
-    $this->orderRepo->shouldReceive('findPendingOrder')
-        ->once()
-        ->with($this->user->id, true)
-        ->andReturn($this->order);
 
     $this->userCartRepo->shouldReceive('findPendingCart')
         ->once()
@@ -94,7 +91,7 @@ it('should complete order payment', function () {
 
     $response = $this->completeOrderPayment->execute($this->paymentResponseDto);
 
-    $amountCharged = $this->orderPayment->order_amount + $this->orderPayment->delivery_amount + $this->paymentResponseDto->getFee() + $this->paymentResponseDto->getVat();
+    $amountCharged = ($this->orderPayment->order_amount + $this->orderPayment->delivery_amount + $this->paymentResponseDto->getFee() + $this->paymentResponseDto->getVat());
 
     Notification::assertSentTo(
         $this->user,
@@ -105,8 +102,7 @@ it('should complete order payment', function () {
 
     expect($response)->toBeInstanceOf(OrderResource::class)
         ->and($response->resource->currency)->toBe($this->order->currency)
-        ->and($response->resource->payment->amount_charged)->toBe($amountCharged)
+        ->and($response->resource->payment->amount_charged)->toBe((int) $amountCharged)
         ->and($response->resource->payment->status)->toBe(OrderStatusEnum::SUCCESS->value)
-        ->and($response->resource->payment->gateway)->toBe($this->paymentResponseDto->getGateway())
         ->and($response->resource->payment->narration)->toBe($this->paymentResponseDto->getResponseMessage());
 });

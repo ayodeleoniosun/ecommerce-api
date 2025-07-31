@@ -25,7 +25,7 @@ class TransactionKoraCardPaymentFactory extends Factory
     {
         return [
             'uuid' => self::generateUUID(),
-            'order_payment_id' => OrderPayment::factory()->create()->id,
+            'order_payment_reference' => OrderPayment::factory()->create()->reference,
             'reference' => self::generateRandomCharacters(),
             'currency' => 'NGN',
             'amount' => 4000,
