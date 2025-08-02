@@ -6,6 +6,7 @@ use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Auth\Enums\UserStatusEnum;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
+use App\Infrastructure\Models\User\User;
 use Illuminate\Support\Facades\Password;
 
 class InitiateForgotPasswordAction
@@ -16,7 +17,7 @@ class InitiateForgotPasswordAction
 
     public function execute(string $email): string
     {
-        $user = $this->userRepository->findByColumn('email', $email);
+        $user = $this->userRepository->findByColumn(User::class, 'email', $email);
 
         throw_if(! $user, ResourceNotFoundException::class, 'Email not found');
 

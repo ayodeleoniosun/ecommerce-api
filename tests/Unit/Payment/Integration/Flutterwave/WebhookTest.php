@@ -69,102 +69,104 @@ beforeEach(function () {
     $this->webhook = new Webhook($this->cardTransactionRepo);
 });
 
-it('should return an exception if reference is invalid', function () {
-    $this->cardTransactionRepo->shouldReceive('findByColumn')
-        ->andReturn(null);
+describe('Flutterwave Webhook', function () {
+    it('should return an exception if reference is invalid', function () {
+        $this->cardTransactionRepo->shouldReceive('findByColumn')
+            ->andReturn(null);
 
-    $this->webhook->execute($this->flutterwaveWebhookDto);
-})->throws(ResourceNotFoundException::class, 'Transaction does not exist');
+        $this->webhook->execute($this->flutterwaveWebhookDto);
+    })->throws(ResourceNotFoundException::class, 'Transaction does not exist');
 
-it('should complete webhook if status is success', function () {
-    Event::fake();
+    it('should complete webhook if status is success', function () {
+        Event::fake();
 
-    $this->cardTransactionRepo->shouldReceive('findByColumn')
-        ->andReturn($this->cardTransactionMock);
+        $this->cardTransactionRepo->shouldReceive('findByColumn')
+            ->andReturn($this->cardTransactionMock);
 
-    $this->cardTransactionRepo->shouldReceive('update')
-        ->once()
-        ->with(
-            TransactionFlutterwaveCardPayment::class,
-            Mockery::type('array'),
-        )->andReturn($this->cardTransactionMock);
+        $this->cardTransactionRepo->shouldReceive('update')
+            ->once()
+            ->with(
+                TransactionFlutterwaveCardPayment::class,
+                Mockery::type('array'),
+            )->andReturn($this->cardTransactionMock);
 
-    $this->cardTransactionRepo->shouldReceive('update')
-        ->once()
-        ->with(
-            ApiLogsFlutterwaveCardPayment::class,
-            Mockery::type('array'),
-        )->andReturn($this->apiLogCardTransactionMock);
+        $this->cardTransactionRepo->shouldReceive('update')
+            ->once()
+            ->with(
+                ApiLogsFlutterwaveCardPayment::class,
+                Mockery::type('array'),
+            )->andReturn($this->apiLogCardTransactionMock);
 
-    Http::fake([
-        '*' => Http::response([
-            'status' => 'success',
-            'message' => 'Transaction fetched successfully',
-            'data' => [
-                'id' => 9526134,
-                'tx_ref' => $this->flutterwaveWebhookDto->getTransactionReference(),
-                'flw_ref' => 'FLW-MOCK-abcdef123',
-                'device_fingerprint' => 'N/A',
-                'amount' => 1000,
-                'currency' => 'NGN',
-                'charged_amount' => 1000,
-                'app_fee' => 14,
-                'merchant_fee' => 0,
-                'processor_response' => 'Approved. Successful',
-                'auth_model' => 'VBVSECURECODE',
-                'ip' => '11.12.13.14',
-                'narration' => 'CARD Transaction',
-                'status' => 'successful',
-                'payment_type' => 'card',
-                'created_at' => '2025-07-31T12:57:32.000Z',
-                'account_id' => 12345,
-                'card' => [
-                    'first_6digits' => '12345',
-                    'last_4digits' => '1234',
-                    'issuer' => ' CREDIT',
-                    'country' => 'NIGERIA NG',
-                    'type' => 'MASTERCARD',
-                    'expiry' => '09/32',
-                ],
-                'meta' => null,
-                'amount_settled' => 984.95,
-                'customer' => [
-                    'id' => 123456,
-                    'email' => 'ayodeleoniosun63@gmail.com',
+        Http::fake([
+            '*' => Http::response([
+                'status' => 'success',
+                'message' => 'Transaction fetched successfully',
+                'data' => [
+                    'id' => 9526134,
+                    'tx_ref' => $this->flutterwaveWebhookDto->getTransactionReference(),
+                    'flw_ref' => 'FLW-MOCK-abcdef123',
+                    'device_fingerprint' => 'N/A',
+                    'amount' => 1000,
+                    'currency' => 'NGN',
+                    'charged_amount' => 1000,
+                    'app_fee' => 14,
+                    'merchant_fee' => 0,
+                    'processor_response' => 'Approved. Successful',
+                    'auth_model' => 'VBVSECURECODE',
+                    'ip' => '11.12.13.14',
+                    'narration' => 'CARD Transaction',
+                    'status' => 'successful',
+                    'payment_type' => 'card',
                     'created_at' => '2025-07-31T12:57:32.000Z',
+                    'account_id' => 12345,
+                    'card' => [
+                        'first_6digits' => '12345',
+                        'last_4digits' => '1234',
+                        'issuer' => ' CREDIT',
+                        'country' => 'NIGERIA NG',
+                        'type' => 'MASTERCARD',
+                        'expiry' => '09/32',
+                    ],
+                    'meta' => null,
+                    'amount_settled' => 984.95,
+                    'customer' => [
+                        'id' => 123456,
+                        'email' => 'ayodeleoniosun63@gmail.com',
+                        'created_at' => '2025-07-31T12:57:32.000Z',
+                    ],
                 ],
-            ],
-        ]),
-    ]);
+            ]),
+        ]);
 
-    $this->webhook->execute($this->flutterwaveWebhookDto);
+        $this->webhook->execute($this->flutterwaveWebhookDto);
 
-    Event::assertDispatched(function (PaymentWebhookCompleted $event) {
-        return $event->paymentResponseDto->getStatus() === PaymentStatusEnum::SUCCESS->value &&
-            $event->paymentResponseDto->getReference() === $this->flutterwaveWebhookDto->getTransactionReference();
+        Event::assertDispatched(function (PaymentWebhookCompleted $event) {
+            return $event->paymentResponseDto->getStatus() === PaymentStatusEnum::SUCCESS->value &&
+                $event->paymentResponseDto->getReference() === $this->flutterwaveWebhookDto->getTransactionReference();
+        });
     });
-});
 
-it('should complete webhook if status is failed', function () {
-    Event::fake();
+    it('should complete webhook if status is failed', function () {
+        Event::fake();
 
-    $this->cardTransactionMock->status = PaymentStatusEnum::FAILED->value;
-    $this->flutterwaveWebhookDto->setStatus(PaymentStatusEnum::FAILED->value);
+        $this->cardTransactionMock->status = PaymentStatusEnum::FAILED->value;
+        $this->flutterwaveWebhookDto->setStatus(PaymentStatusEnum::FAILED->value);
 
-    $this->cardTransactionRepo->shouldReceive('findByColumn')
-        ->andReturn($this->cardTransactionMock);
+        $this->cardTransactionRepo->shouldReceive('findByColumn')
+            ->andReturn($this->cardTransactionMock);
 
-    $this->cardTransactionRepo->shouldReceive('update')
-        ->once()
-        ->with(
-            TransactionFlutterwaveCardPayment::class,
-            Mockery::type('array'),
-        )->andReturn($this->cardTransactionMock);
+        $this->cardTransactionRepo->shouldReceive('update')
+            ->once()
+            ->with(
+                TransactionFlutterwaveCardPayment::class,
+                Mockery::type('array'),
+            )->andReturn($this->cardTransactionMock);
 
-    $this->webhook->execute($this->flutterwaveWebhookDto);
+        $this->webhook->execute($this->flutterwaveWebhookDto);
 
-    Event::assertDispatched(function (PaymentWebhookCompleted $event) {
-        return $event->paymentResponseDto->getStatus() === PaymentStatusEnum::FAILED->value &&
-            $event->paymentResponseDto->getReference() === $this->flutterwaveWebhookDto->getTransactionReference();
+        Event::assertDispatched(function (PaymentWebhookCompleted $event) {
+            return $event->paymentResponseDto->getStatus() === PaymentStatusEnum::FAILED->value &&
+                $event->paymentResponseDto->getReference() === $this->flutterwaveWebhookDto->getTransactionReference();
+        });
     });
 });

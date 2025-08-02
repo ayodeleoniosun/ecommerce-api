@@ -2,9 +2,9 @@
 
 namespace App\Domain\Auth\Notifications;
 
-use App\Infrastructure\Models\User\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -15,7 +15,7 @@ class RegistrationCompletedNotification extends Notification implements ShouldQu
     /**
      * Create a new notification instance.
      */
-    public function __construct(public readonly User $user)
+    public function __construct(public readonly Model $user)
     {
         //
     }

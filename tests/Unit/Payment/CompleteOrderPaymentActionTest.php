@@ -67,42 +67,44 @@ beforeEach(function () {
     );
 });
 
-it('should complete order payment', function () {
-    Notification::fake();
+describe('Complete Order Payment', function () {
+    it('should complete order payment', function () {
+        Notification::fake();
 
-    $this->userCartRepo->shouldReceive('findPendingCart')
-        ->once()
-        ->with($this->user->id, true)
-        ->andReturn($this->cart);
+        $this->userCartRepo->shouldReceive('findPendingCart')
+            ->once()
+            ->with($this->user->id, true)
+            ->andReturn($this->cart);
 
-    $this->order->status = CartStatusEnum::CHECKED_OUT->value;
+        $this->order->status = CartStatusEnum::CHECKED_OUT->value;
 
-    $this->orderRepo->shouldReceive('storeOrUpdate')
-        ->once()
-        ->with([
-            'id' => $this->order->id,
-            'status' => $this->paymentResponseDto->getStatus(),
-        ])->andReturn($this->order);
+        $this->orderRepo->shouldReceive('storeOrUpdate')
+            ->once()
+            ->with([
+                'id' => $this->order->id,
+                'status' => $this->paymentResponseDto->getStatus(),
+            ])->andReturn($this->order);
 
-    $this->userCartItemRepo->shouldReceive('completeCartItems')
-        ->once()
-        ->with($this->cart->id, CartStatusEnum::CHECKED_OUT->value)
-        ->andReturn(true);
+        $this->userCartItemRepo->shouldReceive('completeCartItems')
+            ->once()
+            ->with($this->cart->id, CartStatusEnum::CHECKED_OUT->value)
+            ->andReturn(true);
 
-    $response = $this->completeOrderPayment->execute($this->paymentResponseDto);
+        $response = $this->completeOrderPayment->execute($this->paymentResponseDto);
 
-    $amountCharged = ($this->orderPayment->order_amount + $this->orderPayment->delivery_amount + $this->paymentResponseDto->getFee() + $this->paymentResponseDto->getVat());
+        $amountCharged = ($this->orderPayment->order_amount + $this->orderPayment->delivery_amount + $this->paymentResponseDto->getFee() + $this->paymentResponseDto->getVat());
 
-    Notification::assertSentTo(
-        $this->user,
-        OrderCompletedNotification::class,
-        function ($notification) use ($response) {
-            return $notification->order->id === $response->resource->user_id;
-        });
+        Notification::assertSentTo(
+            $this->user,
+            OrderCompletedNotification::class,
+            function ($notification) use ($response) {
+                return $notification->order->id === $response->resource->user_id;
+            });
 
-    expect($response)->toBeInstanceOf(OrderResource::class)
-        ->and($response->resource->currency)->toBe($this->order->currency)
-        ->and($response->resource->payment->amount_charged)->toBe((int) $amountCharged)
-        ->and($response->resource->payment->status)->toBe(OrderStatusEnum::SUCCESS->value)
-        ->and($response->resource->payment->narration)->toBe($this->paymentResponseDto->getResponseMessage());
+        expect($response)->toBeInstanceOf(OrderResource::class)
+            ->and($response->resource->currency)->toBe($this->order->currency)
+            ->and($response->resource->payment->amount_charged)->toBe((int) $amountCharged)
+            ->and($response->resource->payment->status)->toBe(OrderStatusEnum::SUCCESS->value)
+            ->and($response->resource->payment->narration)->toBe($this->paymentResponseDto->getResponseMessage());
+    });
 });

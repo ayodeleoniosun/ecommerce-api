@@ -34,76 +34,43 @@ beforeEach(function () {
     $this->createVendorBusinessInformation = new CreateVendorBusinessInformationAction($this->vendorBusinessRepo);
 });
 
-it('should throw an exception if business name exist for another vendor', function () {
-    $this->vendorBusinessRepo->shouldReceive('findOtherBusiness')
-        ->once()
-        ->with(
-            'name',
-            $this->vendorBusinessDto->getCompanyName(),
-            $this->vendorBusinessDto->getUserId(),
-        )
-        ->andReturn($this->businessInformation);
+describe('Create Vendor Business Information', function () {
+    it('should throw an exception if business name exist for another vendor', function () {
+        $this->vendorBusinessRepo->shouldReceive('findOtherBusiness')
+            ->once()
+            ->with(
+                'name',
+                $this->vendorBusinessDto->getCompanyName(),
+                $this->vendorBusinessDto->getUserId(),
+            )
+            ->andReturn($this->businessInformation);
 
-    $this->createVendorBusinessInformation->execute($this->vendorBusinessDto);
-})->throws(ConflictHttpException::class, 'Business name exist for another vendor');
+        $this->createVendorBusinessInformation->execute($this->vendorBusinessDto);
+    })->throws(ConflictHttpException::class, 'Business name exist for another vendor');
 
-it('should throw an exception if business registration number exist for another vendor', function () {
-    $this->vendorBusinessRepo->shouldReceive('findOtherBusiness')
-        ->once()
-        ->with(
-            'name',
-            $this->vendorBusinessDto->getCompanyName(),
-            $this->vendorBusinessDto->getUserId(),
-        )
-        ->andReturn(null);
+    it('should throw an exception if business registration number exist for another vendor', function () {
+        $this->vendorBusinessRepo->shouldReceive('findOtherBusiness')
+            ->once()
+            ->with(
+                'name',
+                $this->vendorBusinessDto->getCompanyName(),
+                $this->vendorBusinessDto->getUserId(),
+            )
+            ->andReturn(null);
 
-    $this->vendorBusinessRepo->shouldReceive('findOtherBusiness')
-        ->once()
-        ->with(
-            'registration_number',
-            $this->vendorBusinessDto->getRegistrationNumber(),
-            $this->vendorBusinessDto->getUserId(),
-        )
-        ->andReturn($this->businessInformation);
+        $this->vendorBusinessRepo->shouldReceive('findOtherBusiness')
+            ->once()
+            ->with(
+                'registration_number',
+                $this->vendorBusinessDto->getRegistrationNumber(),
+                $this->vendorBusinessDto->getUserId(),
+            )
+            ->andReturn($this->businessInformation);
 
-    $this->createVendorBusinessInformation->execute($this->vendorBusinessDto);
-})->throws(ConflictHttpException::class, 'Registration number exist for another vendor');
+        $this->createVendorBusinessInformation->execute($this->vendorBusinessDto);
+    })->throws(ConflictHttpException::class, 'Registration number exist for another vendor');
 
-it('should throw an exception if business tax identification number exist for another vendor', function () {
-    $this->vendorBusinessRepo->shouldReceive('findOtherBusiness')
-        ->once()
-        ->with(
-            'name',
-            $this->vendorBusinessDto->getCompanyName(),
-            $this->vendorBusinessDto->getUserId(),
-        )
-        ->andReturn(null);
-
-    $this->vendorBusinessRepo->shouldReceive('findOtherBusiness')
-        ->once()
-        ->with(
-            'registration_number',
-            $this->vendorBusinessDto->getRegistrationNumber(),
-            $this->vendorBusinessDto->getUserId(),
-        )
-        ->andReturn(null);
-
-    $this->vendorBusinessRepo->shouldReceive('findOtherBusiness')
-        ->once()
-        ->with(
-            'tax_identification_number',
-            $this->vendorBusinessDto->getTaxIdentificationNumber(),
-            $this->vendorBusinessDto->getUserId(),
-        )
-        ->andReturn($this->businessInformation);
-
-    $this->createVendorBusinessInformation->execute($this->vendorBusinessDto);
-})->throws(ConflictHttpException::class, 'Tax identification number exist for another vendor');
-
-it('should create a new business information record if no existing record and business certificate is not uploaded',
-    function () {
-        Storage::fake('local');
-
+    it('should throw an exception if business tax identification number exist for another vendor', function () {
         $this->vendorBusinessRepo->shouldReceive('findOtherBusiness')
             ->once()
             ->with(
@@ -129,94 +96,129 @@ it('should create a new business information record if no existing record and bu
                 $this->vendorBusinessDto->getTaxIdentificationNumber(),
                 $this->vendorBusinessDto->getUserId(),
             )
-            ->andReturn(null);
-
-        $this->vendorBusinessRepo->shouldReceive('findBusiness')
-            ->once()
-            ->with(
-                'registration_number',
-                $this->vendorBusinessDto->getRegistrationNumber(),
-            )
-            ->andReturn(null);
-
-        $this->vendorBusinessRepo->shouldReceive('create')
-            ->once()
-            ->with($this->vendorBusinessDto)
             ->andReturn($this->businessInformation);
 
-        $vendorBusinessInformation = $this->createVendorBusinessInformation->execute($this->vendorBusinessDto);
+        $this->createVendorBusinessInformation->execute($this->vendorBusinessDto);
+    })->throws(ConflictHttpException::class, 'Tax identification number exist for another vendor');
 
-        expect($vendorBusinessInformation)->toBeInstanceOf(VendorBusinessInformation::class)
-            ->and($vendorBusinessInformation->user_id)->toBe($this->vendorBusinessDto->getUserId())
-            ->and($vendorBusinessInformation->name)->toBe($this->vendorBusinessDto->getCompanyName())
-            ->and($vendorBusinessInformation->description)->toBe($this->vendorBusinessDto->getDescription())
-            ->and($vendorBusinessInformation->certificate_path)->toBeNull()
-            ->and($vendorBusinessInformation->registration_number)->toBe($this->vendorBusinessDto->getRegistrationNumber())
-            ->and($vendorBusinessInformation->tax_identification_number)->toBe($this->vendorBusinessDto->getTaxIdentificationNumber());
-    });
+    it('should create a new business information record if no existing record and business certificate is not uploaded',
+        function () {
+            Storage::fake('local');
 
-it('should create a new business information record if no existing record and business certificate is uploaded',
-    function () {
-        Storage::fake('local');
+            $this->vendorBusinessRepo->shouldReceive('findOtherBusiness')
+                ->once()
+                ->with(
+                    'name',
+                    $this->vendorBusinessDto->getCompanyName(),
+                    $this->vendorBusinessDto->getUserId(),
+                )
+                ->andReturn(null);
 
-        $vendorBusinessDto = new CreateVendorBusinessInformationDto(
-            $this->businessInformation->user_id,
-            $this->businessInformation->name,
-            $this->businessInformation->description,
-            $this->businessInformation->registration_number,
-            $this->businessInformation->tax_identification_number,
-            UploadedFile::fake()->image('business-certificate.jpg')
-        );
+            $this->vendorBusinessRepo->shouldReceive('findOtherBusiness')
+                ->once()
+                ->with(
+                    'registration_number',
+                    $this->vendorBusinessDto->getRegistrationNumber(),
+                    $this->vendorBusinessDto->getUserId(),
+                )
+                ->andReturn(null);
 
-        $this->vendorBusinessRepo->shouldReceive('findOtherBusiness')
-            ->once()
-            ->with(
-                'name',
-                $vendorBusinessDto->getCompanyName(),
-                $vendorBusinessDto->getUserId(),
-            )
-            ->andReturn(null);
+            $this->vendorBusinessRepo->shouldReceive('findOtherBusiness')
+                ->once()
+                ->with(
+                    'tax_identification_number',
+                    $this->vendorBusinessDto->getTaxIdentificationNumber(),
+                    $this->vendorBusinessDto->getUserId(),
+                )
+                ->andReturn(null);
 
-        $this->vendorBusinessRepo->shouldReceive('findOtherBusiness')
-            ->once()
-            ->with(
-                'registration_number',
-                $vendorBusinessDto->getRegistrationNumber(),
-                $vendorBusinessDto->getUserId(),
-            )
-            ->andReturn(null);
+            $this->vendorBusinessRepo->shouldReceive('findBusiness')
+                ->once()
+                ->with(
+                    'registration_number',
+                    $this->vendorBusinessDto->getRegistrationNumber(),
+                )
+                ->andReturn(null);
 
-        $this->vendorBusinessRepo->shouldReceive('findOtherBusiness')
-            ->once()
-            ->with(
-                'tax_identification_number',
-                $vendorBusinessDto->getTaxIdentificationNumber(),
-                $vendorBusinessDto->getUserId(),
-            )
-            ->andReturn(null);
+            $this->vendorBusinessRepo->shouldReceive('create')
+                ->once()
+                ->with($this->vendorBusinessDto)
+                ->andReturn($this->businessInformation);
 
-        $this->vendorBusinessRepo->shouldReceive('findBusiness')
-            ->once()
-            ->with(
-                'registration_number',
-                $vendorBusinessDto->getRegistrationNumber(),
-            )
-            ->andReturn(null);
+            $vendorBusinessInformation = $this->createVendorBusinessInformation->execute($this->vendorBusinessDto);
 
-        $this->businessInformation->certificate_path = 'vendors/business/certificates/'.$this->businessInformation->uuid.'.jpg';
+            expect($vendorBusinessInformation)->toBeInstanceOf(VendorBusinessInformation::class)
+                ->and($vendorBusinessInformation->user_id)->toBe($this->vendorBusinessDto->getUserId())
+                ->and($vendorBusinessInformation->name)->toBe($this->vendorBusinessDto->getCompanyName())
+                ->and($vendorBusinessInformation->description)->toBe($this->vendorBusinessDto->getDescription())
+                ->and($vendorBusinessInformation->certificate_path)->toBeNull()
+                ->and($vendorBusinessInformation->registration_number)->toBe($this->vendorBusinessDto->getRegistrationNumber())
+                ->and($vendorBusinessInformation->tax_identification_number)->toBe($this->vendorBusinessDto->getTaxIdentificationNumber());
+        });
 
-        $this->vendorBusinessRepo->shouldReceive('create')
-            ->once()
-            ->with($vendorBusinessDto)
-            ->andReturn($this->businessInformation);
+    it('should create a new business information record if no existing record and business certificate is uploaded',
+        function () {
+            Storage::fake('local');
 
-        $response = $this->createVendorBusinessInformation->execute($vendorBusinessDto);
+            $vendorBusinessDto = new CreateVendorBusinessInformationDto(
+                $this->businessInformation->user_id,
+                $this->businessInformation->name,
+                $this->businessInformation->description,
+                $this->businessInformation->registration_number,
+                $this->businessInformation->tax_identification_number,
+                UploadedFile::fake()->image('business-certificate.jpg')
+            );
 
-        expect($response)->toBeInstanceOf(VendorBusinessInformation::class)
-            ->and($response->user_id)->toBe($this->vendorBusinessDto->getUserId())
-            ->and($response->name)->toBe($this->vendorBusinessDto->getCompanyName())
-            ->and($response->description)->toBe($this->vendorBusinessDto->getDescription())
-            ->and($response->certificate_path)->toBeString()
-            ->and($response->registration_number)->toBe($this->vendorBusinessDto->getRegistrationNumber())
-            ->and($response->tax_identification_number)->toBe($this->vendorBusinessDto->getTaxIdentificationNumber());
-    });
+            $this->vendorBusinessRepo->shouldReceive('findOtherBusiness')
+                ->once()
+                ->with(
+                    'name',
+                    $vendorBusinessDto->getCompanyName(),
+                    $vendorBusinessDto->getUserId(),
+                )
+                ->andReturn(null);
+
+            $this->vendorBusinessRepo->shouldReceive('findOtherBusiness')
+                ->once()
+                ->with(
+                    'registration_number',
+                    $vendorBusinessDto->getRegistrationNumber(),
+                    $vendorBusinessDto->getUserId(),
+                )
+                ->andReturn(null);
+
+            $this->vendorBusinessRepo->shouldReceive('findOtherBusiness')
+                ->once()
+                ->with(
+                    'tax_identification_number',
+                    $vendorBusinessDto->getTaxIdentificationNumber(),
+                    $vendorBusinessDto->getUserId(),
+                )
+                ->andReturn(null);
+
+            $this->vendorBusinessRepo->shouldReceive('findBusiness')
+                ->once()
+                ->with(
+                    'registration_number',
+                    $vendorBusinessDto->getRegistrationNumber(),
+                )
+                ->andReturn(null);
+
+            $this->businessInformation->certificate_path = 'vendors/business/certificates/'.$this->businessInformation->uuid.'.jpg';
+
+            $this->vendorBusinessRepo->shouldReceive('create')
+                ->once()
+                ->with($vendorBusinessDto)
+                ->andReturn($this->businessInformation);
+
+            $response = $this->createVendorBusinessInformation->execute($vendorBusinessDto);
+
+            expect($response)->toBeInstanceOf(VendorBusinessInformation::class)
+                ->and($response->user_id)->toBe($this->vendorBusinessDto->getUserId())
+                ->and($response->name)->toBe($this->vendorBusinessDto->getCompanyName())
+                ->and($response->description)->toBe($this->vendorBusinessDto->getDescription())
+                ->and($response->certificate_path)->toBeString()
+                ->and($response->registration_number)->toBe($this->vendorBusinessDto->getRegistrationNumber())
+                ->and($response->tax_identification_number)->toBe($this->vendorBusinessDto->getTaxIdentificationNumber());
+        });
+});

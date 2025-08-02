@@ -37,19 +37,21 @@ beforeEach(function () {
     $this->deleteCartItem = new RemoveCartItemAction($this->userCartItemRepo);
 });
 
-it('should throw an exception if cart item does not exist', function () {
-    $this->deleteCartItem->execute('invalid_uuid');
-})->throws(ResourceNotFoundException::class, 'Item not found in your cart');
+describe('Remove Cart Item', function () {
+    it('should throw an exception if cart item does not exist', function () {
+        $this->deleteCartItem->execute('invalid_uuid');
+    })->throws(ResourceNotFoundException::class, 'Item not found in your cart');
 
-it('should throw an exception if cart item has already been checked out', function () {
-    $this->userCartItem->status = CartStatusEnum::CHECKED_OUT->value;
-    $this->userCartItem->save();
+    it('should throw an exception if cart item has already been checked out', function () {
+        $this->userCartItem->status = CartStatusEnum::CHECKED_OUT->value;
+        $this->userCartItem->save();
 
-    $this->deleteCartItem->execute($this->userCartItem->uuid);
-})->throws(ResourceNotFoundException::class, 'Item not found in your cart');
+        $this->deleteCartItem->execute($this->userCartItem->uuid);
+    })->throws(ResourceNotFoundException::class, 'Item not found in your cart');
 
-it('should delete an existing cart item', function () {
-    $response = $this->deleteCartItem->execute($this->userCartItem->uuid);
+    it('should delete an existing cart item', function () {
+        $response = $this->deleteCartItem->execute($this->userCartItem->uuid);
 
-    expect($response)->toBeTrue();
+        expect($response)->toBeTrue();
+    });
 });

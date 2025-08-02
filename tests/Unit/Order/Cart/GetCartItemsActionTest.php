@@ -15,57 +15,59 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Mockery;
 
-it('should get cart items', function () {
-    $userCartItemRepo = Mockery::mock(UserCartItemRepositoryInterface::class);
-    $request = Mockery::mock(Request::class);
+describe('Get Cart Items', function () {
+    it('should get cart items', function () {
+        $userCartItemRepo = Mockery::mock(UserCartItemRepositoryInterface::class);
+        $request = Mockery::mock(Request::class);
 
-    $user = User::factory()->create();
+        $user = User::factory()->create();
 
-    $userCart = UserCart::factory()->create([
-        'user_id' => $user->id,
-    ]);
-
-    $product = Product::factory()->create();
-
-    $productItem = ProductItem::factory()
-        ->count(3)
-        ->state(new Sequence(
-            ['price' => 10000, 'quantity' => 10],
-            ['price' => 20000, 'quantity' => 15],
-            ['price' => 30000, 'quantity' => 20],
-        ))->create([
-            'product_id' => $product->id,
+        $userCart = UserCart::factory()->create([
+            'user_id' => $user->id,
         ]);
 
-    $userCartItems = UserCartItem::factory()
-        ->count(3)
-        ->state(new Sequence(
-            ['product_item_id' => $productItem[0]->id, 'quantity' => 2],
-            ['product_item_id' => $productItem[1]->id, 'quantity' => 3],
-            ['product_item_id' => $productItem[2]->id, 'quantity' => 5],
-        ))
-        ->create([
-            'cart_id' => $userCart->id,
-        ]);
+        $product = Product::factory()->create();
 
-    $this->actingAs($user, 'sanctum');
+        $productItem = ProductItem::factory()
+            ->count(3)
+            ->state(new Sequence(
+                ['price' => 10000, 'quantity' => 10],
+                ['price' => 20000, 'quantity' => 15],
+                ['price' => 30000, 'quantity' => 20],
+            ))->create([
+                'product_id' => $product->id,
+            ]);
 
-    $cartItems = new GetCartItemsAction($userCartItemRepo);
+        $userCartItems = UserCartItem::factory()
+            ->count(3)
+            ->state(new Sequence(
+                ['product_item_id' => $productItem[0]->id, 'quantity' => 2],
+                ['product_item_id' => $productItem[1]->id, 'quantity' => 3],
+                ['product_item_id' => $productItem[2]->id, 'quantity' => 5],
+            ))
+            ->create([
+                'cart_id' => $userCart->id,
+            ]);
 
-    $userCartItemsPaginatedData = new LengthAwarePaginator(
-        items: $userCartItems,
-        total: 2,
-        perPage: 50,
-        currentPage: 1,
-    );
+        $this->actingAs($user, 'sanctum');
 
-    $userCartItemRepo->shouldReceive('index')
-        ->once()
-        ->with($request)
-        ->andReturn($userCartItemsPaginatedData);
+        $cartItems = new GetCartItemsAction($userCartItemRepo);
 
-    $response = $cartItems->execute($request);
+        $userCartItemsPaginatedData = new LengthAwarePaginator(
+            items: $userCartItems,
+            total: 2,
+            perPage: 50,
+            currentPage: 1,
+        );
 
-    expect($response)->toBeInstanceOf(CartResourceCollection::class)
-        ->and($response->collection)->toHaveCount(3);
+        $userCartItemRepo->shouldReceive('index')
+            ->once()
+            ->with($request)
+            ->andReturn($userCartItemsPaginatedData);
+
+        $response = $cartItems->execute($request);
+
+        expect($response)->toBeInstanceOf(CartResourceCollection::class)
+            ->and($response->collection)->toHaveCount(3);
+    });
 });

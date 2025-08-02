@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Repositories\Vendor\Products;
 
+use App\Domain\Order\Enums\CartStatusEnum;
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductItemDto;
 use App\Domain\Vendor\Products\Interfaces\ProductItemRepositoryInterface;
 use App\Infrastructure\Models\Inventory\ProductItem;
@@ -45,8 +46,15 @@ class ProductItemRepository extends BaseRepository implements ProductItemReposit
         return $productItem->increment('quantity', $quantity);
     }
 
-    public function decreaseStock(ProductItem|Model $productItem, int $quantity): bool|int
+    public function decreaseStock(ProductItem|Model $productItem, int $quantity): ProductItem
     {
-        return $productItem->decrement('quantity', $quantity);
+        $productItem->decrement('quantity', $quantity);
+
+        if ($productItem->quantity === 0) {
+            $productItem->status = CartStatusEnum::OUT_OF_STOCK->value;
+            $productItem->save();
+        }
+
+        return $productItem;
     }
 }

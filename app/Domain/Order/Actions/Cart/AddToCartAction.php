@@ -12,6 +12,7 @@ use App\Domain\Order\Resources\Cart\CartResource;
 use App\Domain\Vendor\Products\Interfaces\ProductItemRepositoryInterface;
 use App\Infrastructure\Models\Cart\UserCartItem;
 use App\Infrastructure\Models\Inventory\ProductItem;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class AddToCartAction
@@ -103,7 +104,7 @@ class AddToCartAction
     private function handleStockQuantity(
         int $cartQuantity,
         ?UserCartItem $cartItem,
-        ProductItem $productItem,
+        Model $productItem,
         CartDto $addToCartDto,
     ): void {
         if ($addToCartDto->getType() === CartOperationEnum::INCREMENT->value) {

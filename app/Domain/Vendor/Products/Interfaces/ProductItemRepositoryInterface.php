@@ -14,5 +14,5 @@ interface ProductItemRepositoryInterface
 
     public function increaseStock(ProductItem $productItem, int $quantity): bool|int;
 
-    public function decreaseStock(ProductItem|Model $productItem, int $quantity): bool|int;
+    public function decreaseStock(ProductItem|Model $productItem, int $quantity): ProductItem;
 }

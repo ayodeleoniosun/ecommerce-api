@@ -38,73 +38,75 @@ beforeEach(function () {
     $this->createVendorContactInformation = new CreateVendorContactInformationAction($this->vendorContactRepo);
 });
 
-it('should throw an exception if contact email exist for another vendor', function () {
-    $this->vendorContactRepo->shouldReceive('findOtherContact')
-        ->once()
-        ->with(
-            'email',
-            $this->vendorContactDto->getEmail(),
-            $this->vendorContactDto->getUserId(),
-        )
-        ->andReturn($this->contactInformation);
+describe('Create Vendor Contact Information', function () {
+    it('should throw an exception if contact email exist for another vendor', function () {
+        $this->vendorContactRepo->shouldReceive('findOtherContact')
+            ->once()
+            ->with(
+                'email',
+                $this->vendorContactDto->getEmail(),
+                $this->vendorContactDto->getUserId(),
+            )
+            ->andReturn($this->contactInformation);
 
-    $this->createVendorContactInformation->execute($this->vendorContactDto);
-})->throws(ConflictHttpException::class, 'Email address exist for another vendor');
+        $this->createVendorContactInformation->execute($this->vendorContactDto);
+    })->throws(ConflictHttpException::class, 'Email address exist for another vendor');
 
-it('should throw an exception if contact phone number exist for another vendor', function () {
-    $this->vendorContactRepo->shouldReceive('findOtherContact')
-        ->once()
-        ->with(
-            'email',
-            $this->vendorContactDto->getEmail(),
-            $this->vendorContactDto->getUserId(),
-        )
-        ->andReturn(null);
+    it('should throw an exception if contact phone number exist for another vendor', function () {
+        $this->vendorContactRepo->shouldReceive('findOtherContact')
+            ->once()
+            ->with(
+                'email',
+                $this->vendorContactDto->getEmail(),
+                $this->vendorContactDto->getUserId(),
+            )
+            ->andReturn(null);
 
-    $this->vendorContactRepo->shouldReceive('findOtherContact')
-        ->once()
-        ->with(
-            'phone_number',
-            $this->vendorContactDto->getPhoneNumber(),
-            $this->vendorContactDto->getUserId(),
-        )
-        ->andReturn($this->contactInformation);
+        $this->vendorContactRepo->shouldReceive('findOtherContact')
+            ->once()
+            ->with(
+                'phone_number',
+                $this->vendorContactDto->getPhoneNumber(),
+                $this->vendorContactDto->getUserId(),
+            )
+            ->andReturn($this->contactInformation);
 
-    $this->createVendorContactInformation->execute($this->vendorContactDto);
-})->throws(ConflictHttpException::class, 'Phone number exist for another vendor');
+        $this->createVendorContactInformation->execute($this->vendorContactDto);
+    })->throws(ConflictHttpException::class, 'Phone number exist for another vendor');
 
-it('should create a new vendor contact information if not exist', function () {
-    $this->vendorContactRepo->shouldReceive('findOtherContact')
-        ->once()
-        ->with(
-            'email',
-            $this->vendorContactDto->getEmail(),
-            $this->vendorContactDto->getUserId(),
-        )
-        ->andReturn(null);
+    it('should create a new vendor contact information if not exist', function () {
+        $this->vendorContactRepo->shouldReceive('findOtherContact')
+            ->once()
+            ->with(
+                'email',
+                $this->vendorContactDto->getEmail(),
+                $this->vendorContactDto->getUserId(),
+            )
+            ->andReturn(null);
 
-    $this->vendorContactRepo->shouldReceive('findOtherContact')
-        ->once()
-        ->with(
-            'phone_number',
-            $this->vendorContactDto->getPhoneNumber(),
-            $this->vendorContactDto->getUserId(),
-        )
-        ->andReturn(null);
+        $this->vendorContactRepo->shouldReceive('findOtherContact')
+            ->once()
+            ->with(
+                'phone_number',
+                $this->vendorContactDto->getPhoneNumber(),
+                $this->vendorContactDto->getUserId(),
+            )
+            ->andReturn(null);
 
-    $this->vendorContactRepo->shouldReceive('create')
-        ->once()
-        ->with($this->vendorContactDto)
-        ->andReturn($this->contactInformation);
+        $this->vendorContactRepo->shouldReceive('create')
+            ->once()
+            ->with($this->vendorContactDto)
+            ->andReturn($this->contactInformation);
 
-    $response = $this->createVendorContactInformation->execute($this->vendorContactDto);
+        $response = $this->createVendorContactInformation->execute($this->vendorContactDto);
 
-    expect($response)->toBeInstanceOf(VendorContactInformation::class)
-        ->and($response->user_id)->toBe($this->vendorContactDto->getUserId())
-        ->and($response->name)->toBe($this->vendorContactDto->getName())
-        ->and($response->email)->toBe($this->vendorContactDto->getEmail())
-        ->and($response->phone_number)->toBe($this->vendorContactDto->getPhoneNumber())
-        ->and($response->country)->toBe($this->vendorContactDto->getCountry())
-        ->and($response->city)->toBe($this->vendorContactDto->getCity())
-        ->and($response->address)->toBe($this->vendorContactDto->getAddress());
+        expect($response)->toBeInstanceOf(VendorContactInformation::class)
+            ->and($response->user_id)->toBe($this->vendorContactDto->getUserId())
+            ->and($response->name)->toBe($this->vendorContactDto->getName())
+            ->and($response->email)->toBe($this->vendorContactDto->getEmail())
+            ->and($response->phone_number)->toBe($this->vendorContactDto->getPhoneNumber())
+            ->and($response->country)->toBe($this->vendorContactDto->getCountry())
+            ->and($response->city)->toBe($this->vendorContactDto->getCity())
+            ->and($response->address)->toBe($this->vendorContactDto->getAddress());
+    });
 });

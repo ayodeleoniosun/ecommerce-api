@@ -23,55 +23,57 @@ beforeEach(function () {
     $this->verifyToken = new VerifyTokenAction($this->userRepo, $this->userVerificationRepo);
 });
 
-it('should throw an exception if token is not found', function () {
-    $this->userVerificationRepo->shouldReceive('findByToken')
-        ->once()
-        ->with($this->token)
-        ->andReturn(null);
+describe('Verify Token', function () {
+    it('should throw an exception if token is not found', function () {
+        $this->userVerificationRepo->shouldReceive('findByToken')
+            ->once()
+            ->with($this->token)
+            ->andReturn(null);
 
-    $this->verifyToken->execute($this->token);
-})->throws(ResourceNotFoundException::class, 'Token not found');
+        $this->verifyToken->execute($this->token);
+    })->throws(ResourceNotFoundException::class, 'Token not found');
 
-it('should throw an exception if token already expired', function () {
-    $this->verification->expires_at = now()->subHour();
+    it('should throw an exception if token already expired', function () {
+        $this->verification->expires_at = now()->subHour();
 
-    $this->userVerificationRepo->shouldReceive('findByToken')
-        ->once()
-        ->with($this->token)
-        ->andReturn($this->verification);
+        $this->userVerificationRepo->shouldReceive('findByToken')
+            ->once()
+            ->with($this->token)
+            ->andReturn($this->verification);
 
-    $this->verifyToken->execute($this->token);
-})->throws(BadRequestException::class, 'Token already expired');
+        $this->verifyToken->execute($this->token);
+    })->throws(BadRequestException::class, 'Token already expired');
 
-it('should throw an exception if token already verified', function () {
-    $this->verification->expires_at = now()->addHour();
-    $this->verification->verified_at = now();
+    it('should throw an exception if token already verified', function () {
+        $this->verification->expires_at = now()->addHour();
+        $this->verification->verified_at = now();
 
-    $this->userVerificationRepo->shouldReceive('findByToken')
-        ->once()
-        ->with($this->token)
-        ->andReturn($this->verification);
+        $this->userVerificationRepo->shouldReceive('findByToken')
+            ->once()
+            ->with($this->token)
+            ->andReturn($this->verification);
 
-    $this->verifyToken->execute($this->token);
-})->throws(BadRequestException::class, 'Account already verified');
+        $this->verifyToken->execute($this->token);
+    })->throws(BadRequestException::class, 'Account already verified');
 
-it('can verify valid token', function () {
-    $this->verification->expires_at = now()->addHour();
+    it('can verify valid token', function () {
+        $this->verification->expires_at = now()->addHour();
 
-    $this->userVerificationRepo->shouldReceive('findByToken')
-        ->once()
-        ->with($this->token)
-        ->andReturn($this->verification);
+        $this->userVerificationRepo->shouldReceive('findByToken')
+            ->once()
+            ->with($this->token)
+            ->andReturn($this->verification);
 
-    $this->userRepo->shouldReceive('verify')
-        ->once()
-        ->with($this->verification)
-        ->andReturn($this->user);
+        $this->userRepo->shouldReceive('verify')
+            ->once()
+            ->with($this->verification)
+            ->andReturn($this->user);
 
-    $response = $this->verifyToken->execute($this->token);
+        $response = $this->verifyToken->execute($this->token);
 
-    expect($response)->toBeInstanceOf(User::class)
-        ->and($response->firstname)->toBe($this->user->firstname)
-        ->and($response->lastname)->toBe($this->user->lastname)
-        ->and($response->email)->toBe($this->user->email);
+        expect($response)->toBeInstanceOf(User::class)
+            ->and($response->firstname)->toBe($this->user->firstname)
+            ->and($response->lastname)->toBe($this->user->lastname)
+            ->and($response->email)->toBe($this->user->email);
+    });
 });

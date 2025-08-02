@@ -16,24 +16,26 @@ beforeEach(function () {
     $this->registerUser = new RegisterUserAction($this->userRepo);
 });
 
-it('can register new user', function () {
-    Notification::fake();
+describe('Registration', function () {
+    it('can register new user', function () {
+        Notification::fake();
 
-    $user = User::factory()->create();
-    $userDto = new CreateUserDto($user->firstname, $user->lastname, $user->email, 'password',
-        UserTypeEnum::CUSTOMER->value);
+        $user = User::factory()->create();
+        $userDto = new CreateUserDto($user->firstname, $user->lastname, $user->email, 'password',
+            UserTypeEnum::CUSTOMER->value);
 
-    $this->userRepo->shouldReceive('create')
-        ->once()
-        ->with($userDto)
-        ->andReturn($user);
+        $this->userRepo->shouldReceive('create')
+            ->once()
+            ->with($userDto)
+            ->andReturn($user);
 
-    $response = $this->registerUser->execute($userDto);
+        $response = $this->registerUser->execute($userDto);
 
-    Notification::assertSentTo($user, RegistrationCompletedNotification::class);
+        Notification::assertSentTo($user, RegistrationCompletedNotification::class);
 
-    expect($response)->toBeInstanceOf(User::class)
-        ->and($response->firstname)->toBe($user->firstname)
-        ->and($response->lastname)->toBe($user->lastname)
-        ->and($response->email)->toBe($user->email);
+        expect($response)->toBeInstanceOf(User::class)
+            ->and($response->firstname)->toBe($user->firstname)
+            ->and($response->lastname)->toBe($user->lastname)
+            ->and($response->email)->toBe($user->email);
+    });
 });

@@ -13,7 +13,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 
-describe('user registration', function () {
+describe('Registration', function () {
     it('should return an error if a required field is empty', function () {
         $payload = [
             'firstname' => 'John',
@@ -116,7 +116,7 @@ describe('user registration', function () {
     });
 });
 
-describe('user login', function () {
+describe('Login', function () {
     it('should return an error if email address does not exist', function () {
         $payload = [
             'email' => 'non_existing@email.com',
@@ -221,7 +221,7 @@ describe('user login', function () {
     });
 });
 
-describe('verify token', function () {
+describe('Verify Token', function () {
     it('should return an error if token does not exist', function () {
         $payload = [
             'token' => 'invalid_token',
@@ -302,7 +302,7 @@ describe('verify token', function () {
     });
 });
 
-describe('resend token', function () {
+describe('Resend Token', function () {
     it('should return an error if email does not exist', function () {
         $payload = [
             'email' => 'invalid_email@email.com',
@@ -358,7 +358,7 @@ describe('resend token', function () {
     });
 });
 
-describe('forgot password', function () {
+describe('Forgot Password', function () {
     it('should return an error if email does not exist', function () {
         $payload = [
             'email' => 'invalid_email@email.com',
@@ -447,7 +447,7 @@ describe('forgot password', function () {
     });
 });
 
-describe('reset password', function () {
+describe('Reset Password', function () {
     it('should return an error if email does not exist', function () {
         $payload = [
             'email' => 'invalid_email@email.com',
@@ -631,7 +631,7 @@ describe('reset password', function () {
     });
 });
 
-describe('authenticated', function () {
+describe('Authenticated', function () {
     it('should return a 401 if unauthenticated', function () {
         $response = $this->getJson('/api/authenticated');
         $content = json_decode($response->getContent());

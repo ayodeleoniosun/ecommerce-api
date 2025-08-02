@@ -113,42 +113,44 @@ beforeEach(function () {
     );
 });
 
-it('should checkout cart items', function () {
-    $this->userCartRepo->shouldReceive('findPendingCart')
-        ->once()
-        ->with($this->user->id)
-        ->andReturn($this->cart);
+describe('Checkout', function () {
+    it('should checkout cart items', function () {
+        $this->userCartRepo->shouldReceive('findPendingCart')
+            ->once()
+            ->with($this->user->id)
+            ->andReturn($this->cart);
 
-    $this->orderRepo->shouldReceive('findOrCreate')
-        ->once()
-        ->andReturn($this->order->load('cart.items.productItem'));
+        $this->orderRepo->shouldReceive('findOrCreate')
+            ->once()
+            ->andReturn($this->order->load('cart.items.productItem'));
 
-    $this->orderShippingRepo->shouldReceive('storeOrUpdate')
-        ->once()
-        ->with([
-            'order_id' => $this->order->id,
-            'country_id' => $this->customerShippingAddress->country_id,
-            'state_id' => $this->customerShippingAddress->state_id,
-            'city_id' => $this->customerShippingAddress->city_id,
-            'delivery_type' => DeliveryTypeEnum::DOOR_DELIVERY->value,
-            'delivery_address' => $this->customerShippingAddress->address,
-            'pickup_station_name' => $this->pickupStation->name,
-            'pickup_station_address' => $this->pickupStation->address,
-            'pickup_station_contact_name' => $this->pickupStation->contact_name,
-            'pickup_station_contact_phone_number' => $this->pickupStation->contact_phone_number,
-            'estimated_delivery_start_date' => now()->addDays(7)->toDateString(),
-            'estimated_delivery_end_date' => now()->addDays(9)->toDateString(),
-        ])
-        ->andReturn($this->orderShipping);
+        $this->orderShippingRepo->shouldReceive('storeOrUpdate')
+            ->once()
+            ->with([
+                'order_id' => $this->order->id,
+                'country_id' => $this->customerShippingAddress->country_id,
+                'state_id' => $this->customerShippingAddress->state_id,
+                'city_id' => $this->customerShippingAddress->city_id,
+                'delivery_type' => DeliveryTypeEnum::DOOR_DELIVERY->value,
+                'delivery_address' => $this->customerShippingAddress->address,
+                'pickup_station_name' => $this->pickupStation->name,
+                'pickup_station_address' => $this->pickupStation->address,
+                'pickup_station_contact_name' => $this->pickupStation->contact_name,
+                'pickup_station_contact_phone_number' => $this->pickupStation->contact_phone_number,
+                'estimated_delivery_start_date' => now()->addDays(7)->toDateString(),
+                'estimated_delivery_end_date' => now()->addDays(9)->toDateString(),
+            ])
+            ->andReturn($this->orderShipping);
 
-    $response = $this->checkout->execute($this->checkoutDto);
+        $response = $this->checkout->execute($this->checkoutDto);
 
-    expect($response)->toBeInstanceOf(OrderResource::class)
-        ->and($response->reference)->toBe($this->order->reference)
-        ->and($response->currency)->toBe($this->order->currency)
-        ->and($response->cart_id)->toBe($this->cart->id)
-        ->and($response->user_id)->toBe($this->user->id)
-        ->and($response->items)->toHaveCount(3)
-        ->and($response->items->every(fn ($item) => $item->order_id === $this->order->id))->toBeTrue()
-        ->and($response->items->map(fn ($item) => $item->total_amount)->all())->toEqual([20000, 60000, 150000]);
+        expect($response)->toBeInstanceOf(OrderResource::class)
+            ->and($response->reference)->toBe($this->order->reference)
+            ->and($response->currency)->toBe($this->order->currency)
+            ->and($response->cart_id)->toBe($this->cart->id)
+            ->and($response->user_id)->toBe($this->user->id)
+            ->and($response->items)->toHaveCount(3)
+            ->and($response->items->every(fn ($item) => $item->order_id === $this->order->id))->toBeTrue()
+            ->and($response->items->map(fn ($item) => $item->total_amount)->all())->toEqual([20000, 60000, 150000]);
+    });
 });

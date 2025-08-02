@@ -7,6 +7,7 @@ use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Auth\Enums\UserStatusEnum;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Infrastructure\Models\User\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -14,9 +15,9 @@ class LoginUserAction
 {
     public function __construct(private readonly UserRepositoryInterface $userRepository) {}
 
-    public function execute(array $credentials): User
+    public function execute(array $credentials): Model
     {
-        $user = $this->userRepository->findByColumn('email', $credentials['email']);
+        $user = $this->userRepository->findByColumn(User::class, 'email', $credentials['email']);
 
         $this->validateUserStatus($user);
 

@@ -6,6 +6,7 @@ use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Auth\Enums\UserStatusEnum;
 use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
+use App\Infrastructure\Models\User\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Password;
 
@@ -17,7 +18,7 @@ class ResetPasswordAction
 
     public function execute(array $request): string
     {
-        $user = $this->userRepository->findByColumn('email', $request['email']);
+        $user = $this->userRepository->findByColumn(User::class, 'email', $request['email']);
 
         throw_if(! $user, ResourceNotFoundException::class, 'Email not found');
 

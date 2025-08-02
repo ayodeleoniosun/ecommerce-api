@@ -31,7 +31,7 @@ beforeEach(function () {
     $this->actingAs($this->user, 'sanctum');
 });
 
-describe('add item to cart', function () {
+describe('Add item to cart', function () {
     it('should return an error if a required field is empty', function () {
         $payload = [
             'merged_product_item_id' => 'John Doe',

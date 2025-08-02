@@ -6,16 +6,16 @@ use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Exceptions\ResourceNotFoundException;
 use App\Domain\Auth\Actions\ResetPasswordAction;
 use App\Domain\Auth\Enums\UserStatusEnum;
-use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Domain\Auth\Requests\ResetPasswordRequest;
 use App\Infrastructure\Models\User\User;
+use App\Infrastructure\Repositories\User\UserRepository;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Password;
 use Mockery;
 
 beforeEach(function () {
-    $this->userRepo = Mockery::mock(UserRepositoryInterface::class);
+    $this->userRepo = Mockery::mock(UserRepository::class)->makePartial();
     $this->user = User::factory()->create();
     $this->resetPassword = new ResetPasswordAction($this->userRepo);
     $this->request = new ResetPasswordRequest;
@@ -27,57 +27,43 @@ beforeEach(function () {
     ]);
 });
 
-it('should throw an exception if email is not found', function () {
-    $this->userRepo->shouldReceive('findByColumn')
-        ->once()
-        ->with('email', $this->user->email)
-        ->andReturn(null);
+describe('Reset Password', function () {
+    it('should throw an exception if email is not found', function () {
+        $payload = $this->request->all();
+        $payload['email'] = 'invalid_email';
 
-    $this->resetPassword->execute($this->request->all());
-})->throws(ResourceNotFoundException::class, 'Email not found');
+        $this->resetPassword->execute($payload);
+    })->throws(ResourceNotFoundException::class, 'Email not found');
 
-it('should throw an exception if user is not yet verified', function () {
-    $this->userRepo->shouldReceive('findByColumn')
-        ->once()
-        ->with('email', $this->user->email)
-        ->andReturn($this->user);
+    it('should throw an exception if user is not yet verified', function () {
+        $this->resetPassword->execute($this->request->all());
+    })->throws(BadRequestException::class, 'User not yet verified');
 
-    $this->resetPassword->execute($this->request->all());
-})->throws(BadRequestException::class, 'User not yet verified');
+    it('should throw an exception if user is not active', function () {
+        $this->user->email_verified_at = now();
+        $this->user->save();
 
-it('should throw an exception if user is not active', function () {
-    $this->user->email_verified_at = now();
+        $this->resetPassword->execute($this->request->all());
+    })->throws(BadRequestException::class, 'User not active');
 
-    $this->userRepo->shouldReceive('findByColumn')
-        ->once()
-        ->with('email', $this->user->email)
-        ->andReturn($this->user);
+    it('can reset password', function () {
+        Event::fake();
 
-    $this->resetPassword->execute($this->request->all());
-})->throws(BadRequestException::class, 'User not active');
+        $this->user->email_verified_at = now();
+        $this->user->status = UserStatusEnum::ACTIVE->value;
+        $this->user->save();
 
-it('can reset password', function () {
-    Event::fake();
+        $this->userRepo->shouldReceive('resetPassword')
+            ->once()
+            ->with($this->request->all())
+            ->andReturn(Password::PASSWORD_RESET);
 
-    $this->user->email_verified_at = now();
-    $this->user->status = UserStatusEnum::ACTIVE->value;
+        $status = $this->resetPassword->execute($this->request->all());
 
-    $this->userRepo->shouldReceive('findByColumn')
-        ->once()
-        ->with('email', $this->user->email)
-        ->andReturn($this->user);
+        expect($status)->toBe(Password::PASSWORD_RESET);
 
-    $this->userRepo->shouldReceive('resetPassword')
-        ->once()
-        ->with($this->request->all())
-        ->andReturn(Password::PASSWORD_RESET);
-
-    $status = $this->resetPassword->execute($this->request->all());
-
-    expect($status)->toBe(Password::PASSWORD_RESET);
-
-    Event::assertDispatched(PasswordReset::class, function ($event) {
-        return $event->user->id === $this->user->id;
+        Event::assertDispatched(PasswordReset::class, function ($event) {
+            return $event->user->id === $this->user->id;
+        });
     });
-
 });

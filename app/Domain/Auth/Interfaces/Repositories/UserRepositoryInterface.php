@@ -10,8 +10,6 @@ interface UserRepositoryInterface
 {
     public function create(CreateUserDto $user): User;
 
-    public function findByColumn(string $field, string $value): ?User;
-
     public function verify(UserVerification $verification): User;
 
     public function resetPassword(array $request): string;

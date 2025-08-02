@@ -30,9 +30,7 @@ beforeEach(function () {
         'user_id' => $this->user->id,
     ]);
 
-    $this->productItem = ProductItem::factory()->create([
-        'quantity' => 10,
-    ]);
+    $this->productItem = ProductItem::factory()->create();
 
     $this->userCartItem = UserCartItem::factory()->create([
         'cart_id' => $this->userCart->id,
@@ -51,140 +49,142 @@ beforeEach(function () {
     $this->addToCart = new AddToCartAction($this->productItemRepo, $this->userCartRepo, $this->userCartItemRepo);
 });
 
-it('should throw an exception if product item does not exist', function () {
-    $this->addCartDto->setProductItemUUID('invalid_uuid');
-    $this->addToCart->execute($this->addCartDto);
-})->throws(ResourceNotFoundException::class, 'Product item not found');
+describe('Add To Cart', function () {
+    it('should throw an exception if product item does not exist', function () {
+        $this->addCartDto->setProductItemUUID('invalid_uuid');
+        $this->addToCart->execute($this->addCartDto);
+    })->throws(ResourceNotFoundException::class, 'Product item not found');
 
-it('should throw an exception if product item quantity is lesser than the cart quantity', function () {
-    $this->addCartDto->setQuantity(100);
-    $this->addToCart->execute($this->addCartDto);
-})->throws(BadRequestException::class, 'Insufficient product quantity');
+    it('should throw an exception if product item quantity is lesser than the cart quantity', function () {
+        $this->addCartDto->setQuantity(100);
+        $this->addToCart->execute($this->addCartDto);
+    })->throws(BadRequestException::class, 'Insufficient product quantity');
 
-it('should add new cart items to cart', function () {
-    $this->userCartRepo->shouldReceive('findPendingCart')
-        ->once()
-        ->with($this->addCartDto->getUserId())
-        ->andReturn($this->userCart);
+    it('should add new cart items to cart', function () {
+        $this->userCartRepo->shouldReceive('findPendingCart')
+            ->once()
+            ->with($this->addCartDto->getUserId())
+            ->andReturn($this->userCart);
 
-    $this->userCartItemRepo->shouldReceive('findExistingCartItem')
-        ->twice()
-        ->with($this->userCart->id, $this->addCartDto->getProductItemId())
-        ->andReturn(null);
+        $this->userCartItemRepo->shouldReceive('findExistingCartItem')
+            ->twice()
+            ->with($this->userCart->id, $this->addCartDto->getProductItemId())
+            ->andReturn(null);
 
-    $this->userCartRepo->shouldReceive('findOrCreate')
-        ->once()
-        ->with($this->addCartDto)
-        ->andReturn($this->userCart);
+        $this->userCartRepo->shouldReceive('findOrCreate')
+            ->once()
+            ->with($this->addCartDto)
+            ->andReturn($this->userCart);
 
-    $this->userCartItemRepo->shouldReceive('storeOrUpdate')
-        ->once()
-        ->with($this->addCartDto)
-        ->andReturn($this->userCartItem);
+        $this->userCartItemRepo->shouldReceive('storeOrUpdate')
+            ->once()
+            ->with($this->addCartDto)
+            ->andReturn($this->userCartItem);
 
-    $response = $this->addToCart->execute($this->addCartDto);
+        $response = $this->addToCart->execute($this->addCartDto);
 
-    expect($response)->toBeInstanceOf(CartResource::class)
-        ->and($response->resource->quantity)->toBe($this->addCartDto->getQuantity())
-        ->and($response->resource->productItem->price)->toBe(10000)
-        ->and($response->resource->productItem->quantity)->toBe(5)
-        ->and($response->resource->productItem->status)->toBe(ProductStatusEnum::IN_STOCK->value);
-});
+        expect($response)->toBeInstanceOf(CartResource::class)
+            ->and($response->resource->quantity)->toBe($this->addCartDto->getQuantity())
+            ->and($response->resource->productItem->price)->toBe(10000)
+            ->and($response->resource->productItem->quantity)->toBe(5)
+            ->and($response->resource->productItem->status)->toBe(ProductStatusEnum::IN_STOCK->value);
+    });
 
-it('should increment existing cart item', function () {
-    $this->userCartItem->quantity = 10;
-    $this->userCartItem->save();
+    it('should increment existing cart item', function () {
+        $this->userCartItem->quantity = 10;
+        $this->userCartItem->save();
 
-    $this->userCartRepo->shouldReceive('findPendingCart')
-        ->once()
-        ->with($this->addCartDto->getUserId())
-        ->andReturn($this->userCart);
+        $this->userCartRepo->shouldReceive('findPendingCart')
+            ->once()
+            ->with($this->addCartDto->getUserId())
+            ->andReturn($this->userCart);
 
-    $this->userCartItemRepo->shouldReceive('findExistingCartItem')
-        ->twice()
-        ->with($this->userCart->id, $this->addCartDto->getProductItemId())
-        ->andReturn($this->userCartItem);
+        $this->userCartItemRepo->shouldReceive('findExistingCartItem')
+            ->twice()
+            ->with($this->userCart->id, $this->addCartDto->getProductItemId())
+            ->andReturn($this->userCartItem);
 
-    $this->userCartRepo->shouldReceive('findOrCreate')
-        ->once()
-        ->with($this->addCartDto)
-        ->andReturn($this->userCart);
+        $this->userCartRepo->shouldReceive('findOrCreate')
+            ->once()
+            ->with($this->addCartDto)
+            ->andReturn($this->userCart);
 
-    $this->userCartItem->quantity = 15;
+        $this->userCartItem->quantity = 15;
 
-    $this->userCartItemRepo->shouldReceive('storeOrUpdate')
-        ->once()
-        ->with($this->addCartDto)
-        ->andReturn($this->userCartItem);
+        $this->userCartItemRepo->shouldReceive('storeOrUpdate')
+            ->once()
+            ->with($this->addCartDto)
+            ->andReturn($this->userCartItem);
 
-    $this->productItem->quantity = 5;
-    $this->productItem->save();
+        $this->productItem->quantity = 10;
+        $this->productItem->save();
 
-    $response = $this->addToCart->execute($this->addCartDto);
+        $response = $this->addToCart->execute($this->addCartDto);
 
-    expect($response)->toBeInstanceOf(CartResource::class)
-        ->and($response->resource->quantity)->toBe(15)
-        ->and($response->resource->productItem->price)->toBe(10000)
-        ->and($response->resource->productItem->quantity)->toBe(0)
-        ->and($response->resource->productItem->status)->toBe(ProductStatusEnum::IN_STOCK->value);
-});
+        expect($response)->toBeInstanceOf(CartResource::class)
+            ->and($response->resource->quantity)->toBe(15)
+            ->and($response->resource->productItem->price)->toBe(10000)
+            ->and($response->resource->productItem->quantity)->toBe(5)
+            ->and($response->resource->productItem->status)->toBe(ProductStatusEnum::IN_STOCK->value);
+    });
 
-it('should throw an exception in an attempt to decrement existing cart item but with lesser quantity', function () {
-    $this->addCartDto->setType(CartOperationEnum::DECREMENT->value);
+    it('should throw an exception in an attempt to decrement existing cart item but with lesser quantity', function () {
+        $this->addCartDto->setType(CartOperationEnum::DECREMENT->value);
 
-    $this->userCartRepo->shouldReceive('findPendingCart')
-        ->once()
-        ->with($this->addCartDto->getUserId())
-        ->andReturn($this->userCart);
+        $this->userCartRepo->shouldReceive('findPendingCart')
+            ->once()
+            ->with($this->addCartDto->getUserId())
+            ->andReturn($this->userCart);
 
-    $this->userCartItemRepo->shouldReceive('findExistingCartItem')
-        ->twice()
-        ->with($this->userCart->id, $this->addCartDto->getProductItemId())
-        ->andReturn($this->userCartItem);
+        $this->userCartItemRepo->shouldReceive('findExistingCartItem')
+            ->twice()
+            ->with($this->userCart->id, $this->addCartDto->getProductItemId())
+            ->andReturn($this->userCartItem);
 
-    $this->userCartRepo->shouldReceive('findOrCreate')
-        ->once()
-        ->with($this->addCartDto)
-        ->andReturn($this->userCart);
+        $this->userCartRepo->shouldReceive('findOrCreate')
+            ->once()
+            ->with($this->addCartDto)
+            ->andReturn($this->userCart);
 
-    $this->userCartItem->quantity = 2;
-    $this->userCartItem->save();
+        $this->userCartItem->quantity = 2;
+        $this->userCartItem->save();
 
-    $this->addToCart->execute($this->addCartDto);
-})->throws(BadRequestException::class, 'Cart item quantity is lesser than the quantity to be decremented');
+        $this->addToCart->execute($this->addCartDto);
+    })->throws(BadRequestException::class, 'Cart item quantity is lesser than the quantity to be decremented');
 
-it('should decrement existing cart item', function () {
-    $this->addCartDto->setType(CartOperationEnum::DECREMENT->value);
-    $this->userCartItem->quantity = 10;
-    $this->userCartItem->save();
+    it('should decrement existing cart item', function () {
+        $this->addCartDto->setType(CartOperationEnum::DECREMENT->value);
+        $this->userCartItem->quantity = 10;
+        $this->userCartItem->save();
 
-    $this->userCartRepo->shouldReceive('findPendingCart')
-        ->once()
-        ->with($this->addCartDto->getUserId())
-        ->andReturn($this->userCart);
+        $this->userCartRepo->shouldReceive('findPendingCart')
+            ->once()
+            ->with($this->addCartDto->getUserId())
+            ->andReturn($this->userCart);
 
-    $this->userCartItemRepo->shouldReceive('findExistingCartItem')
-        ->twice()
-        ->with($this->userCart->id, $this->addCartDto->getProductItemId())
-        ->andReturn($this->userCartItem);
+        $this->userCartItemRepo->shouldReceive('findExistingCartItem')
+            ->twice()
+            ->with($this->userCart->id, $this->addCartDto->getProductItemId())
+            ->andReturn($this->userCartItem);
 
-    $this->userCartRepo->shouldReceive('findOrCreate')
-        ->once()
-        ->with($this->addCartDto)
-        ->andReturn($this->userCart);
+        $this->userCartRepo->shouldReceive('findOrCreate')
+            ->once()
+            ->with($this->addCartDto)
+            ->andReturn($this->userCart);
 
-    $this->userCartItem->quantity = 5;
+        $this->userCartItem->quantity = 5;
 
-    $this->userCartItemRepo->shouldReceive('storeOrUpdate')
-        ->once()
-        ->with($this->addCartDto)
-        ->andReturn($this->userCartItem);
+        $this->userCartItemRepo->shouldReceive('storeOrUpdate')
+            ->once()
+            ->with($this->addCartDto)
+            ->andReturn($this->userCartItem);
 
-    $response = $this->addToCart->execute($this->addCartDto);
+        $response = $this->addToCart->execute($this->addCartDto);
 
-    expect($response)->toBeInstanceOf(CartResource::class)
-        ->and($response->resource->quantity)->toBe(5)
-        ->and($response->resource->productItem->price)->toBe(10000)
-        ->and($response->resource->productItem->quantity)->toBe(15)
-        ->and($response->resource->productItem->status)->toBe(ProductStatusEnum::IN_STOCK->value);
+        expect($response)->toBeInstanceOf(CartResource::class)
+            ->and($response->resource->quantity)->toBe(5)
+            ->and($response->resource->productItem->price)->toBe(10000)
+            ->and($response->resource->productItem->quantity)->toBe(15)
+            ->and($response->resource->productItem->status)->toBe(ProductStatusEnum::IN_STOCK->value);
+    });
 });

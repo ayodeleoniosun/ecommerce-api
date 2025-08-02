@@ -8,13 +8,14 @@ use App\Domain\Auth\Interfaces\Repositories\UserRepositoryInterface;
 use App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface;
 use App\Infrastructure\Models\User\User;
 use App\Infrastructure\Models\User\UserVerification;
+use App\Infrastructure\Repositories\BaseRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 
-class UserRepository implements UserRepositoryInterface
+class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
     public function __construct(private readonly UserVerificationRepositoryInterface $userVerificationRepository) {}
 
@@ -33,11 +34,6 @@ class UserRepository implements UserRepositoryInterface
         });
 
         return $user;
-    }
-
-    public function findByColumn(string $field, string $value): ?User
-    {
-        return User::where($field, $value)->first();
     }
 
     public function verify(UserVerification $verification): User

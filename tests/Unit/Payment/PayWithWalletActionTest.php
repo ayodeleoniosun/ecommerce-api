@@ -117,84 +117,86 @@ beforeEach(function () {
     );
 });
 
-it('should return an exception if wallet balance is insufficient', function () {
-    $this->walletRepo->shouldReceive('find')
-        ->with($this->user->id, $this->order->currency)
-        ->andReturn(null);
+describe('Pay With Wallet', function () {
+    it('should return an exception if wallet balance is insufficient', function () {
+        $this->walletRepo->shouldReceive('find')
+            ->with($this->user->id, $this->order->currency)
+            ->andReturn(null);
 
-    $wallet = Wallet::factory()->create([
-        'user_id' => $this->user->id,
-        'currency' => $this->order->currency,
-    ]);
-
-    $this->walletRepo->shouldReceive('create')
-        ->with([
+        $wallet = Wallet::factory()->create([
             'user_id' => $this->user->id,
             'currency' => $this->order->currency,
-        ])->andReturn($wallet);
+        ]);
 
-    $this->payWithWallet->execute($this->order);
-})->throws(BadRequestException::class, 'Insufficient funds');
+        $this->walletRepo->shouldReceive('create')
+            ->with([
+                'user_id' => $this->user->id,
+                'currency' => $this->order->currency,
+            ])->andReturn($wallet);
 
-it('should pay for order via wallet', function () {
-    $this->walletRepo->shouldReceive('find')
-        ->with($this->user->id, $this->order->currency)
-        ->andReturn(null);
+        $this->payWithWallet->execute($this->order);
+    })->throws(BadRequestException::class, 'Insufficient funds');
 
-    $wallet = Wallet::factory()->create([
-        'user_id' => $this->user->id,
-        'balance' => 5000000,
-        'currency' => $this->order->currency,
-    ]);
+    it('should pay for order via wallet', function () {
+        $this->walletRepo->shouldReceive('find')
+            ->with($this->user->id, $this->order->currency)
+            ->andReturn(null);
 
-    $walletTransaction = WalletTransaction::factory()->create([
-        'wallet_id' => $wallet->id,
-        'amount' => $this->orderPayment->order_amount,
-        'type' => WalletTransactionTypeEnum::DEBIT->value,
-        'reference' => 'WAL-1234589',
-    ]);
+        $wallet = Wallet::factory()->create([
+            'user_id' => $this->user->id,
+            'balance' => 5000000,
+            'currency' => $this->order->currency,
+        ]);
 
-    $walletAuditLog = WalletAuditLog::factory()->create([
-        'wallet_id' => $wallet->id,
-        'transaction_id' => $walletTransaction->id,
-        'previous_balance' => 0,
-        'new_balance' => $this->orderPayment->order_amount,
-    ]);
+        $walletTransaction = WalletTransaction::factory()->create([
+            'wallet_id' => $wallet->id,
+            'amount' => $this->orderPayment->order_amount,
+            'type' => WalletTransactionTypeEnum::DEBIT->value,
+            'reference' => 'WAL-1234589',
+        ]);
 
-    $walletOrderPayment = WalletOrderPayment::factory()->create([
-        'wallet_transaction_id' => $walletTransaction->id,
-        'order_payment_id' => $this->orderPayment->id,
-    ]);
+        $walletAuditLog = WalletAuditLog::factory()->create([
+            'wallet_id' => $wallet->id,
+            'transaction_id' => $walletTransaction->id,
+            'previous_balance' => 0,
+            'new_balance' => $this->orderPayment->order_amount,
+        ]);
 
-    $this->walletRepo->shouldReceive('create')
-        ->andReturn($wallet);
+        $walletOrderPayment = WalletOrderPayment::factory()->create([
+            'wallet_transaction_id' => $walletTransaction->id,
+            'order_payment_id' => $this->orderPayment->id,
+        ]);
 
-    $this->walletTransactionRepo->shouldReceive('create')
-        ->once()
-        ->andReturn($walletTransaction);
+        $this->walletRepo->shouldReceive('create')
+            ->andReturn($wallet);
 
-    $this->walletOrderPaymentRepo->shouldReceive('create')
-        ->once()
-        ->andReturn($walletOrderPayment);
+        $this->walletTransactionRepo->shouldReceive('create')
+            ->once()
+            ->andReturn($walletTransaction);
 
-    $this->walletAuditLogRepo->shouldReceive('create')
-        ->once()
-        ->andReturn($walletAuditLog);
+        $this->walletOrderPaymentRepo->shouldReceive('create')
+            ->once()
+            ->andReturn($walletOrderPayment);
 
-    $currentWallet = $wallet;
-    $wallet->balance -= $this->orderPayment->order_amount;
-    $wallet->save();
+        $this->walletAuditLogRepo->shouldReceive('create')
+            ->once()
+            ->andReturn($walletAuditLog);
 
-    $this->walletRepo->shouldReceive('decrementBalance')
-        ->once()
-        ->with($currentWallet, $this->orderPayment->order_amount)
-        ->andReturn($wallet);
+        $currentWallet = $wallet;
+        $wallet->balance -= $this->orderPayment->order_amount;
+        $wallet->save();
 
-    $response = $this->payWithWallet->execute($this->order);
+        $this->walletRepo->shouldReceive('decrementBalance')
+            ->once()
+            ->with($currentWallet, $this->orderPayment->order_amount)
+            ->andReturn($wallet);
 
-    expect($response)->toBeInstanceOf(PaymentResponseDto::class)
-        ->and($response->getStatus())->toBe(PaymentStatusEnum::SUCCESS->value)
-        ->and($response->getPaymentMethod())->toBe(PaymentTypeEnum::WALLET->value)
-        ->and($response->getReference())->toBe($walletTransaction->reference)
-        ->and($response->getResponseMessage())->toBe(PaymentResponseMessageEnum::TRANSACTION_SUCCESSFUL->value);
+        $response = $this->payWithWallet->execute($this->order);
+
+        expect($response)->toBeInstanceOf(PaymentResponseDto::class)
+            ->and($response->getStatus())->toBe(PaymentStatusEnum::SUCCESS->value)
+            ->and($response->getPaymentMethod())->toBe(PaymentTypeEnum::WALLET->value)
+            ->and($response->getReference())->toBe($walletTransaction->reference)
+            ->and($response->getResponseMessage())->toBe(PaymentResponseMessageEnum::TRANSACTION_SUCCESSFUL->value);
+    });
 });

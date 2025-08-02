@@ -4,8 +4,9 @@ namespace App\Infrastructure\Repositories\User;
 
 use App\Domain\Auth\Interfaces\Repositories\UserVerificationRepositoryInterface;
 use App\Infrastructure\Models\User\UserVerification;
+use App\Infrastructure\Repositories\BaseRepository;
 
-class UserVerificationRepository implements UserVerificationRepositoryInterface
+class UserVerificationRepository extends BaseRepository implements UserVerificationRepositoryInterface
 {
     public function findByToken(string $token): ?UserVerification
     {
