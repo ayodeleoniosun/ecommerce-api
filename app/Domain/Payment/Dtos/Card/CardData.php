@@ -6,7 +6,7 @@ class CardData
 {
     public function __construct(
         private readonly string $name,
-        private readonly string $number,
+        private string $number,
         private readonly string $cvv,
         private readonly string $expiryMonth,
         private readonly string $expiryYear,
@@ -40,6 +40,11 @@ class CardData
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function setNumber(string $number): void
+    {
+        $this->number = $number;
     }
 
     public function getNumber(): string

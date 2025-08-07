@@ -74,6 +74,72 @@ beforeEach(function () {
 });
 
 describe('Korapay Integration', function () {
+    it('should return a failed status if card is not supported', function () {
+        $this->cardTransactionMock->shouldReceive('load')
+            ->once()
+            ->with('apiLog')
+            ->andReturnSelf();
+
+        $this->cardTransactionRepo->shouldReceive('create')
+            ->once()
+            ->with(
+                TransactionKoraCardPayment::class,
+                $this->paymentDto->toTransactionArray(),
+            )->andReturn($this->cardTransactionMock);
+
+        $this->cardTransactionRepo->shouldReceive('create')
+            ->once()
+            ->with(
+                ApiLogsKoraCardPayment::class,
+                ['transaction_id' => $this->cardTransactionMock->id],
+            )->andReturn($this->apiLogCardTransactionMock);
+
+        $this->cardTransactionRepo->shouldReceive('update')
+            ->once()
+            ->with(
+                TransactionKoraCardPayment::class,
+                Mockery::type('array'),
+            )->andReturn($this->cardTransactionMock);
+
+        $this->cardTransactionRepo->shouldReceive('update')
+            ->once()
+            ->with(
+                ApiLogsKoraCardPayment::class,
+                Mockery::type('array'),
+            )->andReturn($this->apiLogCardTransactionMock);
+
+        $this->korapayIntegration->shouldReceive('initializeCharge')
+            ->once()
+            ->with($this->paymentDto)
+            ->andReturn([
+                'status' => true,
+                'message' => 'Card charge failed',
+                'data' => [
+                    'amount' => 490000,
+                    'amount_charged' => 490000,
+                    'auth_model' => AuthModelEnum::PIN->value,
+                    'currency' => CurrencyEnum::NGN,
+                    'fee' => 0,
+                    'vat' => 0,
+                    'response_message' => 'Card not supported',
+                    'payment_reference' => 'KPY-12345-ref',
+                    'status' => 'failed',
+                    'transaction_reference' => 'KPY-1234-ref',
+                ],
+            ]);
+
+        $response = $this->korapayIntegration->initiate($this->paymentDto);
+
+        expect($response)->toBeInstanceOf(PaymentResponseDto::class)
+            ->and($response->getStatus())->toBe(PaymentStatusEnum::FAILED->value)
+            ->and($response->getAuthModel())->toBeNull()
+            ->and($response->getAmountCharged())->toBeNull()
+            ->and($response->getFee())->toBe(0.0)
+            ->and($response->getResponseMessage())->toBe('Card not supported')
+            ->and($response->getRedirectionUrl())->toBeNull()
+            ->and($response->getVat())->toBe(0.0);
+    });
+
     it('should initialize charge successfully using PIN auth model', function () {
         $this->cardTransactionMock->shouldReceive('load')
             ->once()

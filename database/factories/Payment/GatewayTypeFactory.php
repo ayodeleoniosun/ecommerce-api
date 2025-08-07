@@ -2,6 +2,7 @@
 
 namespace Database\Factories\Payment;
 
+use App\Application\Shared\Enum\CurrencyEnum;
 use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Domain\Payment\Enums\PaymentCategoryEnum;
 use App\Domain\Payment\Enums\PaymentTypeEnum;
@@ -29,7 +30,7 @@ class GatewayTypeFactory extends Factory
             'uuid' => self::generateUUID(),
             'type' => PaymentTypeEnum::CARD->value,
             'category' => PaymentCategoryEnum::COLLECTION->value,
-            'currency' => 'NGN',
+            'currency' => CurrencyEnum::NGN->value,
             'primary_gateway_id' => Gateway::factory()->create()->id,
             'secondary_gateway_id' => Gateway::factory()->create()->id,
         ];

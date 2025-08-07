@@ -3,6 +3,7 @@
 namespace Database\Factories\Payment;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
+use App\Domain\Payment\Enums\GatewayEnum;
 use App\Infrastructure\Models\Payment\Gateway;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -24,8 +25,8 @@ class GatewayFactory extends Factory
     {
         return [
             'uuid' => self::generateUUID(),
-            'slug' => 'korapay',
-            'name' => 'Korapay',
+            'slug' => GatewayEnum::KORAPAY->value,
+            'name' => ucfirst(GatewayEnum::KORAPAY->value),
         ];
     }
 }

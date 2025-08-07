@@ -28,12 +28,12 @@ class PayWithCardAction extends BaseOrderAction
     use UtilitiesTrait;
 
     public function __construct(
-        private readonly OrderRepositoryInterface $orderRepository,
-        private readonly CardTransactionRepositoryInterface $cardTransactionRepository,
-        protected GatewayRepositoryInterface $gatewayRepository,
-        protected GatewayTypeRepositoryInterface $gatewayTypeRepository,
         protected OrderItemRepositoryInterface $orderItemRepository,
         protected OrderPaymentRepositoryInterface $orderPaymentRepository,
+        private readonly OrderRepositoryInterface $orderRepository,
+        private readonly CardTransactionRepositoryInterface $cardTransactionRepository,
+        private readonly GatewayRepositoryInterface $gatewayRepository,
+        private readonly GatewayTypeRepositoryInterface $gatewayTypeRepository,
     ) {
         parent::__construct(
             $orderItemRepository,
@@ -49,7 +49,6 @@ class PayWithCardAction extends BaseOrderAction
         $orderPayment = $this->createOrderPayment($order);
 
         $gateway = $this->getGateway($order->currency);
-        $paymentGateway = PaymentGateway::make($gateway, $this->cardTransactionRepository);
         $gatewayReference = self::generateGatewayReference($gateway);
 
         $this->orderPaymentRepository->updateColumns($orderPayment, [
@@ -59,6 +58,8 @@ class PayWithCardAction extends BaseOrderAction
         ]);
 
         $initiateCardPaymentDto = $this->buildCardPaymentDto($orderPayment, $cardData);
+
+        $paymentGateway = PaymentGateway::make($gateway, $this->cardTransactionRepository);
 
         return $paymentGateway->initiate($initiateCardPaymentDto);
     }
