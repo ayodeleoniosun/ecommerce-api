@@ -6,6 +6,7 @@ use App\Domain\Order\Enums\CartStatusEnum;
 use App\Domain\Order\Enums\OrderStatusEnum;
 use App\Domain\Order\Interfaces\Cart\UserCartItemRepositoryInterface;
 use App\Domain\Order\Interfaces\Order\OrderRepositoryInterface;
+use App\Domain\Order\Notifications\OrderCompletedNotification;
 use App\Domain\Order\Resources\Order\OrderResource;
 use App\Domain\Payment\Actions\Order\CompleteOrderPaymentAction;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
@@ -17,6 +18,7 @@ use App\Infrastructure\Models\Order\Order;
 use App\Infrastructure\Models\Order\OrderPayment;
 use App\Infrastructure\Models\User\User;
 use App\Infrastructure\Repositories\Cart\UserCartRepository;
+use App\Infrastructure\Repositories\Order\OrderItemRepository;
 use App\Infrastructure\Repositories\Order\OrderPaymentRepository;
 use Illuminate\Support\Facades\Notification;
 use Mockery;
@@ -24,6 +26,7 @@ use Mockery;
 beforeEach(function () {
     $this->orderRepo = Mockery::mock(OrderRepositoryInterface::class);
     $this->orderPaymentRepo = Mockery::mock(OrderPaymentRepository::class)->makePartial();
+    $this->orderItemRepo = Mockery::mock(OrderItemRepository::class)->makePartial();
     $this->userCartRepo = Mockery::mock(UserCartRepository::class)->makePartial();
     $this->userCartItemRepo = Mockery::mock(UserCartItemRepositoryInterface::class);
 
@@ -59,8 +62,9 @@ beforeEach(function () {
     );
 
     $this->completeOrderPayment = new CompleteOrderPaymentAction(
-        $this->orderRepo,
+        $this->orderItemRepo,
         $this->orderPaymentRepo,
+        $this->orderRepo,
         $this->userCartRepo,
         $this->userCartItemRepo
     );
@@ -95,6 +99,7 @@ describe('Complete Order Payment', function () {
 
         Notification::assertSentTo(
             $this->user,
+            OrderCompletedNotification::class,
             function ($notification) use ($response) {
                 return $notification->order->id === $response->resource->user_id;
             });

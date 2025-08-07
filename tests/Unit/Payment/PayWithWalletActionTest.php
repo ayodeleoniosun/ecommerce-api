@@ -151,6 +151,7 @@ describe('Pay With Wallet', function () {
         $walletTransaction = WalletTransaction::factory()->create([
             'wallet_id' => $wallet->id,
             'amount' => $this->orderPayment->order_amount,
+            'amount_charged' => $this->orderPayment->order_amount,
             'type' => WalletTransactionTypeEnum::DEBIT->value,
             'reference' => 'WAL-1234589',
         ]);

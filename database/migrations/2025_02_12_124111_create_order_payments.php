@@ -25,8 +25,6 @@ return new class extends Migration
             $table->string('payment_method')->nullable();
             $table->string('auth_model')->nullable();
             $table->text('narration')->nullable();
-            $table->decimal('amount_charged', total: 10)->nullable();
-            $table->string('payment_method')->nullable();
             $table->string('gateway')->nullable();
             $table->string('gateway_reference')->nullable();
             $table->decimal('fee')->nullable();

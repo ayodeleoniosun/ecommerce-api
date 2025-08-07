@@ -20,9 +20,9 @@ return new class extends Migration
             $table->string('type');
             $table->string('reference');
             $table->string('status')->default(PaymentStatusEnum::PENDING->value);
-            $table->string('payment_method');
-            $table->string('gateway');
-            $table->string('gateway_reference');
+            $table->string('payment_method')->nullable();
+            $table->string('gateway')->nullable();
+            $table->string('gateway_reference')->nullable();
             $table->decimal('fee')->nullable();
             $table->decimal('vat')->nullable();
             $table->timestamp('completed_at')->nullable();
