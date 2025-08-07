@@ -9,7 +9,7 @@ class PaymentAuthorizationDto
     use UtilitiesTrait;
 
     public function __construct(
-        private readonly string $reference,
+        private string $reference,
         private readonly array $authorization,
         private ?string $gatewayReference = null,
         private ?string $authModel = null,
@@ -42,6 +42,11 @@ class PaymentAuthorizationDto
     public function getAuthorization(): ?array
     {
         return $this->authorization;
+    }
+
+    public function setReference(string $reference): void
+    {
+        $this->reference = $reference;
     }
 
     public function setGatewayReference(string $gatewayReference): void

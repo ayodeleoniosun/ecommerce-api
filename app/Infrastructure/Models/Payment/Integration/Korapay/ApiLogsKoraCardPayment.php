@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Models\Payment\Integration\Korapay;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
+use Database\Factories\Payment\Integration\Korapay\ApiLogKoraCardPaymentFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,6 +21,11 @@ class ApiLogsKoraCardPayment extends Model
         static::creating(function ($model) {
             $model->uuid = self::generateUUID();
         });
+    }
+
+    protected static function newFactory(): ApiLogKoraCardPaymentFactory
+    {
+        return ApiLogKoraCardPaymentFactory::new();
     }
 
     public function transaction(): BelongsTo

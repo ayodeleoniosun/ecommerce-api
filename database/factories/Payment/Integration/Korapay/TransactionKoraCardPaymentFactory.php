@@ -3,6 +3,7 @@
 namespace Database\Factories\Payment\Integration\Korapay;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
+use App\Domain\Payment\Enums\AuthModelEnum;
 use App\Infrastructure\Models\Order\OrderPayment;
 use App\Infrastructure\Models\Payment\Integration\Korapay\TransactionKoraCardPayment;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -29,6 +30,8 @@ class TransactionKoraCardPaymentFactory extends Factory
             'reference' => self::generateRandomCharacters(),
             'currency' => 'NGN',
             'amount' => 4000,
+            'gateway_transaction_reference' => 'KPY-1234',
+            'auth_model' => AuthModelEnum::PIN->value,
         ];
     }
 }

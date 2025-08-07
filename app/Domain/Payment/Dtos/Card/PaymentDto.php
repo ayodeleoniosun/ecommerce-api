@@ -9,7 +9,7 @@ class PaymentDto extends InitiateCardPaymentDto
     use UtilitiesTrait;
 
     public function __construct(
-        private readonly string $paymentMethod,
+        private string $paymentMethod,
         private readonly ?array $card,
     ) {}
 
@@ -19,6 +19,11 @@ class PaymentDto extends InitiateCardPaymentDto
             paymentMethod: $payload['payment_method'],
             card: $payload['card'] ?? null
         );
+    }
+
+    public function setPaymentMethod(string $paymentMethod): void
+    {
+        $this->paymentMethod = $paymentMethod;
     }
 
     public function getPaymentMethod(): string
