@@ -4,7 +4,7 @@ namespace App\Domain\Payment\Controllers;
 
 use App\Application\Shared\Responses\ApiResponse;
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Domain\Payment\Actions\Wallet\AuthorizeWalletFundingPaymentAction;
+use App\Domain\Payment\Actions\Wallet\AuthorizeWalletFundingAction;
 use App\Domain\Payment\Actions\Wallet\CompleteWalletFundingAction;
 use App\Domain\Payment\Actions\Wallet\FundWalletAction;
 use App\Domain\Payment\Actions\Wallet\GetWalletAction;
@@ -24,7 +24,7 @@ class WalletController
         private readonly GetWalletAction $getWallet,
         private readonly FundWalletAction $fundWallet,
         private readonly CompleteWalletFundingAction $completeWalletFunding,
-        private readonly AuthorizeWalletFundingPaymentAction $authorizeWalletFundingPayment,
+        private readonly AuthorizeWalletFundingAction $authorizeWalletFundingPayment,
     ) {}
 
     public function balance(string $currency): JsonResponse

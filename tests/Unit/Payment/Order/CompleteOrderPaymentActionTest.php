@@ -101,7 +101,7 @@ describe('Complete Order Payment', function () {
             $this->user,
             OrderCompletedNotification::class,
             function ($notification) use ($response) {
-                return $notification->order->id === $response->resource->user_id;
+                return $notification->order->user->id === $response->resource->user_id;
             });
 
         expect($response)->toBeInstanceOf(OrderResource::class)

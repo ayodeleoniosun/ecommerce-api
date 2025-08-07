@@ -11,7 +11,7 @@ class PaymentResponseDto
     public function __construct(
         private string $status,
         private readonly string $paymentMethod,
-        private readonly string $reference,
+        private string $reference,
         private readonly string $responseMessage,
         private ?string $authModel = null,
         private readonly ?string $gateway = null,
@@ -81,6 +81,11 @@ class PaymentResponseDto
     public function getReference(): string
     {
         return $this->reference;
+    }
+
+    public function setReference(string $reference): void
+    {
+        $this->reference = $reference;
     }
 
     public function getResponseMessage(): string

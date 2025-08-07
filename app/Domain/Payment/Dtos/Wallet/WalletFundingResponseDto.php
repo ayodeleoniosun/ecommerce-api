@@ -32,6 +32,11 @@ class WalletFundingResponseDto
         return $this->amount;
     }
 
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
     public function getCurrency(): string
     {
         return $this->currency;

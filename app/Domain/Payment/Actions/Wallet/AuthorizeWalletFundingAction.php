@@ -11,7 +11,7 @@ use App\Domain\Payment\Interfaces\Wallet\WalletRepositoryInterface;
 use App\Domain\Payment\Interfaces\Wallet\WalletTransactionRepositoryInterface;
 use App\Infrastructure\Services\Payments\PaymentGateway;
 
-class AuthorizeWalletFundingPaymentAction extends BaseWalletAction
+class AuthorizeWalletFundingAction extends BaseWalletAction
 {
     use UtilitiesTrait;
 
