@@ -3,9 +3,9 @@
 namespace Tests\Unit\Payment\Integration;
 
 use App\Application\Shared\Enum\CurrencyEnum;
-use App\Domain\Payment\Dtos\CardData;
-use App\Domain\Payment\Dtos\CustomerData;
-use App\Domain\Payment\Dtos\InitiateCardPaymentDto;
+use App\Domain\Payment\Dtos\Card\CardData;
+use App\Domain\Payment\Dtos\Card\CustomerData;
+use App\Domain\Payment\Dtos\Card\InitiateCardPaymentDto;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
 use App\Domain\Payment\Enums\AuthModelEnum;
 use App\Domain\Payment\Enums\PaymentStatusEnum;

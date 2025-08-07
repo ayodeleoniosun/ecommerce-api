@@ -2,12 +2,13 @@
 
 namespace App\Infrastructure\Repositories\Vendor\Products;
 
-use App\Domain\Order\Enums\CartStatusEnum;
 use App\Domain\Vendor\Products\Dtos\CreateOrUpdateProductItemDto;
+use App\Domain\Vendor\Products\Enums\ProductStatusEnum;
 use App\Domain\Vendor\Products\Interfaces\ProductItemRepositoryInterface;
 use App\Infrastructure\Models\Inventory\ProductItem;
 use App\Infrastructure\Repositories\BaseRepository;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class ProductItemRepository extends BaseRepository implements ProductItemRepositoryInterface
 {
@@ -41,20 +42,27 @@ class ProductItemRepository extends BaseRepository implements ProductItemReposit
             ->first();
     }
 
-    public function increaseStock(ProductItem $productItem, int $quantity): bool|int
+    public function increaseStock(Model $productItem, int $quantity): bool|int
     {
-        return $productItem->increment('quantity', $quantity);
+        return DB::transaction(function () use ($productItem, $quantity) {
+            $productItem->status = ProductStatusEnum::IN_STOCK->value;
+            $productItem->save();
+
+            return $productItem->increment('quantity', $quantity);
+        });
     }
 
-    public function decreaseStock(ProductItem|Model $productItem, int $quantity): ProductItem
+    public function decreaseStock(Model $productItem, int $quantity): Model
     {
-        $productItem->decrement('quantity', $quantity);
+        return DB::transaction(function () use ($productItem, $quantity) {
+            $productItem->decrement('quantity', $quantity);
 
-        if ($productItem->quantity === 0) {
-            $productItem->status = CartStatusEnum::OUT_OF_STOCK->value;
-            $productItem->save();
-        }
+            if ($productItem->quantity === 0) {
+                $productItem->status = ProductStatusEnum::OUT_OF_STOCK->value;
+                $productItem->save();
+            }
 
-        return $productItem;
+            return $productItem;
+        });
     }
 }

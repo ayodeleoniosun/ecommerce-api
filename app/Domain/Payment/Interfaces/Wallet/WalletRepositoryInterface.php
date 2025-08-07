@@ -11,4 +11,6 @@ interface WalletRepositoryInterface
     public function find(int $userId, string $currency): ?Wallet;
 
     public function decrementBalance(Wallet $wallet, int $amount): void;
+
+    public function incrementBalance(Wallet $wallet, int $amount): void;
 }

@@ -4,14 +4,15 @@ namespace App\Domain\Payment\Actions\Wallet;
 
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Domain\Payment\Dtos\CardData;
-use App\Domain\Payment\Dtos\CustomerData;
-use App\Domain\Payment\Dtos\FundWalletDto;
+use App\Domain\Payment\Dtos\Card\CardData;
+use App\Domain\Payment\Dtos\Card\CustomerData;
+use App\Domain\Payment\Dtos\Card\InitiateCardPaymentDto;
 use App\Domain\Payment\Dtos\GatewayFilterData;
-use App\Domain\Payment\Dtos\InitiateCardPaymentDto;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
+use App\Domain\Payment\Dtos\Wallet\FundWalletDto;
 use App\Domain\Payment\Enums\PaymentCategoryEnum;
 use App\Domain\Payment\Enums\PaymentTypeEnum;
+use App\Domain\Payment\Enums\WalletTransactionTypeEnum;
 use App\Domain\Payment\Interfaces\CardTransactionRepositoryInterface;
 use App\Domain\Payment\Interfaces\GatewayRepositoryInterface;
 use App\Domain\Payment\Interfaces\GatewayTypeRepositoryInterface;
@@ -33,7 +34,10 @@ class FundWalletAction extends BaseWalletAction
         private readonly GatewayRepositoryInterface $gatewayRepository,
         private readonly GatewayTypeRepositoryInterface $gatewayTypeRepository,
     ) {
-        parent::__construct($walletRepository);
+        parent::__construct(
+            $walletRepository,
+            $walletTransactionRepository,
+        );
     }
 
     /**
@@ -41,13 +45,56 @@ class FundWalletAction extends BaseWalletAction
      */
     public function execute(FundWalletDto $fundWalletDto): PaymentResponseDto
     {
-        $currency = $fundWalletDto->getCurrency();
-        $wallet = $this->getWallet($currency);
+        $reference = self::generateRandomCharacters('WAL-');
+        $gateway = $this->getGateway($fundWalletDto->getCurrency());
+        $gatewayReference = self::generateGatewayReference($gateway);
 
+        $fundWalletDto->setReference($reference);
+        $fundWalletDto->setGateway($gateway);
+        $fundWalletDto->setGatewayReference($gatewayReference);
+
+        $wallet = $this->getWallet($fundWalletDto->getCurrency());
+
+        $this->walletTransactionRepository->create([
+            'wallet_id' => $wallet->id,
+            'amount' => $fundWalletDto->getAmount(),
+            'amount_charged' => $fundWalletDto->getAmount(),
+            'type' => WalletTransactionTypeEnum::CREDIT->value,
+            'reference' => $reference,
+            'gateway' => $gateway,
+            'gateway_reference' => $gatewayReference,
+            'payment_method' => PaymentTypeEnum::CARD->value,
+        ]);
+
+        return $this->initiatePayment($fundWalletDto);
+    }
+
+    private function getGateway(string $currency): string
+    {
+        $gatewayFilterData = new GatewayFilterData(
+            type: PaymentTypeEnum::CARD->value,
+            category: PaymentCategoryEnum::COLLECTION->value,
+            currency: $currency
+        );
+
+        $gatewayType = $this->gatewayTypeRepository->findGatewayType($gatewayFilterData);
+
+        $gateway = $this->gatewayRepository->findByColumn(
+            Gateway::class,
+            'id',
+            $gatewayType->primary_gateway_id,
+        );
+
+        return $gateway->slug;
+    }
+
+    /**
+     * @throws BadRequestException
+     */
+    private function initiatePayment(FundWalletDto $fundWalletDto): PaymentResponseDto
+    {
+        $paymentGateway = PaymentGateway::make($fundWalletDto->getGateway(), $this->cardTransactionRepository);
         $cardPaymentDto = $this->buildCardPaymentDto($fundWalletDto);
-        $gateway = $this->getGateway($currency);
-
-        $paymentGateway = PaymentGateway::make($gateway, $this->cardTransactionRepository);
 
         return $paymentGateway->initiate($cardPaymentDto);
     }
@@ -72,26 +119,9 @@ class FundWalletAction extends BaseWalletAction
                 email: $user->email,
                 name: $user->fullname,
             ),
-            redirectUrl: 'https://example.com',
+            redirectUrl: config("payment.gateways.{$fundWalletDto->getGateway()}.webhook_url"),
+            orderPaymentReference: $fundWalletDto->getReference(),
+            gatewayReference: $fundWalletDto->getGatewayReference()
         );
-    }
-
-    private function getGateway(string $currency): string
-    {
-        $gatewayFilterData = new GatewayFilterData(
-            type: PaymentTypeEnum::CARD->value,
-            category: PaymentCategoryEnum::COLLECTION->value,
-            currency: $currency
-        );
-
-        $gatewayType = $this->gatewayTypeRepository->findGatewayType($gatewayFilterData);
-
-        $gateway = $this->gatewayRepository->findByColumn(
-            Gateway::class,
-            'id',
-            $gatewayType->primary_gateway_id,
-        );
-
-        return $gateway->slug;
     }
 }

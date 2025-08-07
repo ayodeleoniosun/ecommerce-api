@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Payment\Actions;
+namespace App\Domain\Payment\Actions\Card;
 
 use App\Application\Shared\Exceptions\BadRequestException;
 use App\Application\Shared\Traits\UtilitiesTrait;
@@ -8,12 +8,11 @@ use App\Domain\Order\Actions\Order\BaseOrderAction;
 use App\Domain\Order\Interfaces\Order\OrderItemRepositoryInterface;
 use App\Domain\Order\Interfaces\Order\OrderPaymentRepositoryInterface;
 use App\Domain\Order\Interfaces\Order\OrderRepositoryInterface;
-use App\Domain\Payment\Dtos\CardData;
-use App\Domain\Payment\Dtos\CustomerData;
+use App\Domain\Payment\Dtos\Card\CardData;
+use App\Domain\Payment\Dtos\Card\CustomerData;
+use App\Domain\Payment\Dtos\Card\InitiateCardPaymentDto;
 use App\Domain\Payment\Dtos\GatewayFilterData;
-use App\Domain\Payment\Dtos\InitiateCardPaymentDto;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
-use App\Domain\Payment\Enums\GatewayPrefixReferenceEnum;
 use App\Domain\Payment\Enums\PaymentCategoryEnum;
 use App\Domain\Payment\Enums\PaymentTypeEnum;
 use App\Domain\Payment\Interfaces\CardTransactionRepositoryInterface;
@@ -50,10 +49,8 @@ class PayWithCardAction extends BaseOrderAction
         $orderPayment = $this->createOrderPayment($order);
 
         $gateway = $this->getGateway($order->currency);
-
         $paymentGateway = PaymentGateway::make($gateway, $this->cardTransactionRepository);
-
-        $gatewayReference = $this->generateGatewayReference($gateway);
+        $gatewayReference = self::generateGatewayReference($gateway);
 
         $this->orderPaymentRepository->updateColumns($orderPayment, [
             'payment_method' => PaymentTypeEnum::CARD->value,
@@ -83,13 +80,6 @@ class PayWithCardAction extends BaseOrderAction
         );
 
         return $gateway->slug;
-    }
-
-    private function generateGatewayReference(string $gateway): string
-    {
-        $prefix = GatewayPrefixReferenceEnum::getPrefix($gateway);
-
-        return self::generateRandomCharacters($prefix->value);
     }
 
     private function buildCardPaymentDto(OrderPayment $orderPayment, array $card): InitiateCardPaymentDto

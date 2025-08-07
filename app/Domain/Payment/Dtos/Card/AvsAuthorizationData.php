@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Payment\Dtos;
+namespace App\Domain\Payment\Dtos\Card;
 
 class AvsAuthorizationData
 {

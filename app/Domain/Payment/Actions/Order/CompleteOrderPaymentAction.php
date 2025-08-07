@@ -1,48 +1,48 @@
 <?php
 
-namespace App\Domain\Payment\Actions;
+namespace App\Domain\Payment\Actions\Order;
 
-use App\Application\Shared\Exceptions\ResourceNotFoundException;
+use App\Application\Shared\Traits\UtilitiesTrait;
+use App\Domain\Order\Actions\Order\BaseOrderAction;
 use App\Domain\Order\Enums\CartStatusEnum;
 use App\Domain\Order\Enums\OrderStatusEnum;
 use App\Domain\Order\Interfaces\Cart\UserCartItemRepositoryInterface;
 use App\Domain\Order\Interfaces\Cart\UserCartRepositoryInterface;
+use App\Domain\Order\Interfaces\Order\OrderItemRepositoryInterface;
 use App\Domain\Order\Interfaces\Order\OrderPaymentRepositoryInterface;
 use App\Domain\Order\Interfaces\Order\OrderRepositoryInterface;
 use App\Domain\Order\Notifications\OrderCompletedNotification;
 use App\Domain\Order\Resources\Order\OrderResource;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
-use App\Domain\Payment\Enums\PaymentResponseMessageEnum;
 use App\Infrastructure\Models\Cart\UserCart;
 use App\Infrastructure\Models\Order\Order;
-use App\Infrastructure\Models\Order\OrderPayment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class CompleteOrderPaymentAction
+class CompleteOrderPaymentAction extends BaseOrderAction
 {
+    use UtilitiesTrait;
+
     public function __construct(
+        protected OrderItemRepositoryInterface $orderItemRepository,
+        protected OrderPaymentRepositoryInterface $orderPaymentRepository,
         private readonly OrderRepositoryInterface $orderRepository,
-        private readonly OrderPaymentRepositoryInterface $orderPaymentRepository,
         private readonly UserCartRepositoryInterface $userCartRepository,
         private readonly UserCartItemRepositoryInterface $userCartItemRepository,
-    ) {}
+    ) {
+        parent::__construct(
+            $orderItemRepository,
+            $orderPaymentRepository,
+        );
+    }
 
     public function execute(PaymentResponseDto $transactionResponse): OrderResource
     {
-        $orderPayment = $this->orderPaymentRepository->findByColumn(
-            OrderPayment::class,
-            'reference',
-            $transactionResponse->getReference(),
-        );
-
-        throw_if(! $orderPayment, ResourceNotFoundException::class,
-            PaymentResponseMessageEnum::TRANSACTION_NOT_FOUND->value);
+        $orderPayment = $this->getValidOrderPayment($transactionResponse->getReference());
 
         $order = null;
-        $status = $transactionResponse->getStatus();
 
-        DB::transaction(function () use (&$order, $orderPayment, $transactionResponse, $status) {
+        DB::transaction(function () use (&$order, $orderPayment, $transactionResponse) {
             $order = $orderPayment->order;
 
             $cart = $this->userCartRepository->findPendingCart($order->user_id, lockForUpdate: true);
@@ -50,7 +50,7 @@ class CompleteOrderPaymentAction
             $amountCharged = $orderPayment->order_amount + $orderPayment->delivery_amount + $transactionResponse->getFee() + $transactionResponse->getVat();
 
             $this->orderPaymentRepository->updateColumns($orderPayment, [
-                'status' => $status,
+                'status' => $transactionResponse->getStatus(),
                 'fee' => $transactionResponse->getFee(),
                 'vat' => $transactionResponse->getVat(),
                 'amount_charged' => $amountCharged,
@@ -59,12 +59,12 @@ class CompleteOrderPaymentAction
                 'completed_at' => now()->toDateTimeString(),
             ]);
 
-            if ($status === OrderStatusEnum::SUCCESS->value) {
-                $order = $this->completeOrder($status, $orderPayment, $cart);
+            if ($transactionResponse->getStatus() === OrderStatusEnum::SUCCESS->value) {
+                $order = $this->completeOrder($transactionResponse->getStatus(), $orderPayment, $cart);
             }
         });
 
-        if ($status === OrderStatusEnum::SUCCESS->value) {
+        if ($transactionResponse->getStatus() === OrderStatusEnum::SUCCESS->value) {
             $order->user->notify(new OrderCompletedNotification($order));
         }
 

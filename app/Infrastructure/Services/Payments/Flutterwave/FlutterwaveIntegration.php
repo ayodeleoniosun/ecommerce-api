@@ -3,7 +3,7 @@
 namespace App\Infrastructure\Services\Payments\Flutterwave;
 
 use App\Application\Shared\Traits\UtilitiesTrait;
-use App\Domain\Payment\Dtos\InitiateCardPaymentDto;
+use App\Domain\Payment\Dtos\Card\InitiateCardPaymentDto;
 use App\Domain\Payment\Dtos\PaymentAuthorizationDto;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
 use App\Domain\Payment\Enums\PaymentStatusEnum;

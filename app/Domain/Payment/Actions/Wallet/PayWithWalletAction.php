@@ -52,13 +52,7 @@ class PayWithWalletAction extends BaseOrderAction
 
         $this->validateWalletBalance($wallet->balance, $orderPayment->order_amount);
 
-        $walletTransaction = DB::transaction(function () use ($wallet, $orderPayment) {
-            $walletTransaction = $this->createWalletTransactions($wallet, $orderPayment);
-
-            $this->walletRepository->decrementBalance($wallet, $orderPayment->order_amount);
-
-            return $walletTransaction;
-        });
+        $walletTransaction = $this->createWalletTransactions($wallet, $orderPayment);
 
         return new PaymentResponseDto(
             status: OrderStatusEnum::SUCCESS->value,
@@ -109,27 +103,31 @@ class PayWithWalletAction extends BaseOrderAction
 
     private function createWalletTransactions(Wallet $wallet, OrderPayment $orderPayment): WalletTransaction
     {
-        $walletTransaction = $this->walletTransactionRepository->create([
-            'wallet_id' => $wallet->id,
-            'amount' => $orderPayment->order_amount,
-            'type' => WalletTransactionTypeEnum::DEBIT->value,
-            'reference' => self::generateRandomCharacters('WAL-'),
-        ]);
+        return DB::transaction(function () use ($wallet, $orderPayment) {
+            $walletTransaction = $this->walletTransactionRepository->create([
+                'wallet_id' => $wallet->id,
+                'amount' => $orderPayment->order_amount,
+                'type' => WalletTransactionTypeEnum::DEBIT->value,
+                'reference' => self::generateRandomCharacters('WAL-'),
+            ]);
 
-        $this->walletOrderPaymentRepository->create([
-            'wallet_transaction_id' => $walletTransaction->id,
-            'order_payment_id' => $orderPayment->id,
-        ]);
+            $this->walletOrderPaymentRepository->create([
+                'wallet_transaction_id' => $walletTransaction->id,
+                'order_payment_id' => $orderPayment->id,
+            ]);
 
-        $newBalance = $wallet->balance - $orderPayment->order_amount;
+            $newBalance = $wallet->balance - $orderPayment->order_amount;
 
-        $this->walletAuditLogRepository->create([
-            'wallet_id' => $wallet->id,
-            'transaction_id' => $walletTransaction->id,
-            'previous_balance' => $wallet->balance,
-            'new_balance' => $newBalance,
-        ]);
+            $this->walletAuditLogRepository->create([
+                'wallet_id' => $wallet->id,
+                'transaction_id' => $walletTransaction->id,
+                'previous_balance' => $wallet->balance,
+                'new_balance' => $newBalance,
+            ]);
 
-        return $walletTransaction;
+            $this->walletRepository->decrementBalance($wallet, $orderPayment->order_amount);
+
+            return $walletTransaction;
+        });
     }
 }

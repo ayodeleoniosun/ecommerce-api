@@ -33,6 +33,6 @@ class BaseRepository
 
     public function lockForUpdate(Model $model): Model
     {
-        return $model->lockForUpdate()->first();
+        return $model->lockForUpdate()->find($model->id);
     }
 }

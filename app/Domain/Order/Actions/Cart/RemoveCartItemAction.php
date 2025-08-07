@@ -20,10 +20,15 @@ class RemoveCartItemAction
     {
         $cartItem = $this->userCartItemRepository->findByColumn(UserCartItem::class, 'uuid', $cartItemUUID);
 
-        if (! $cartItem || $cartItem->status !== CartStatusEnum::PENDING->value) {
+        if (! $this->canRemoveCartItem($cartItem)) {
             throw new ResourceNotFoundException('Item not found in your cart');
         }
 
         return $this->userCartItemRepository->delete($cartItem);
+    }
+
+    private function canRemoveCartItem($cartItem): bool
+    {
+        return $cartItem && $cartItem->status === CartStatusEnum::PENDING->value && $cartItem->cart->user_id === auth()->user()->id;
     }
 }

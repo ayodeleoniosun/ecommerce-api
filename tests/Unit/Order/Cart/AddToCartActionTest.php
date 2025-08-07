@@ -128,6 +128,42 @@ describe('Add To Cart', function () {
             ->and($response->resource->productItem->status)->toBe(ProductStatusEnum::IN_STOCK->value);
     });
 
+    it('should update the status of the item quantity to out of stock if user adds the entire item quantity to cart',
+        function () {
+            $this->addCartDto->setQuantity(10);
+
+            $this->userCartRepo->shouldReceive('findPendingCart')
+                ->once()
+                ->with($this->addCartDto->getUserId())
+                ->andReturn($this->userCart);
+
+            $this->userCartItemRepo->shouldReceive('findExistingCartItem')
+                ->twice()
+                ->with($this->userCart->id, $this->addCartDto->getProductItemId())
+                ->andReturn(null);
+
+            $this->userCartRepo->shouldReceive('findOrCreate')
+                ->once()
+                ->with($this->addCartDto)
+                ->andReturn($this->userCart);
+
+            $this->userCartItem->quantity = 10;
+            $this->userCartItem->save();
+
+            $this->userCartItemRepo->shouldReceive('storeOrUpdate')
+                ->once()
+                ->with($this->addCartDto)
+                ->andReturn($this->userCartItem);
+
+            $response = $this->addToCart->execute($this->addCartDto);
+
+            expect($response)->toBeInstanceOf(CartResource::class)
+                ->and($response->resource->quantity)->toBe($this->addCartDto->getQuantity())
+                ->and($response->resource->productItem->price)->toBe(10000)
+                ->and($response->resource->productItem->quantity)->toBe(0)
+                ->and($response->resource->productItem->status)->toBe(ProductStatusEnum::OUT_OF_STOCK->value);
+        });
+
     it('should throw an exception in an attempt to decrement existing cart item but with lesser quantity', function () {
         $this->addCartDto->setType(CartOperationEnum::DECREMENT->value);
 

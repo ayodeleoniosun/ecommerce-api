@@ -55,6 +55,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::prefix('wallets')->group(function () {
         Route::post('/fund', [WalletController::class, 'fund']);
+        Route::post('/fund/authorize', [WalletController::class, 'authorize']);
         Route::get('/balance/{currency}', [WalletController::class, 'balance']);
     });
 

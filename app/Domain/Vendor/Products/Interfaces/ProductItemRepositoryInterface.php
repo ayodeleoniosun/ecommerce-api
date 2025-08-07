@@ -12,7 +12,7 @@ interface ProductItemRepositoryInterface
 
     public function findExistingProductItem(int $productId, string $variationOptionId): ?ProductItem;
 
-    public function increaseStock(ProductItem $productItem, int $quantity): bool|int;
+    public function increaseStock(Model $productItem, int $quantity): bool|int;
 
-    public function decreaseStock(ProductItem|Model $productItem, int $quantity): ProductItem;
+    public function decreaseStock(Model $productItem, int $quantity): Model;
 }

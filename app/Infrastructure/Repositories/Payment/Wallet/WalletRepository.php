@@ -20,6 +20,11 @@ class WalletRepository extends BaseRepository implements WalletRepositoryInterfa
             ->first();
     }
 
+    public function incrementBalance(Wallet $wallet, int $amount): void
+    {
+        $wallet->increment('balance', $amount);
+    }
+
     public function decrementBalance(Wallet $wallet, int $amount): void
     {
         $wallet->decrement('balance', $amount);

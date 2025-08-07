@@ -62,4 +62,13 @@ class UserCartItemRepository extends BaseRepository implements UserCartItemRepos
             ->where('product_item_id', $productItemId)
             ->get();
     }
+
+    public function removeCartItem(UserCartItem $cartItem): void
+    {
+        $cartItem->refresh();
+
+        if ($cartItem->quantity === 0) {
+            $cartItem->delete();
+        }
+    }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Application\Shared\Traits;
 
+use App\Domain\Payment\Dtos\PaymentResponseDto;
 use App\Domain\Payment\Enums\AuthModelEnum;
+use App\Domain\Payment\Enums\GatewayPrefixReferenceEnum;
 use App\Domain\Payment\Enums\PaymentStatusEnum;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -14,15 +16,6 @@ trait UtilitiesTrait
         $uuid = Str::uuid()->toString();
 
         return str_replace('-', '', $uuid);
-    }
-
-    public static function generateRandomCharacters(string $prefix = '', int $length = 16): string
-    {
-        $alphanumeric = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-        $randomCharacters = substr(str_shuffle(str_repeat($alphanumeric, 5)), 0, $length);
-
-        return $prefix.$randomCharacters;
     }
 
     public static function parseDate($date): string
@@ -45,12 +38,39 @@ trait UtilitiesTrait
         return [PaymentStatusEnum::FAILED->value, PaymentStatusEnum::SUCCESS->value];
     }
 
+    public static function shouldUpdateTransactionStatus(PaymentResponseDto $paymentResponseDto): bool
+    {
+        if ($paymentResponseDto->getStatus() === PaymentStatusEnum::FAILED->value ||
+            ($paymentResponseDto->getAuthModel() && self::requiresAuthorization($paymentResponseDto->getAuthModel()))
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
     public static function requiresAuthorization(string $authModel): bool
     {
-        if (in_array($authModel, [AuthModelEnum::NO_AUTH->value, AuthModelEnum::PIN->value])) {
+        if ($authModel && in_array($authModel, [AuthModelEnum::NO_AUTH->value, AuthModelEnum::PIN->value])) {
             return false;
         }
 
         return true;
+    }
+
+    public static function generateGatewayReference(string $gateway): string
+    {
+        $prefix = GatewayPrefixReferenceEnum::getPrefix($gateway);
+
+        return self::generateRandomCharacters($prefix->value);
+    }
+
+    public static function generateRandomCharacters(string $prefix = '', int $length = 16): string
+    {
+        $alphanumeric = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        $randomCharacters = substr(str_shuffle(str_repeat($alphanumeric, 5)), 0, $length);
+
+        return $prefix.$randomCharacters;
     }
 }

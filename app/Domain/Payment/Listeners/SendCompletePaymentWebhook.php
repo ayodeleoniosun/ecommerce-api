@@ -3,7 +3,7 @@
 namespace App\Domain\Payment\Listeners;
 
 use App\Domain\Order\Resources\Order\OrderResource;
-use App\Domain\Payment\Actions\CompleteOrderPaymentAction;
+use App\Domain\Payment\Actions\Order\CompleteOrderPaymentAction;
 use App\Domain\Payment\Events\PaymentWebhookCompleted;
 use Illuminate\Contracts\Queue\ShouldQueue;
 

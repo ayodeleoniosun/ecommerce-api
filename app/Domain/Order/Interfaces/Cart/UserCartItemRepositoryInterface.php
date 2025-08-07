@@ -16,6 +16,8 @@ interface UserCartItemRepositoryInterface
 
     public function completeCartItems(int $cartId, string $status): bool;
 
+    public function removeCartItem(UserCartItem $cartItem): void;
+
     public function findExistingCartItem(?int $cartId, int $productItemId): ?UserCartItem;
 
     public function getAllOutOfStockItems(int $productItemId): Collection;

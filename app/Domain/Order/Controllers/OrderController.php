@@ -9,11 +9,11 @@ use App\Domain\Order\Actions\Order\GetOrderAction;
 use App\Domain\Order\Actions\Order\GetOrdersAction;
 use App\Domain\Order\Dtos\CheckoutDto;
 use App\Domain\Order\Requests\CheckoutRequest;
-use App\Domain\Payment\Actions\AuthorizePaymentAction;
-use App\Domain\Payment\Actions\CompleteOrderPaymentAction;
-use App\Domain\Payment\Actions\InitiateOrderPaymentAction;
+use App\Domain\Payment\Actions\Order\AuthorizeOrderPaymentAction;
+use App\Domain\Payment\Actions\Order\CompleteOrderPaymentAction;
+use App\Domain\Payment\Actions\Order\InitiateOrderPaymentAction;
+use App\Domain\Payment\Dtos\Card\PaymentDto;
 use App\Domain\Payment\Dtos\PaymentAuthorizationDto;
-use App\Domain\Payment\Dtos\PaymentDto;
 use App\Domain\Payment\Enums\PaymentStatusEnum;
 use App\Domain\Payment\Requests\OrderPaymentRequest;
 use App\Domain\Payment\Requests\PaymentAuthorizationRequest;
@@ -28,7 +28,7 @@ class OrderController
         private readonly CheckoutAction $checkout,
         private readonly InitiateOrderPaymentAction $initiateOrderPayment,
         private readonly CompleteOrderPaymentAction $completeOrderPayment,
-        private readonly AuthorizePaymentAction $authorizePayment,
+        private readonly AuthorizeOrderPaymentAction $authorizePayment,
         private readonly GetOrdersAction $getOrders,
         private readonly GetOrderAction $getOrder,
     ) {}
@@ -75,15 +75,17 @@ class OrderController
         try {
             $transactionResponse = $this->initiateOrderPayment->execute($paymentDto);
 
-            if ($transactionResponse->getStatus() === PaymentStatusEnum::FAILED->value) {
-                $this->completeOrderPayment->updateOrderPayment($transactionResponse);
+            $shouldUpdateTransactionStatus = self::shouldUpdateTransactionStatus($transactionResponse);
 
+            if ($shouldUpdateTransactionStatus) {
+                $this->completeOrderPayment->updateOrderPayment($transactionResponse);
+            }
+
+            if ($transactionResponse->getStatus() === PaymentStatusEnum::FAILED->value) {
                 return ApiResponse::error($transactionResponse->getResponseMessage());
             }
 
-            if ($transactionResponse->getAuthModel() && self::requiresAuthorization($transactionResponse->getAuthModel())) {
-                $this->completeOrderPayment->updateOrderPayment($transactionResponse);
-
+            if (self::requiresAuthorization($transactionResponse->getAuthModel())) {
                 return ApiResponse::success('Authorization required', $transactionResponse->toArray());
             }
 

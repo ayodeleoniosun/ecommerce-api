@@ -2,7 +2,7 @@
 
 namespace App\Domain\Payment\Interfaces;
 
-use App\Domain\Payment\Dtos\InitiateCardPaymentDto;
+use App\Domain\Payment\Dtos\Card\InitiateCardPaymentDto;
 use App\Domain\Payment\Dtos\PaymentAuthorizationDto;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
 

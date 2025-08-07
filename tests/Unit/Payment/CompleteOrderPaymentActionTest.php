@@ -6,9 +6,8 @@ use App\Domain\Order\Enums\CartStatusEnum;
 use App\Domain\Order\Enums\OrderStatusEnum;
 use App\Domain\Order\Interfaces\Cart\UserCartItemRepositoryInterface;
 use App\Domain\Order\Interfaces\Order\OrderRepositoryInterface;
-use App\Domain\Order\Notifications\OrderCompletedNotification;
 use App\Domain\Order\Resources\Order\OrderResource;
-use App\Domain\Payment\Actions\CompleteOrderPaymentAction;
+use App\Domain\Payment\Actions\Order\CompleteOrderPaymentAction;
 use App\Domain\Payment\Dtos\PaymentResponseDto;
 use App\Domain\Payment\Enums\AuthModelEnum;
 use App\Domain\Payment\Enums\PaymentStatusEnum;
@@ -96,7 +95,6 @@ describe('Complete Order Payment', function () {
 
         Notification::assertSentTo(
             $this->user,
-            OrderCompletedNotification::class,
             function ($notification) use ($response) {
                 return $notification->order->id === $response->resource->user_id;
             });

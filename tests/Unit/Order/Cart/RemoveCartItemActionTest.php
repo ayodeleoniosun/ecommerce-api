@@ -42,6 +42,13 @@ describe('Remove Cart Item', function () {
         $this->deleteCartItem->execute('invalid_uuid');
     })->throws(ResourceNotFoundException::class, 'Item not found in your cart');
 
+    it('should throw an exception if cart item does exist but for another user', function () {
+        $this->userCartItem->cart->user_id = User::factory()->create()->id;
+        $this->userCartItem->cart->save();
+
+        $this->deleteCartItem->execute($this->userCartItem->uuid);
+    })->throws(ResourceNotFoundException::class, 'Item not found in your cart');
+
     it('should throw an exception if cart item has already been checked out', function () {
         $this->userCartItem->status = CartStatusEnum::CHECKED_OUT->value;
         $this->userCartItem->save();

@@ -23,6 +23,9 @@ class AddToCartAction
         private readonly UserCartItemRepositoryInterface $userCartItemRepository,
     ) {}
 
+    /**
+     * @throws BadRequestException
+     */
     public function execute(CartDto $addToCartDto): CartResource
     {
         $productItem = $this->productItemRepository->findByColumn(
@@ -33,21 +36,19 @@ class AddToCartAction
 
         throw_if(! $productItem, ResourceNotFoundException::class, 'Product item not found');
 
-        $cartItem = null;
-
         $lockedProductItem = $this->productItemRepository->lockForUpdate($productItem);
 
-        DB::transaction(function () use ($addToCartDto, $lockedProductItem, &$cartItem) {
-            $cartQuantity = $addToCartDto->getQuantity();
+        $cartQuantity = $addToCartDto->getQuantity();
 
-            throw_if(
-                $cartQuantity > $lockedProductItem->quantity,
-                BadRequestException::class,
-                'Insufficient product quantity',
-            );
+        if ($cartQuantity > $lockedProductItem->quantity && $addToCartDto->getType() === CartOperationEnum::INCREMENT->value) {
+            throw new BadRequestException('Insufficient product quantity');
+        }
 
-            $this->updateQuantity($addToCartDto);
+        $this->updateQuantity($addToCartDto);
 
+        $cartItem = null;
+
+        DB::transaction(function () use ($addToCartDto, $cartQuantity, $lockedProductItem, &$cartItem) {
             $cart = $this->userCartRepository->findOrCreate($addToCartDto);
 
             $addToCartDto->setCartId($cart->id);
@@ -62,7 +63,7 @@ class AddToCartAction
             $cartItem = $this->userCartItemRepository->storeOrUpdate($addToCartDto);
 
             if ($cartItem->quantity === 0) {
-                $this->removeCartItem($cartItem);
+                $this->userCartItemRepository->removeCartItem($cartItem);
             }
         });
 
@@ -122,14 +123,5 @@ class AddToCartAction
         }
 
         $this->productItemRepository->increaseStock($productItem, $cartQuantity);
-    }
-
-    private function removeCartItem(UserCartItem $cartItem): void
-    {
-        $cartItem->refresh();
-
-        if ($cartItem->quantity === 0) {
-            $cartItem->delete();
-        }
     }
 }
