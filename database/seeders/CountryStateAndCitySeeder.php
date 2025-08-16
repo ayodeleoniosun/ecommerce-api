@@ -2,61 +2,100 @@
 
 namespace Database\Seeders;
 
-use App\Infrastructure\Models\Shipping\Address\City;
+use App\Application\Shared\Traits\UtilitiesTrait;
 use App\Infrastructure\Models\Shipping\Address\Country;
 use App\Infrastructure\Models\Shipping\Address\State;
+use Illuminate\Support\Facades\DB;
 use Kdabrow\SeederOnce\SeederOnce;
 
 class CountryStateAndCitySeeder extends SeederOnce
 {
+    use UtilitiesTrait;
+
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
         $json = file_get_contents(database_path('seeders/data/countries_states_cities.json'));
-        $countries = json_decode($json, true);
+        $countriesData = json_decode($json, true);
 
-        foreach ($countries as $country) {
-            // insert or update countries
-            $countryRecord = Country::updateOrCreate(
-                ['code' => $country['iso2'], 'currency_code' => $country['currency']],
-                [
-                    'name' => strtolower($country['name']),
-                    'code' => $country['iso2'],
-                    'phone_code' => $country['phonecode'],
-                    'currency_code' => $country['currency'],
-                    'currency' => $country['currency_name'],
-                    'currency_symbol' => $country['currency_symbol'],
-                ],
-            );
+        $countries = [];
+        $now = now();
 
-            // insert or update states
-            if (isset($country['states'])) {
-                foreach ($country['states'] as $state) {
-                    $stateRecord = State::updateOrCreate(
-                        ['code' => $state['state_code'], 'country_id' => $countryRecord->id],
-                        [
-                            'country_id' => $countryRecord->id,
-                            'name' => strtolower($state['name']),
-                            'code' => $state['state_code'],
-                        ],
-                    );
+        foreach ($countriesData as $country) {
+            $countries[] = [
+                'uuid' => self::generateUUID(),
+                'name' => strtolower($country['name']),
+                'code' => $country['iso2'],
+                'phone_code' => $country['phonecode'],
+                'currency_code' => $country['currency'],
+                'currency' => $country['currency_name'],
+                'currency_symbol' => $country['currency_symbol'],
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+        }
 
-                    // insert or update cities
-                    if (isset($state['cities'])) {
-                        foreach ($state['cities'] as $city) {
-                            City::updateOrCreate(
-                                ['state_id' => $stateRecord->id, 'name' => strtolower($city['name'])],
-                                [
-                                    'state_id' => $stateRecord->id,
-                                    'name' => strtolower($city['name']),
-                                ],
-                            );
-                        }
-                    }
+        DB::table('countries')->insert($countries);
+
+        $states = [];
+        $countryIds = Country::pluck('id', 'code')->toArray();
+
+        foreach ($countriesData as $country) {
+            $countryId = $countryIds[$country['iso2']] ?? null;
+
+            if (! $countryId || empty($country['states'])) {
+                continue;
+            }
+
+            foreach ($country['states'] as $state) {
+                $states[] = [
+                    'uuid' => self::generateUUID(),
+                    'country_id' => $countryId,
+                    'name' => strtolower($state['name']),
+                    'code' => $state['id'],
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+            }
+        }
+
+        DB::table('states')->insert($states);
+
+        $cities = [];
+        $stateIds = State::pluck('id', 'code')->toArray();
+
+        foreach ($countriesData as $country) {
+            $countryId = $countryIds[$country['iso2']] ?? null;
+
+            if (! $countryId || empty($country['states'])) {
+                continue;
+            }
+
+            foreach ($country['states'] as $state) {
+                $stateId = $stateIds[$state['id']] ?? null;
+
+                if (! $stateId || empty($state['cities'])) {
+                    continue;
+                }
+
+                foreach ($state['cities'] as $city) {
+                    $cities[] = [
+                        'uuid' => self::generateUUID(),
+                        'state_id' => $stateId,
+                        'name' => strtolower($city['name']),
+                        'created_at' => $now,
+                        'updated_at' => $now,
+                    ];
                 }
             }
+        }
+
+        $batchSize = 5000;
+
+        foreach (array_chunk($cities, $batchSize) as $chunk) {
+            DB::table('cities')->insert($chunk);
         }
     }
 }

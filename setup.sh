@@ -2,27 +2,24 @@
 
 set -e
 
-GREEN=$(tput setaf 2)
+PINK=$(tput setaf 5)
 
-echo "${GREEN}🧱 Starting Application setup..."
+echo "${PINK}🧱 Starting Application setup..."
 
-echo "${GREEN}🔄 Bringing up containers..."
+echo "${PINK}🔄 Bringing up containers..."
 docker-compose down -v
 docker-compose up -d --build
 
-echo "${GREEN}📦 Installing Composer dependencies..."
+echo "${PINK}📦 Installing Composer dependencies..."
 docker exec -it app composer install
 
-echo "${GREEN}🔑 Generating app key..."
+echo "${PINK}🔑 Generating app key..."
 docker exec -it app php artisan key:generate
 
-echo "${GREEN}🚀 Migrating database..."
+echo "${PINK}🚀 Migrating database..."
 docker exec -it app php artisan migrate
 
-echo "${GREEN}🚀 Running seeders..."
+echo "${PINK}🚀 Running seeders..."
 docker exec -it app php artisan db:seed
 
-echo "${GREEN}🚀 Starting Horizon..."
-docker exec -it app php artisan horizon
-
-echo "${GREEN}✅ Application setup complete!"
+echo "${PINK}✅ Application setup complete!"

@@ -5,6 +5,8 @@ FROM composer:2 AS vendor
 
 WORKDIR /app
 
+COPY ./docker/php.ini /usr/local/etc/php/conf.d/php.ini
+
 # Copy only composer files first to leverage Docker layer caching
 COPY composer.json composer.lock ./
 
@@ -27,6 +29,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxml2-dev \
     libzip-dev \
     libjpeg-dev \
+    supervisor \
     libfreetype6-dev \
     libcurl4-openssl-dev \
     libssl-dev \
@@ -49,6 +52,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY --from=vendor /usr/bin/composer /usr/bin/composer
 #COPY --from=vendor /app/vendor /var/www/vendor
 
+# Create supervisor directory
+RUN mkdir -p /etc/supervisor/conf.d
+
 # Copy Laravel source code
 COPY . /var/www
 
@@ -56,6 +62,11 @@ COPY . /var/www
 RUN chown -R www-data:www-data /var/www \
     && chmod -R 755 /var/www
 
+# Copy supervisor config
+COPY docker/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
+COPY ./docker/supervisor/ /etc/supervisor/conf.d/
+
 EXPOSE 9000
 
-CMD ["php-fpm"]
+# Start supervisor
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]

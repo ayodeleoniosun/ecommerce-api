@@ -16,9 +16,11 @@ return new class extends Migration
             $table->string('uuid');
             $table->foreignId('country_id')->constrained('countries')->nullOnDelete();
             $table->string('name');
-            $table->string('code', 10)->nullable();
+            $table->string('code', 10);
             $table->timestamps();
             $table->softDeletes();
+
+            $table->unique(['country_id', 'code']);
         });
     }
 
