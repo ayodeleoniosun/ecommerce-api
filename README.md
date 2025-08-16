@@ -30,13 +30,13 @@ Ensure you have docker installed containerized setup.
 #### Step 1: Clone the repository
 
 ```bash
-git clone https://github.com/ayodeleoniosun/ecommerce-api.git
+git clone https://github.com/ayodeleoniosun/laravel-ecommerce-api.git
 ```
 
 #### Step 2: Switch to the repo folder
 
 ```bash
-cd ecommerce-api
+cd laravel-ecommerce-api
 ```
 
 #### Step 3: Setup environment variable
