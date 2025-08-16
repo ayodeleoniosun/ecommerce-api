@@ -17,6 +17,24 @@ services:
         networks:
             - ecommerce
 
+    test:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: app_test
+        env_file:
+            - .env.testing
+        volumes:
+            - ./:/var/www
+        depends_on:
+            - postgres
+            - redis
+        networks:
+            - ecommerce
+        command: >
+            sh -c "php artisan optimize:clear &&
+                   vendor/bin/pest --configuration phpunit.xml"
+
     postgres:
         image: postgres:15
         container_name: postgres

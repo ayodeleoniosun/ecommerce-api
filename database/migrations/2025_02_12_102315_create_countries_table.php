@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('uuid')->unique();
             $table->string('name');
-            $table->string('code', 2)->unique();
+            $table->string('code', 2);
             $table->string('phone_code', 10);
             $table->string('currency_code', 10);
             $table->string('currency');

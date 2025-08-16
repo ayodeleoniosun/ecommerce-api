@@ -11,6 +11,7 @@ use App\Infrastructure\Models\User\UserVerification;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 
 describe('Registration', function () {
@@ -597,6 +598,7 @@ describe('Reset Password', function () {
 
     it('should reset user password', function () {
         Event::fake();
+        Mail::fake();
 
         $user = User::factory()->create([
             'email_verified_at' => now(),

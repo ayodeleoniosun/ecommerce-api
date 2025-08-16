@@ -54,8 +54,16 @@ make serve
 
 The Postman API collection is locally available [Here](public/postman_collection.json). <br/>
 
-### Testing
+### Launch
+
+To start testing the api, import the postman collection above and set the base url to `http://localhost:8000`
+
+Happy testing!!!!
+
+### Automated Testing
+
+To run the integration and unit tests (A total of 203), run the command below:
 
 ```bash
-docker exec -it app php artisan test
+docker compose run test
 ```

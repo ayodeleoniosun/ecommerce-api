@@ -11,6 +11,7 @@ use App\Infrastructure\Models\User\User;
 use App\Infrastructure\Repositories\User\UserRepository;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Mockery;
 
@@ -48,6 +49,7 @@ describe('Reset Password', function () {
 
     it('can reset password', function () {
         Event::fake();
+        Mail::fake();
 
         $this->user->email_verified_at = now();
         $this->user->status = UserStatusEnum::ACTIVE->value;
