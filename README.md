@@ -5,10 +5,10 @@ promotes modularity, maintainability, and scalability and is ideal for enterpris
 
 ### Features
 
-- Built on Laravel with expressive, elegant syntax.
+- Built with Laravel with expressive, elegant syntax.
 - Modular codebase using Domain-Driven Design.
 - Clean separation across layers: `Application`, `Domain`, `Infrastructure`.
-- Docker support for consistent development environments
+- Docker support for consistent development environments.
 - Well written unit tests.
 - Event-driven architecture.
 - Event sourcing for full audit log.
@@ -47,7 +47,7 @@ cd ecommerce-api
 #### Step 4: Setup docker containers and install all dependencies
 
 ```bash
-bash setup.sh
+make serve
 ```
 
 ### Documentation
